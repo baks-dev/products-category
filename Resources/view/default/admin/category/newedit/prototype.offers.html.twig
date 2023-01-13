@@ -1,0 +1,71 @@
+{% trans_default_domain 'products.category' %}
+<div class="card card-flush p-4 item-collection-offers mb-2">
+	<div class="card-body pt-0">
+		<div class="d-flex gap-5">
+			<div class="w-50">
+
+				<div class="card-header">
+					<div class="card-title">
+						<h2>
+							Торговое предложение
+						</h2>
+					</div>
+				</div>
+
+				<div class="card-body">
+					<div class="d-flex align-items-end gap-5 pb-3">
+
+						{{ form_row(offer.DeleteOffers, { label: '<span class="svg-icon svg-icon-2 text-nowrap">
+													<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
+														<rect opacity="0.5" x="7.05025" y="15.5356" width="12" height="2" rx="1" transform="rotate(-45 7.05025 15.5356)" fill="black"></rect>
+														<rect x="8.46447" y="7.05029" width="12" height="2" rx="1" transform="rotate(45 8.46447 7.05029)" fill="black"></rect>
+													</svg>' ~ 'Удалить свойство'|trans ~ '</span>' }) }}
+
+						 {#Сортировка секции#}
+						{{ form_row(offer.sort, {  label : 'Сортировка'|trans, value : '__OFFER_SORT__' } ) }}
+					</div>
+
+					{{ form_row(offer.image, {  label : 'Возможность загрузки пользовательского изображение'|trans } ) }}
+
+					{{ form_row(offer.article, {  label : 'Торговое предложение с Артикулом'|trans } ) }}
+
+					{{ form_row(offer.price, {  label : 'Торговое предложение с ценой'|trans } ) }}
+
+					{{ form_row(offer.quantitative, {  label : 'Количественный учет'|trans } ) }}
+
+					<div class="d-flex gap-5 align-items-end">
+						<div class="py-4">
+							{{ form_row(offer.isReference, {  label : 'Справочник'|trans, attr : { 'data-reference' : offer.reference.vars.id, 'data-multiple' : offer.multiple.vars.id, 'class' : 'is-reference' } } ) }}
+						</div>
+						<div class="d-none py-4" id="multiple_{{ offer.multiple.vars.id }}">
+							{{ form_row(offer.multiple, {  label : 'Множественный'|trans } ) }}
+						</div>
+
+						{{ form_row(offer.reference, {  label : false, placeholder: 'Выберите справичник из списка...'|trans , attr : { 'class' : 'd-none' } } ) }}
+					</div>
+				</div>
+
+				<div class="text-muted text-break">
+					Справочник даст пользователю выбор значений согласно шаблону, иначе текстовое поле
+				</div>
+			</div>
+
+			<div class="w-50">
+
+				<div class="card-header">
+					<div class="card-title">
+						<h2>
+							Настройки локали
+						</h2>
+					</div>
+				</div>
+
+				<div class="card-body">
+					{{ include(_self|replace({ "prototype.offers.html.twig": "prototype.offers.trans.html.twig"})) }}
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+

@@ -1,0 +1,104 @@
+{% trans_default_domain 'products.category' %}
+
+<tr>
+
+	<td>
+		{# Пользовательское меню #}
+		{{ include(_self|replace({ "_table.tbody.html.twig": "_usecase.html.twig" })) }}
+	</td>
+
+	{# Чекбокс #}
+	<td>
+		<div class="form-check form-check-sm form-check-custom">
+			<label>
+				<input class="form-check-input checked-item" type="checkbox" onchange=checkedItem(); value="{{ item.event }}">
+			</label>
+		</div>
+	</td>
+
+	<td class="ps-5">
+		{#{{ item.sort }}#}
+	</td>
+	<td class="ps-5">
+		<div class="d-flex">
+
+			<div class="">
+				<a href="{{ path('ProductCategory:admin.category.index', { cat: item.id }) }}"
+				   class="text-gray-{{ item.counter ? 900 : 600 }} btn btn-light text-hover-primary fs-5 fw-bolder mb-1"
+				>
+					{{ item.counter }}
+				</a>
+			</div>
+
+			{#{{ dump(item) }}#}
+			{#{{ dump(cdn_host) }}
+			{{ dump(item.event) }}
+			{{ dump(item.cover) }}
+			{{ dump(item.ext) }}#}
+
+
+
+			{% if item.cdn %}
+				<div class="symbol symbol-50px ms-5">
+					<span class="symbol-label lazy" data-bg="{{ cdn_host~'/images/products/category/cover/'~item.dir~'/'~item.cover~'.min.'~item.ext }}"></span>
+				</div>
+			{% else %}
+				<div class="symbol symbol-50px ms-5">
+					<span class="symbol-label lazy" data-bg="{{ item.cover is not null ?
+					category_cover_dir ~ item.dir ~ '/' ~ item.cover ~'.'~ item.ext  : '/img/blank.svg' }}"></span>
+				</div>
+			{% endif %}
+
+
+
+
+			{# Обложка  #}
+			{#<div class="symbol symbol-50px ms-5">
+				<span class="symbol-label" style="background-image:url({{ item.cover is not null ?
+				category_cover_dir~item.id~'/'~item.cover  : '/assets/img/blank.svg' }});"></span>
+			</div>#}
+
+			<div class="ms-5">
+
+				{# Название #}
+
+					<a href="{{ path('ProductCategory:admin.category.newedit.edit', {id: item.event }) }}"
+					   class="text-gray-600 text-hover-primary fs-5 fw-bolder mb-1"
+					>
+						{{ item.name }}
+					</a>
+
+				{# Описание #}
+				<div class="text-muted fs-7 fw-bolder">
+					{{ item.description }}
+				</div>
+			</div>
+
+		</div>
+	</td>
+
+	<td class="ps-5">
+		{% if item.parent is null %}
+
+			<div class="badge badge-light-success px-2">
+				{{ 'admin.products.category.parent.label'|trans }}
+			</div>
+
+			{% else %}
+				<div class="py-4 pe-3">
+					<div class="badge badge-light-danger px-2">
+						{{ parent }}
+					</div>
+				</div>
+
+
+		{% endif %}
+	</td>
+
+	{#<td>
+		<a href="{{ path('ProductCategory:admin.category.newedit.new', { cat: item.id }) }}" class="btn btn-sm btn-primary ">
+			{{ 'btn.new'|trans({}, 'messages') }}
+		</a>
+	</td>#}
+
+</tr>

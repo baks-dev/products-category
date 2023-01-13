@@ -1,0 +1,70 @@
+<tr>
+
+    {# Пользовательское меню #}
+    <td>
+        {# Пользовательское меню #}
+        {{ include(_self|replace({ "_table.tbody.html.twig": "_usecase.html.twig" })) }}
+    </td>
+
+    {# Чекбокс #}
+    {# Чекбокс #}
+    <td>
+        <div class="form-check form-check-sm form-check-custom">
+            <label>
+                <input class="form-check-input checked-item" type="checkbox" onchange=checkedItem(); value="{{ item.event }}">
+            </label>
+        </div>
+    </td>
+
+    <td>
+        <div class="d-flex">
+            {# Обложка  #}
+            <div class="symbol symbol-50px">
+				{#<span class="symbol-label" style="background-image:url({{ item.cover is not null ?
+                category_cover_dir~item.id~'/'~item.cover  : '/assets/img/blank.svg' }});"></span>#}
+            </div>
+
+            <div class="ms-3">
+
+                {# Название #}
+                <a href="{#{{ path('Product:admin.category.recyclebin.detail', { id: item.event }) }}#}"
+                   class="text-gray-800 text-hover-primary fs-5 fw-bolder mb-1"
+                >
+					{{ item.name }}
+				</a>
+
+                {# Описание #}
+                <div class="text-muted fs-7 fw-bolder">
+                    {{ item.description }}
+                </div>
+
+            </div>
+        </div>
+    </td>
+
+    <td>
+        <div class="d-flex">
+            {# Превью  #}
+            {# <a href="../../demo11/dist/apps/ecommerce/catalog/edit-category.html" class="symbol symbol-50px">
+                <span class="symbol-label" style="background-image:url(assets/media//stock/ecommerce/68.gif);"></span>
+            </a> #}
+            <div class="ms-0">
+
+				{#{% if item.user_id %}
+					#}{# Редактор #}{#
+					<a href="#}{#{{ path('User:admin.user.account.newedit.edit', { id: item.user_id }) }}#}{#"
+					   class="text-gray-800 text-hover-primary fs-5 fw-bolder mb-1"
+					>
+						{{ item.user_email }}
+					</a>
+				{% endif %}#}
+
+                {# Описание #}
+                <div class="text-muted fs-7 fw-bolder text-break">
+                    {{ user_ip(item.user_ip) }}
+                    {{ item.user_agent }}
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>

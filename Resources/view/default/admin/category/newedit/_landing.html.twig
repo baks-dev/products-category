@@ -1,0 +1,75 @@
+{% trans_default_domain 'products.category' %}
+
+{#{{ form_row(form.info.active, {  label : 'Раздел активен'|trans({}, 'messages') }) }}#}
+
+
+<nav>
+	<div class="nav nav-tabs" id="nav-{{ form.landings.vars.id }}" role="tablist">
+		{% for landing in form.landings %}
+			<button class="nav-link{{ app.request.locale == landing.vars.value.local? ' active' : '' }}"
+					id="nav-{{ landing.vars.id }}-tab" data-bs-toggle="tab"
+					data-bs-target="#nav-{{ landing.vars.id }}"
+					type="button" role="tab" aria-controls="nav-{{ landing.vars.id }}" aria-selected="true">
+				{{ landing.vars.value.local|trans({}, 'messages') }}
+			</button>
+		{% endfor %}
+	</div>
+</nav>
+
+<div class="tab-content mt-5" id="nav-{{ form.landings.vars.id }}Content">
+
+	{% for landing in form.landings %}
+		<div class="tab-pane fade{{ app.request.locale == landing.vars.value.local? ' show active' : '' }}"
+			 id="nav-{{ landing.vars.id }}" role="tabpanel"
+			 aria-labelledby="nav-{{ landing.vars.id }}-tab">
+
+			{# Локаль #}
+			{{ form_row(landing.local) }}
+
+			{#  Верхний блок #}
+			{{ form_row(landing.header, {
+				label : 'Заголовочный блок'|trans
+			}) }}
+
+			{# Нижний блок #}
+			{{ form_row(landing.bottom, {
+				label: 'Нижний блок'|trans
+			}) }}
+		</div>
+
+		<script>
+            window.addEventListener('load', function () {
+
+                if(!CKEDITOR.instances['{{ landing.header.vars.id }}'])
+                {
+                    CKEDITOR.replace('{{ landing.header.vars.id }}');
+                }
+
+                if(!CKEDITOR.instances['{{ landing.bottom.vars.id }}'])
+                {
+                    CKEDITOR.replace('{{ landing.bottom.vars.id }}');
+                }
+            });
+		</script>
+
+	{% endfor %}
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

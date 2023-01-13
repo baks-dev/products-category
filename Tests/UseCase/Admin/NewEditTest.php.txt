@@ -1,0 +1,533 @@
+<?php
+/*
+ *  Copyright 2022.  Baks.dev <admin@baks.dev>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *   limitations under the License.
+ *
+ */
+
+namespace App\Module\Products\Category\Tests\UseCase\Admin;
+
+use App\Module\Products\Category\Entity\Event;
+use App\Module\Products\Category\Type\Event\CategoryEvent;
+use App\Module\Products\Category\Type\Id\CategoryUid;
+use App\Module\Products\Category\Type\Parent\ParentCategoryUid;
+use App\Module\Products\Category\UseCase\Admin\NewEdit;
+use App\System\Type\Field\FieldEnum;
+use App\System\Type\Field\InputField;
+use App\System\Type\Locale\Locale;
+use App\System\Type\Locale\LocaleEnum;
+use Doctrine\Common\Collections\ArrayCollection;
+use PHPUnit\Util\Reflection;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+
+class NewEditTest extends KernelTestCase
+{
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    private $entityManager;
+    
+    private Locale $locale;
+    
+    protected function setUp(): void
+    {
+        $kernel = self::bootKernel();
+    
+        $this->locale = new Locale(LocaleEnum::DEFAULT_LOCALE);
+        
+        $this->entityManager = $kernel->getContainer()
+          ->get('doctrine')
+          ->getManager();
+    }
+    
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->entityManager->close();
+        $this->entityManager = null;
+    }
+    
+    public function testSomething() : void
+    {
+        //$kernel = self::bootKernel();
+        
+        //$this->locale = new Locale(LocaleEnum::DEFAULT_LOCALE);
+        
+        //$this->assertEquals('test', $this->kernel->getEnvironment());
+        
+        
+        $dto = $this->getDTO();
+        
+        //dd($dto->getInfo());
+        
+        $Event = new Event\Event();
+        $Event->setCategory(new CategoryUid());
+        $Event->setEntity($dto);
+        
+        $Event->getDto($new = new NewEdit\Category\CategoryDTO());
+        $this->equailsDTO($dto, $new); /* сверяем DTO */
+        
+        
+        /* Сохраняем объект в бд */
+        $this->entityManager->persist($Event);
+        $this->entityManager->flush();
+        /* Получаем объект */
+        $Event = $this->entityManager->getRepository(Event\Event::class)->find($Event->getId());
+        /* Удаляем объект */
+        $this->entityManager->remove($Event);
+        $this->entityManager->flush();
+        
+        
+        $Event->getDto($new = new NewEdit\Category\CategoryDTO());
+        $this->equailsDTO($dto, $new); /* сверяем DTO */
+        
+    }
+    
+    public function equailsDTO(NewEdit\Category\CategoryDTO $dto, NewEdit\Category\CategoryDTO $new)
+    {
+        $this->assertNotNull($new->getEvent());
+        
+        /* Trans */
+        $this->assertInstanceOf(ArrayCollection::class, $dto->getTrans());
+        $this->assertNotEmpty($dto->getTrans());
+        
+        $dto->getTrans()->map(function ($dtoTrans) use ($new)
+        {
+            /** @var NewEdit\Category\Trans\CategoryTransDTO $dtoTrans */
+            $return = $new->getTrans()->filter(function ($newTrans) use ($dtoTrans)
+            {
+                return $newTrans == $dtoTrans;
+            });
+            
+            $newTrans = $return->current();
+    
+            $this->assertEquals($newTrans->getLocal(), $dtoTrans->getLocal());
+            $this->assertEquals($newTrans->getName(), $dtoTrans->getName());
+            $this->assertEquals($newTrans->getDescription(), $dtoTrans->getDescription());
+            
+            $this->assertTrue($newTrans == $dtoTrans, $dtoTrans::class.' не соответствуют');
+        });
+        
+        /* Cover */
+        $this->assertEquals($dto->getCover(), $new->getCover());
+        $this->assertEquals($dto->getCover()->getName(), $new->getCover()->getName());
+        $this->assertEquals($dto->getCover()->getExt(), $new->getCover()->getExt());
+        $this->assertEquals($dto->getCover()->getDir(), $new->getCover()->getDir());
+        
+        /* Info */
+        $this->assertEquals($dto->getInfo(), $new->getInfo());
+        $this->assertEquals($dto->getInfo()->getUrl(), $new->getInfo()->getUrl());
+        $this->assertEquals($dto->getInfo()->isActive(), $new->getInfo()->isActive());
+        
+        $this->assertInstanceOf(ArrayCollection::class, $dto->getLandings());
+        $this->assertNotEmpty($dto->getLandings());
+        
+        /* Landing */
+        $dto->getLandings()->map(function ($dtoLanding) use ($new)
+        {
+            /** @var NewEdit\Landing\LandingCollectionDTO $dtoLanding */
+            $return = $new->getLandings()->filter(function ($newLanding) use ($dtoLanding)
+            {
+                return $newLanding == $dtoLanding;
+            });
+            
+            $newLanding = $return->current();
+            
+            $this->assertEquals($newLanding->getLocal(), $dtoLanding->getLocal());
+            $this->assertEquals($newLanding->getHeader(), $dtoLanding->getHeader());
+            $this->assertEquals($newLanding->getBottom(), $dtoLanding->getBottom());
+            
+            $this->assertTrue($newLanding == $dtoLanding, $dtoLanding::class.' не соответствуют');
+        });
+        
+        /* Offers */
+        
+        $this->assertInstanceOf(ArrayCollection::class, $dto->getOffers());
+        $this->assertNotEmpty($dto->getOffers());
+        
+        $dto->getOffers()->map(function ($dtoOffer) use ($new)
+        {
+            /** @var NewEdit\Offers\OffersCollectionDTO $dtoOffer */
+            $return = $new->getOffers()->filter(function ($newOffer) use ($dtoOffer)
+            {
+                return $newOffer == $dtoOffer;
+            });
+            
+            $newOffer = $return->current();
+            
+            $this->assertEquals($newOffer->getSort(), $dtoOffer->getSort());
+            $this->assertEquals($newOffer->getReference(), $dtoOffer->getReference());
+            $this->assertEquals($newOffer->isImage(), $dtoOffer->isImage());
+            $this->assertEquals($newOffer->isPrice(), $dtoOffer->isPrice());
+            $this->assertEquals($newOffer->isMultiple(), $dtoOffer->isMultiple());
+            
+            $this->assertTrue($newOffer == $dtoOffer, $dtoOffer::class.' не соответствуют');
+            
+            /* Offers Trans */
+            
+            $dtoOffer->getTrans()->map(function ($dtoOfferTrans) use ($newOffer)
+            {
+                /** @var NewEdit\Offers\Trans\OffersTransDTO $dtoOfferTrans */
+                $return = $newOffer->getTrans()->filter(function ($newOfferTrans) use ($dtoOfferTrans)
+                {
+                    return $newOfferTrans == $dtoOfferTrans;
+                });
+                
+                $newOfferTrans = $return->current();
+                
+                $this->assertEquals($newOfferTrans->getLocal(), $dtoOfferTrans->getLocal());
+                $this->assertEquals($newOfferTrans->getName(), $dtoOfferTrans->getName());
+                $this->assertEquals($newOfferTrans->getDescription(), $dtoOfferTrans->getDescription());
+                
+                $this->assertTrue($newOfferTrans == $dtoOfferTrans, $dtoOfferTrans::class.' не соответствуют');
+            });
+        });
+        
+        $this->assertInstanceOf(ArrayCollection::class, $dto->getSections());
+        $this->assertNotEmpty($dto->getSections());
+        
+        /* Section */
+        
+        $dto->getSections()->map(function ($dtoSection) use ($new)
+        {
+            
+            /** @var NewEdit\Section\SectionCollectionDTO $dtoSection */
+            $return = $new->getSections()->filter(function ($newSection) use ($dtoSection)
+            {
+                return $newSection == $dtoSection;
+            });
+            
+            $newSection = $return->current();
+            
+            $this->assertEquals($newSection->getSort(), $dtoSection->getSort());
+            $this->assertTrue($newSection == $dtoSection, $dtoSection::class.' не соответствуют');
+            
+            $this->assertInstanceOf(ArrayCollection::class, $dtoSection->getTrans());
+            $this->assertNotEmpty($dtoSection->getTrans());
+            
+            /* Section Trans */
+            $dtoSection->getTrans()->map(function ($dtoSectionTrans) use ($newSection)
+            {
+                /** @var NewEdit\Section\Trans\SectionTransDTO $dtoSectionTrans */
+                $return = $newSection->getTrans()->filter(function ($newSectionTrans) use ($dtoSectionTrans)
+                {
+                    return $newSectionTrans == $dtoSectionTrans;
+                });
+                
+                $newSectionTrans = $return->current();
+                
+                $this->assertEquals($newSectionTrans->getLocal(), $dtoSectionTrans->getLocal());
+                $this->assertEquals($newSectionTrans->getName(), $dtoSectionTrans->getName());
+                $this->assertEquals($newSectionTrans->getDescription(), $dtoSectionTrans->getDescription());
+                $this->assertTrue($newSectionTrans == $dtoSectionTrans, $dtoSectionTrans::class.' не соответствуют');
+            });
+            
+            $this->assertInstanceOf(ArrayCollection::class, $dtoSection->getFields());
+            $this->assertNotEmpty($dtoSection->getFields());
+            
+            /* Section Fields */
+            $dtoSection->getFields()->map(function ($dtoSectionField) use ($newSection)
+            {
+                /** @var NewEdit\Section\Fields\SectionFieldCollectionDTO $dtoSectionField */
+                $return = $newSection->getFields()->filter(function ($newSectionField) use ($dtoSectionField)
+                {
+                    return $newSectionField == $dtoSectionField;
+                });
+                
+                $newSectionField = $return->current();
+
+                $this->assertEquals($newSectionField->getSort(), $dtoSectionField->getSort());
+                $this->assertEquals($newSectionField->getType(), $dtoSectionField->getType());
+                $this->assertTrue($newSectionField == $dtoSectionField, $dtoSectionField::class.' не соответствуют');
+                
+                $this->assertInstanceOf(ArrayCollection::class, $dtoSectionField->getTrans());
+                $this->assertNotEmpty($dtoSectionField->getTrans());
+    
+                $dtoSectionField->getTrans()->map(function ($dtoSectionFieldTrans) use ($newSectionField)
+                {
+                    /** @var NewEdit\Section\Fields\Trans\SectionFieldTransDTO $dtoSectionFieldTrans */
+                    $return = $newSectionField->getTrans()->filter(function ($newSectionFieldTrans) use ($dtoSectionFieldTrans)
+                    {
+                        return $newSectionFieldTrans == $dtoSectionFieldTrans;
+                    });
+    
+                    $newSectionFieldTrans = $return->current();
+                    
+                    $this->assertEquals($newSectionFieldTrans->getLocal(), $dtoSectionFieldTrans->getLocal());
+                    $this->assertEquals($newSectionFieldTrans->getName(), $dtoSectionFieldTrans->getName());
+                    $this->assertEquals($newSectionFieldTrans->getDescription(), $dtoSectionFieldTrans->getDescription());
+                    $this->assertTrue($newSectionFieldTrans == $dtoSectionFieldTrans, $dtoSectionFieldTrans::class.' не соответствуют');
+                    
+                });
+
+            });
+            
+        });
+        
+    }
+    
+    public function getDTO() : NewEdit\Category\CategoryDTO
+    {
+        
+        $dto = new NewEdit\Category\CategoryDTO();
+        
+        $this->assertEquals(500, $dto->getSort()); /* Default 500 */
+        $dto->setSort(100);
+        $this->assertEquals(100, $dto->getSort());
+        
+        $this->assertNull($dto->getEvent()); /* Default NULL */
+        $dto->setId($CategoryEvent = new CategoryEvent());
+        $this->assertNotNull($dto->getEvent());
+        $this->assertEquals($CategoryEvent, $dto->getEvent());
+        
+        $dto->setId(null);
+        $this->assertNull($dto->getEvent());
+        
+        $this->assertNull($dto->getParent()); /* Default NULL */
+        $dto->setParent($ParentCategoryUid = new ParentCategoryUid(new CategoryUid()));
+        
+        $this->assertNotNull($dto->getParent());
+        $this->assertEquals($ParentCategoryUid, $dto->getParent());
+        
+        $dto->setParent(null);
+        $this->assertNull($dto->getParent());
+        
+        /* Trans */
+        /** @var NewEdit\Category\Trans\CategoryTransDTO $dtoTrans */
+        foreach($dto->getTrans() as $dtoTrans)
+        {
+            $dtoTrans->setName('Category Name '.$dtoTrans->getLocal()->getName());
+            $this->assertEquals('Category Name '.$dtoTrans->getLocal()->getName(), $dtoTrans->getName());
+            
+            $dtoTrans->setDescription('Category Description '.$dtoTrans->getLocal()->getName());
+            $this->assertEquals('Category Description '.$dtoTrans->getLocal()->getName(), $dtoTrans->getDescription());
+            
+            $this->assertContains($dtoTrans, $dto->getTrans());
+            $this->assertInstanceOf($dtoTrans::class, $dto->getTranClass());
+        }
+        
+        $this->assertEmpty(Locale::diffLocale($dto->getTrans()));
+        
+        /* Cover */
+        
+        $coverName = uniqid();
+        $dtoCover = new NewEdit\Cover\CoverDTO();
+        $dtoCover->setName($coverName);
+        $this->assertEquals($dtoCover->getName(), $coverName);
+        
+        $dtoCover->setExt('png');
+        $this->assertEquals('png', $dtoCover->getExt());
+        
+        $dtoCover->setCdn(true);
+        $this->assertTrue($dtoCover->isCdn());
+        
+        $dtoCover->setCdn(false);
+        $this->assertFalse($dtoCover->isCdn());
+        
+        $coverDir = new CategoryEvent();
+        $dtoCover->setDir($coverDir);
+        $this->assertEquals($dtoCover->getDir(), $coverDir);
+        
+        $dto->setCover($dtoCover);
+        
+        /* Info */
+        
+        $infoUrl = uniqid();
+        $dtoInfo = new NewEdit\Info\InfoDTO();
+        
+        $dtoInfo->setActive(true);
+        $this->assertTrue($dtoInfo->isActive());
+        
+        $dtoInfo->setActive(false);
+        $this->assertFalse($dtoInfo->isActive());
+        
+        $dtoInfo->setUrl($infoUrl);
+        $this->assertEquals($dtoInfo->getUrl(), $infoUrl);
+        
+        $dto->setInfo($dtoInfo);
+        
+        /* Landing */
+        
+        /* Trans */
+        /** @var NewEdit\Landing\LandingCollectionDTO $dtoLanding */
+        foreach($dto->getLandings() as $dtoLanding)
+        {
+            
+            $dtoLanding->setBottom('Landing Bottom '.$dtoLanding->getLocal()->getName());
+            $this->assertEquals('Landing Bottom '.$dtoLanding->getLocal()->getName(), $dtoLanding->getBottom());
+            
+            $dtoLanding->setHeader('Landing Header '.$dtoLanding->getLocal()->getName());
+            $this->assertEquals('Landing Header '.$dtoLanding->getLocal()->getName(), $dtoLanding->getHeader());
+            
+            $this->assertContains($dtoLanding, $dto->getLandings());
+            $this->assertInstanceOf($dtoLanding::class, $dto->getLandingClass());
+        }
+        
+        $this->assertEmpty(Locale::diffLocale($dto->getLandings()));
+        
+        /* Offers */
+        
+        $dtoOffer = new NewEdit\Offers\OffersCollectionDTO();
+        
+        $this->assertEquals(100, $dtoOffer->getSort()); /* Default 100 */
+        $dtoOffer->setSort(500);
+        $this->assertIsInt($dtoOffer->getSort());
+        $this->assertEquals(500, $dtoOffer->getSort());
+        
+        $dtoOffer->setImage(true);
+        $this->assertTrue($dtoOffer->isImage());
+        $dtoOffer->setImage(false);
+        $this->assertFalse($dtoOffer->isImage());
+        
+        $dtoOffer->setMultiple(true);
+        $this->assertTrue($dtoOffer->isMultiple());
+        $dtoOffer->setMultiple(false);
+        $this->assertFalse($dtoOffer->isMultiple());
+        
+        $dtoOffer->setPrice(true);
+        $this->assertTrue($dtoOffer->isPrice());
+        $dtoOffer->setPrice(false);
+        $this->assertFalse($dtoOffer->isPrice());
+        
+        $dtoOffer->setReference('Offer Reference');
+        $this->assertEquals('Offer Reference', $dtoOffer->getReference());
+        
+        /* Offers Trans */
+        
+        /** @var NewEdit\Offers\Trans\OffersTransDTO $dtoOfferTrans */
+        foreach($dtoOffer->getTrans() as $dtoOfferTrans)
+        {
+            $dtoOfferTrans->setName('Offer Name '.$dtoOfferTrans->getLocal()->getName());
+            $this->assertEquals('Offer Name '.$dtoOfferTrans->getLocal()->getName(), $dtoOfferTrans->getName());
+            
+            $dtoOfferTrans->setDescription('Offer Description '.$dtoOfferTrans->getLocal()->getName());
+            $this->assertEquals(
+              'Offer Description '.$dtoOfferTrans->getLocal()->getName(),
+              $dtoOfferTrans->getDescription());
+            
+            $this->assertContains($dtoOfferTrans, $dtoOffer->getTrans());
+            $this->assertInstanceOf($dtoOfferTrans::class, $dtoOffer->getTranClass());
+        }
+        
+        $this->assertEmpty(Locale::diffLocale($dto->getTrans()));
+        
+        $dto->addOffer($dtoOffer);
+        $this->assertContains($dtoOffer, $dto->getOffers());
+        $this->assertInstanceOf($dtoOffer::class, $dto->getOfferClass());
+        
+        /* Section */
+        $dtoSection = new NewEdit\Section\SectionCollectionDTO();
+        
+        $this->assertEquals(100, $dtoSection->getSort()); /* Default 100 */
+        $dtoSection->setSort(500);
+        $this->assertIsInt($dtoSection->getSort());
+        $this->assertEquals(500, $dtoSection->getSort());
+        
+        $dto->addSection($dtoSection);
+        
+        /* Section Trans */
+        
+        /** @var NewEdit\Section\Trans\SectionTransDTO $dtoSectionTrans */
+        foreach($dtoSection->getTrans() as $dtoSectionTrans)
+        {
+            $dtoSectionTrans->setName('Section Name '.$dtoSectionTrans->getLocal()->getName());
+            $this->assertEquals('Section Name '.$dtoSectionTrans->getLocal()->getName(), $dtoSectionTrans->getName());
+            
+            $dtoSectionTrans->setDescription('Section Description '.$dtoSectionTrans->getLocal()->getName());
+            $this->assertEquals(
+              'Section Description '.$dtoSectionTrans->getLocal()->getName(),
+              $dtoSectionTrans->getDescription());
+            
+            $this->assertContains($dtoSectionTrans, $dtoSection->getTrans());
+            $this->assertInstanceOf($dtoSectionTrans::class, $dtoSection->getTranClass());
+        }
+        
+        $this->assertEmpty(Locale::diffLocale($dtoSection->getTrans()));
+        
+        /* Section Field */
+        $dtoSectionField = new NewEdit\Section\Fields\SectionFieldCollectionDTO();
+        
+        $this->assertEquals(100, $dtoSectionField->getSort()); /* Default 100 */
+        $dtoSectionField->setSort(500);
+        $this->assertIsInt($dtoSectionField->getSort());
+        $this->assertEquals(500, $dtoSectionField->getSort());
+        
+        $this->assertTrue($dtoSectionField->isPublic()); /* Default TRUE */
+        $dtoSectionField->setPublic(false);
+        $this->assertFalse($dtoSectionField->isPublic());
+        $dtoSectionField->setPublic(true);
+        $this->assertTrue($dtoSectionField->isPublic());
+        
+        $this->assertTrue($dtoSectionField->isRequired()); /* Default TRUE */
+        $dtoSectionField->setRequired(false);
+        $this->assertFalse($dtoSectionField->isRequired());
+        $dtoSectionField->setRequired(true);
+        $this->assertTrue($dtoSectionField->isRequired());
+        
+        $InputField = new InputField(FieldEnum::INPUT);
+        $dtoSectionField->setType($InputField);
+        $this->assertEquals($dtoSectionField->getType(), $InputField);
+        
+        $dtoSection->addField($dtoSectionField);
+        $this->assertContains($dtoSectionField, $dtoSection->getFields());
+        $this->assertInstanceOf($dtoSectionField::class, $dtoSection->getFieldClass());
+        
+        /* Section Field Trans */
+        
+        /** @var NewEdit\Section\Fields\Trans\SectionFieldTransDTO $dtoSectionFieldTrans */
+        foreach($dtoSectionField->getTrans() as $dtoSectionFieldTrans)
+        {
+            $dtoSectionFieldTrans->setName('Section Field Name '.$dtoSectionFieldTrans->getLocal()->getName());
+            $this->assertEquals(
+              'Section Field Name '.$dtoSectionFieldTrans->getLocal()->getName(),
+              $dtoSectionFieldTrans->getName());
+            
+            $dtoSectionFieldTrans->setDescription(
+              'Section Field Description '.$dtoSectionFieldTrans->getLocal()->getName());
+            $this->assertEquals(
+              'Section Field Description '.$dtoSectionFieldTrans->getLocal()->getName(),
+              $dtoSectionFieldTrans->getDescription());
+            
+            $this->assertContains($dtoSectionFieldTrans, $dtoSectionField->getTrans());
+            $this->assertInstanceOf($dtoSectionFieldTrans::class, $dtoSectionField->getTranClass());
+        }
+        
+        $this->assertEmpty(Locale::diffLocale($dtoSectionField->getTrans()));
+        
+        /* Seo */
+        
+        /** @var NewEdit\Seo\SeoCollectionDTO $dtoSeo */
+        foreach($dto->getSeo() as $dtoSeo)
+        {
+            $dtoSeo->setDescription('Category Seo Description '.$dtoSeo->getLocal()->getValue());
+            $this->assertEquals('Category Seo Description '.$dtoSeo->getLocal()->getValue(), $dtoSeo->getDescription());
+            
+            $dtoSeo->setKeywords('Category Seo Keywords '.$dtoSeo->getLocal()->getValue());
+            $this->assertEquals('Category Seo Keywords '.$dtoSeo->getLocal()->getValue(), $dtoSeo->getKeywords());
+            
+            $dtoSeo->setTitle('Category Seo Title '.$dtoSeo->getLocal()->getValue());
+            $this->assertEquals('Category Seo Title '.$dtoSeo->getLocal()->getValue(), $dtoSeo->getTitle());
+            
+            $dto->addSeo($dtoSeo);
+            $this->assertContains($dtoSeo, $dto->getSeo());
+            $this->assertInstanceOf($dtoSeo::class, $dto->getSeoClass());
+        }
+        
+        $this->assertEmpty(Locale::diffLocale($dto->getSeo()));
+        
+        return $dto;
+    }
+    
+}

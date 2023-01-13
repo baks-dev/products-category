@@ -1,0 +1,34 @@
+{% trans_default_domain 'products.category' %}
+
+<nav>
+	<div class="nav nav-tabs" id="nav-{{ offer.trans.vars.id }}" role="tablist">
+		{% for trans in offer.trans %}
+			<button class="nav-link{{ app.request.locale == trans.vars.value.local? ' active' : '' }}"
+					id="nav-{{ trans.vars.id }}-tab" data-bs-toggle="tab"
+					data-bs-target="#nav-{{ trans.vars.id }}"
+					type="button" role="tab" aria-controls="nav-{{ trans.vars.id }}" aria-selected="true">
+				{{ trans.vars.value.local|trans({}, 'messages') }}
+			</button>
+		{% endfor %}
+	</div>
+</nav>
+
+<div class="tab-content mt-5" id="nav-{{ offer.trans.vars.id }}Content">
+	{% for trans in offer.trans %}
+		<div class="tab-pane fade{{ app.request.locale == trans.vars.value.local ? ' show active' : '' }}"
+			 id="nav-{{ trans.vars.id }}" role="tabpanel"
+			 aria-labelledby="nav-{{ trans.vars.id }}-tab">
+
+			{# Локаль #}
+			{{ form_row(trans.local) }}
+
+			{# Название торгового предложения #}
+			{{ form_row(trans.name, { label : 'admin.product.offers.form.name'|trans } ) }}
+
+			{# Краткое описание #}
+			{{ form_row(trans.description, {
+				label: 'admin.product.offers.form.desc'|trans
+			}) }}
+		</div>
+	{% endfor %}
+</div>
