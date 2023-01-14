@@ -20,8 +20,8 @@ namespace App\Module\Products\Category\Entity\Modify;
 
 
 use App\Module\Products\Category\Entity\Event\Event;
-use App\Module\User\User\Entity\User;
-use App\Module\User\User\Type\Id\UserUid;
+use App\Module\Users\User\Entity\User;
+use App\Module\Users\User\Type\Id\UserUid;
 use App\System\Services\EntityEvent\EntityEvent;
 use App\System\Type\Ip\IpAddress;
 use App\System\Type\Modify\ModifyAction;

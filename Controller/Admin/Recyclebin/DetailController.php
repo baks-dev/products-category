@@ -19,7 +19,7 @@
 namespace App\Module\Products\Category\Controller\Admin\Recyclebin;
 
 use App\Module\Product\Repository\Category\Info\InfoRepository;
-use App\Module\User\Repository\User\UserProfile;
+use App\Module\Users\Repository\User\UserProfile;
 use App\Module\Product\Entity\Category\Event;
 use App\Module\Product\Handler\Admin\Category\NewEdit\CategoryForm;
 use App\Module\Product\Handler\Admin\Category\Restore\Handler;

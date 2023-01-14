@@ -8,8 +8,8 @@
 
 Модуль должен быть расположен в директории *src/Module/Products/Category*
 
-для автоматической установки в указанную директорию в коревом файле проекта composer.json необходимо указать следующую
-зависимость и затем выполнить комманду установки:
+для автоматической установки в указанную директорию в коревом файле проекта composer.json необходимо указать следующие
+зависимости и затем выполнить комманду установки:
 
 ![json](https://img.shields.io/badge/Json-green)
 
@@ -17,11 +17,12 @@
 {
     "require": {
         "oomphinc/composer-installers-extender": "*"
-    }
-    ,
+    },
+    
     "require-dev": {
         "roave/security-advisories": "dev-latest"
     },
+    
     "config": {
         "allow-plugins": {
             "oomphinc/composer-installers-extender": true,
@@ -46,8 +47,7 @@ $ composer require baks-dev/products-category
 
 ## Журнал изменений ![Changelog](https://img.shields.io/badge/changelog-yellow)
 
-Посмотри пожалуйста [CHANGELOG](CHANGELOG.md) для получения дополнительной информации о том, что изменилось за последнее
-время.
+О том, что изменилось за последнее время, обратитесь к [CHANGELOG](CHANGELOG.md) за дополнительной информацией.
 
 ## Лицензия ![License](https://img.shields.io/badge/MIT-green)
 

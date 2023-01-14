@@ -20,7 +20,7 @@ namespace App\Module\Products\Category\Controller\Admin\History;
 
 use App\Module\Product\Repository\Category\Info\InfoRepository;
 use App\System\Controller\AbstractController;
-use App\Module\User\Repository\User\UserProfile;
+use App\Module\Users\Repository\User\UserProfile;
 use App\Module\Product\Entity\Category\Event;
 use App\Module\Product\Handler\Admin\Category\Detail\Handler;
 use App\Module\Product\Handler\Admin\Category\NewEdit\CategoryForm;

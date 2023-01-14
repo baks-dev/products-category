@@ -22,10 +22,10 @@ namespace App\Module\Products\Category\Repository\CategoryOffersForm;
 //use App\Module\Product\Entity\Category;
 //use App\Module\Product\Entity\Category\Offers;
 //use App\Module\Product\Type\Category\Id\CategoryUid;
-//use App\Module\UserLevel\Type\Level\Event\LevelEvent;
-//use App\Module\UserProfile\Entity\Profile;
-//use App\Module\UserProfile\Type\Profile\Id\ProfileUid;
-//use App\Module\UserProfile\Type\Profile\Id\ProfileUidType;
+//use App\Module\UsersLevel\Type\Level\Event\LevelEvent;
+//use App\Module\UsersProfile\Entity\Profile;
+//use App\Module\UsersProfile\Type\Profile\Id\ProfileUid;
+//use App\Module\UsersProfile\Type\Profile\Id\ProfileUidType;
 //use App\System\Type\Locale\Locales;
 
 use App\Module\Products\Category\Entity;
