@@ -16,7 +16,7 @@
  *
  */
 
-namespace App\Module\Products\Category\UseCase\Admin\NewEdit\Info;
+namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Info;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;

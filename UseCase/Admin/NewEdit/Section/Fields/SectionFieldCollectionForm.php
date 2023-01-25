@@ -16,9 +16,9 @@
  *
  */
 
-namespace App\Module\Products\Category\UseCase\Admin\NewEdit\Section\Fields;
+namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\Fields;
 
-use App\System\Type\Field\InputField;
+use BaksDev\Core\Type\Field\InputField;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;

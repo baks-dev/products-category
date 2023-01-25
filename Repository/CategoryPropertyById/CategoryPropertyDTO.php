@@ -16,12 +16,12 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\CategoryPropertyById;
+namespace BaksDev\Products\Category\Repository\CategoryPropertyById;
 
 
-use App\Module\Products\Category\Type\Section\Field\Id\FieldUid;
-use App\Module\Products\Category\Type\Section\Id\SectionUid;
-use App\System\Type\Field\InputField;
+use BaksDev\Products\Category\Type\Section\Field\Id\FieldUid;
+use BaksDev\Products\Category\Type\Section\Id\SectionUid;
+use BaksDev\Core\Type\Field\InputField;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
 

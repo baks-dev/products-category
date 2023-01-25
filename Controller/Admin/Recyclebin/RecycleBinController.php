@@ -16,13 +16,14 @@
 *
 */
 
-namespace App\Module\Products\Category\Controller\Admin\Recyclebin;
+namespace BaksDev\Products\Category\Controller\Admin\Recyclebin;
 
-use App\Module\Products\Category\Repository\AllRecyclebinCategory\AllRecyclebinCategoryInterface;
-use App\System\Controller\AbstractController;
-use App\System\Handler\Search\SearchDTO;
-use App\System\Handler\Search\SearchForm;
-use App\System\Helper\Paginator;
+use BaksDev\Core\Services\Security\RoleSecurity;
+use BaksDev\Products\Category\Repository\AllRecyclebinCategory\AllRecyclebinCategoryInterface;
+use BaksDev\Core\Controller\AbstractController;
+use BaksDev\Core\Form\Search\SearchDTO;
+use BaksDev\Core\Form\Search\SearchForm;
+use BaksDev\Core\Helper\Paginator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +31,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted(new Expression('"ROLE_ADMIN" in role_names or "ROLE_PRODUCT_CATEGORY_RECYCLEBIN" in role_names'))]
+
+#[RoleSecurity(['ROLE_ADMIN', 'ROLE_PRODUCT_CATEGORY_RECYCLEBIN'])]
 final class RecycleBinController extends AbstractController
 {
 

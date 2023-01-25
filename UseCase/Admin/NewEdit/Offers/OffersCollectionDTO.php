@@ -16,13 +16,13 @@
  *
  */
 
-namespace App\Module\Products\Category\UseCase\Admin\NewEdit\Offers;
+namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers;
 
 
-use App\Module\Products\Category\Entity\Offers\OffersInterface;
-use App\Module\Products\Category\Entity\Offers\Trans\TransInterface;
-use App\Module\Products\Category\Type\Offers\Id\OffersUid;
-use App\Module\Products\Category\UseCase\Admin\NewEdit\Offers\Trans\OffersTransDTO;
+use BaksDev\Products\Category\Entity\Offers\OffersInterface;
+use BaksDev\Products\Category\Entity\Offers\Trans\TransInterface;
+use BaksDev\Products\Category\Type\Offers\Id\OffersUid;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\Trans\OffersTransDTO;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;

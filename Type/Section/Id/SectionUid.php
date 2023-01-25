@@ -16,7 +16,7 @@
  *
  */
 
-namespace App\Module\Products\Category\Type\Section\Id;
+namespace BaksDev\Products\Category\Type\Section\Id;
 
 use Symfony\Component\Uid\AbstractUid;
 use Symfony\Component\Uid\Uuid;

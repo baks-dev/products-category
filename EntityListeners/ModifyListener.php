@@ -16,10 +16,10 @@
 *
 */
 
-namespace App\Module\Products\Category\EntityListeners;
+namespace BaksDev\Products\Category\EntityListeners;
 
-use App\Module\Products\Category\Entity\Modify\Modify;
-use App\System\Type\Ip\IpAddress;
+use BaksDev\Products\Category\Entity\Modify\ProductCategoryModify;
+use BaksDev\Core\Type\Ip\IpAddress;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -38,7 +38,7 @@ final class ModifyListener
         $this->token = $token;
     }
     
-    public function prePersist(Modify $data, LifecycleEventArgs $event) : void
+    public function prePersist(ProductCategoryModify $data, LifecycleEventArgs $event) : void
     {
         $token = $this->token->getToken();
         

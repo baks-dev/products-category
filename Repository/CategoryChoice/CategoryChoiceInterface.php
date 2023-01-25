@@ -16,9 +16,9 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\CategoryChoice;
+namespace BaksDev\Products\Category\Repository\CategoryChoice;
 
-use App\Module\Products\Category\Type\Id\CategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryUid;
 
 interface CategoryChoiceInterface
 {

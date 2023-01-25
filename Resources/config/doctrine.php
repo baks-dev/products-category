@@ -2,24 +2,24 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use App\Module\Products\Category\Type\Event\CategoryEvent;
-use App\Module\Products\Category\Type\Event\CategoryEventConverter;
-use App\Module\Products\Category\Type\Event\CategoryEventType;
-use App\Module\Products\Category\Type\Id\CategoryUid;
-use App\Module\Products\Category\Type\Id\CategoryUidConverter;
-use App\Module\Products\Category\Type\Id\CategoryUidType;
-use App\Module\Products\Category\Type\Landing\Id\LandingUid;
-use App\Module\Products\Category\Type\Landing\Id\LandingUidType;
-use App\Module\Products\Category\Type\Offers\Id\OffersUid;
-use App\Module\Products\Category\Type\Offers\Id\OffersUidType;
-use App\Module\Products\Category\Type\Parent\ParentCategoryUid;
-use App\Module\Products\Category\Type\Parent\ParentCategoryUidType;
-use App\Module\Products\Category\Type\Section\Field\Id\FieldUid;
-use App\Module\Products\Category\Type\Section\Field\Id\FieldUidType;
-use App\Module\Products\Category\Type\Section\Id\SectionUid;
-use App\Module\Products\Category\Type\Section\Id\SectionUidType;
-use App\Module\Products\Category\Type\Settings\CategorySettings;
-use App\Module\Products\Category\Type\Settings\CategorySettingsType;
+use BaksDev\Products\Category\Type\Event\CategoryEvent;
+use BaksDev\Products\Category\Type\Event\CategoryEventConverter;
+use BaksDev\Products\Category\Type\Event\CategoryEventType;
+use BaksDev\Products\Category\Type\Id\CategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryUidConverter;
+use BaksDev\Products\Category\Type\Id\CategoryUidType;
+use BaksDev\Products\Category\Type\Landing\Id\LandingUid;
+use BaksDev\Products\Category\Type\Landing\Id\LandingUidType;
+use BaksDev\Products\Category\Type\Offers\Id\OffersUid;
+use BaksDev\Products\Category\Type\Offers\Id\OffersUidType;
+use BaksDev\Products\Category\Type\Parent\ParentCategoryUid;
+use BaksDev\Products\Category\Type\Parent\ParentCategoryUidType;
+use BaksDev\Products\Category\Type\Section\Field\Id\FieldUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\FieldUidType;
+use BaksDev\Products\Category\Type\Section\Id\SectionUid;
+use BaksDev\Products\Category\Type\Section\Id\SectionUidType;
+use BaksDev\Products\Category\Type\Settings\CategorySettings;
+use BaksDev\Products\Category\Type\Settings\CategorySettingsType;
 
 use Symfony\Config\DoctrineConfig;
 
@@ -89,7 +89,7 @@ return static function (ContainerConfigurator $container, DoctrineConfig $doctri
       ->type('attribute')
       ->dir('%kernel.project_dir%/src/Module/Products/Category/Entity')
       ->isBundle(false)
-      ->prefix('App\Module\Products\Category\Entity')
+      ->prefix('BaksDev\Products\Category\Entity')
       ->alias('ProductCategory')
     ;
 };

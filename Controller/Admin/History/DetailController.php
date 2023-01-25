@@ -16,15 +16,16 @@
 *
 */
 
-namespace App\Module\Products\Category\Controller\Admin\History;
+namespace BaksDev\Products\Category\Controller\Admin\History;
 
 use App\Module\Product\Repository\Category\Info\InfoRepository;
-use App\System\Controller\AbstractController;
-use App\Module\Users\Repository\User\UserProfile;
+use BaksDev\Core\Controller\AbstractController;
+use BaksDev\Users\Repository\User\UserProfile;
 use App\Module\Product\Entity\Category\Event;
 use App\Module\Product\Handler\Admin\Category\Detail\Handler;
 use App\Module\Product\Handler\Admin\Category\NewEdit\CategoryForm;
 
+use BaksDev\Core\Services\Security\RoleSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,7 +35,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[IsGranted(new Expression('"ROLE_ADMIN" in role_names or "ROLE_PRODUCT_CATEGORY_HISTORY" in role_names'))]
+#[RoleSecurity(['ROLE_ADMIN', 'ROLE_PRODUCT_CATEGORY_HISTORY'])]
 final class DetailController extends AbstractController
 {
     #[Route('/admin/product/category/history/detail/{id}', name: 'admin.category.history.detail', methods: [

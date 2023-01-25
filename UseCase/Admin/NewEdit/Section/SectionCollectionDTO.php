@@ -16,14 +16,14 @@
  *
  */
 
-namespace App\Module\Products\Category\UseCase\Admin\NewEdit\Section;
+namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Section;
 
 
-use App\Module\Products\Category\Entity\Section\SectionInterface;
-use App\Module\Products\Category\Type\Section\Id\SectionUid;
-use App\Module\Products\Category\UseCase\Admin\NewEdit\Section\Fields\SectionFieldCollectionDTO;
-use App\Module\Products\Category\UseCase\Admin\NewEdit\Section\Trans\SectionTransDTO;
-use App\System\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity\Section\SectionInterface;
+use BaksDev\Products\Category\Type\Section\Id\SectionUid;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\Fields\SectionFieldCollectionDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\Trans\SectionTransDTO;
+use BaksDev\Core\Type\Locale\Locale;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 

@@ -16,7 +16,7 @@
  *
  */
 
-namespace App\Module\Products\Category\UseCase\Admin\NewEdit\Landing;
+namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Landing;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;

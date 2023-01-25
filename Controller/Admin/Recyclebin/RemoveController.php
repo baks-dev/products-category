@@ -16,19 +16,18 @@
 *
 */
 
-namespace App\Module\Products\Category\Controller\Admin\Recyclebin;
+namespace BaksDev\Products\Category\Controller\Admin\Recyclebin;
 
-use App\System\Controller\AbstractController;
+use BaksDev\Core\Controller\AbstractController;
+use BaksDev\Core\Services\Security\RoleSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\System\Type\Locale\Locale;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+use BaksDev\Core\Type\Locale\Locale;
 
-
-#[IsGranted(new Expression('"ROLE_ADMIN" in role_names or "ROLE_PRODUCT_CATEGORY_REMOVE" in role_names'))]
+#[RoleSecurity(['ROLE_ADMIN', 'ROLE_PRODUCT_CATEGORY_REMOVE'])]
 final class RemoveController extends AbstractController
 {
     #[Route('/admin/product/category/recyclebin/remove/{id}', name: 'admin.category.recyclebin.remove', methods: ['GET', 'POST'])]

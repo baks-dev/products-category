@@ -16,13 +16,13 @@
  *
  */
 
-namespace App\Module\Products\Category\UseCase\Admin\NewEdit\Landing;
+namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Landing;
 
 
-use App\Module\Products\Category\Entity\Event\Event;
-use App\Module\Products\Category\Entity\Landing\LandingInterface;
-use App\Module\Products\Category\Type\Event\CategoryEvent;
-use App\System\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity\Event\Event;
+use BaksDev\Products\Category\Entity\Landing\LandingInterface;
+use BaksDev\Products\Category\Type\Event\CategoryEvent;
+use BaksDev\Core\Type\Locale\Locale;
 
 final class LandingCollectionDTO implements LandingInterface
 {

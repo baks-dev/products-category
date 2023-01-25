@@ -16,11 +16,11 @@
  *
  */
 
-namespace App\Module\Products\Category\UseCase\Admin\Recyclebin\Restore\Modify;
+namespace BaksDev\Products\Category\UseCase\Admin\Recyclebin\Restore\Modify;
 
-use App\Module\Products\Category\Entity\Modify\ModifyInterface;
-use App\System\Type\Modify\ModifyAction;
-use App\System\Type\Modify\ModifyActionEnum;
+use BaksDev\Products\Category\Entity\Modify\ModifyInterface;
+use BaksDev\Core\Type\Modify\ModifyAction;
+use BaksDev\Core\Type\Modify\ModifyActionEnum;
 
 final class ModifyDTO implements ModifyInterface
 {

@@ -16,9 +16,9 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\AllRecyclebinCategory;
+namespace BaksDev\Products\Category\Repository\AllRecyclebinCategory;
 
-use App\System\Handler\Search\SearchDTO;
+use BaksDev\Core\Form\Search\SearchDTO;
 
 interface AllRecyclebinCategoryInterface
 {

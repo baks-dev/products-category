@@ -16,12 +16,12 @@
  *
  */
 
-namespace App\Module\Products\Category\UseCase\Admin\NewEdit\Category\Trans;
+namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Category\Trans;
 
-use App\Module\Products\Category\Entity\Event\Event;
-use App\Module\Products\Category\Entity\Trans\TransInterface;
-use App\Module\Products\Category\Type\Event\CategoryEvent;
-use App\System\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity\Event\Event;
+use BaksDev\Products\Category\Entity\Trans\TransInterface;
+use BaksDev\Products\Category\Type\Event\CategoryEvent;
+use BaksDev\Core\Type\Locale\Locale;
 use Symfony\Component\Validator\Constraints as Assert;
 
 

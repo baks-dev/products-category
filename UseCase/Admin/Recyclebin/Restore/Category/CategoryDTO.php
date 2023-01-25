@@ -16,13 +16,13 @@
  *
  */
 
-namespace App\Module\Products\Category\UseCase\Admin\Recyclebin\Restore\Category;
+namespace BaksDev\Products\Category\UseCase\Admin\Recyclebin\Restore\Category;
 
-use App\Module\Products\Category\Entity\Event\EventInterface;
-use App\Module\Products\Category\Type\Event\CategoryEvent;
-use App\Module\Products\Category\UseCase\Admin\Recyclebin\Restore\Modify\ModifyDTO;
+use BaksDev\Products\Category\Entity\Event\ProductCategoryEventInterface;
+use BaksDev\Products\Category\Type\Event\CategoryEvent;
+use BaksDev\Products\Category\UseCase\Admin\Recyclebin\Restore\Modify\ModifyDTO;
 
-final class CategoryDTO implements EventInterface
+final class CategoryDTO implements ProductCategoryEventInterface
 {
     /**
      * Идентификатор события

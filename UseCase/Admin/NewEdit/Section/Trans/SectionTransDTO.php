@@ -16,13 +16,13 @@
  *
  */
 
-namespace App\Module\Products\Category\UseCase\Admin\NewEdit\Section\Trans;
+namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\Trans;
 
 
-use App\Module\Products\Category\Entity\Section\Section;
-use App\Module\Products\Category\Entity\Section\Trans\TransInterface;
-use App\Module\Products\Category\Type\Section\Id\SectionUid;
-use App\System\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity\Section\Section;
+use BaksDev\Products\Category\Entity\Section\Trans\TransInterface;
+use BaksDev\Products\Category\Type\Section\Id\SectionUid;
+use BaksDev\Core\Type\Locale\Locale;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class SectionTransDTO implements TransInterface

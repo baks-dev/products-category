@@ -16,13 +16,13 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\ParentCategoryChoiceForm;
+namespace BaksDev\Products\Category\Repository\ParentCategoryChoiceForm;
 
 
-use App\Module\Products\Category\Entity as EntityCategory;
-use App\Module\Products\Category\Type\Id\CategoryUid;
-use App\Module\Products\Category\Type\Parent\ParentCategoryUid;
-use App\System\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity as EntityCategory;
+use BaksDev\Products\Category\Type\Id\CategoryUid;
+use BaksDev\Products\Category\Type\Parent\ParentCategoryUid;
+use BaksDev\Core\Type\Locale\Locale;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 

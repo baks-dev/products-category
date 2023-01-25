@@ -16,7 +16,7 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\PropertyFieldsByCategoryChoiceForm;
+namespace BaksDev\Products\Category\Repository\PropertyFieldsByCategoryChoiceForm;
 
 interface PropertyFieldsByCategoryChoiceFormInterface
 {

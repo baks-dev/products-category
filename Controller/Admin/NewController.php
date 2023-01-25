@@ -16,15 +16,16 @@
  *
  */
 
-namespace App\Module\Products\Category\Controller\Admin;
+namespace BaksDev\Products\Category\Controller\Admin;
 
-use App\Module\Products\Category\Entity as CategoryEntity;
-use App\Module\Products\Category\Type\Event\CategoryEvent;
-use App\Module\Products\Category\Type\Parent\ParentCategoryUid;
-use App\Module\Products\Category\UseCase\Admin\NewEdit\Category\CategoryDTO;
-use App\Module\Products\Category\UseCase\Admin\NewEdit\Category\CategoryForm;
-use App\Module\Products\Category\UseCase\CategoryAggregate;
-use App\System\Controller\AbstractController;
+use BaksDev\Core\Services\Security\RoleSecurity;
+use BaksDev\Products\Category\Entity as CategoryEntity;
+use BaksDev\Products\Category\Type\Event\CategoryEvent;
+use BaksDev\Products\Category\Type\Parent\ParentCategoryUid;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Category\CategoryDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Category\CategoryForm;
+use BaksDev\Products\Category\UseCase\CategoryAggregate;
+use BaksDev\Core\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -35,7 +36,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted(new Expression('"ROLE_ADMIN" in role_names or "ROLE_PRODUCT_CATEGORY_NEW" in role_names'))]
+#[RoleSecurity(['ROLE_ADMIN', 'ROLE_PRODUCT_CATEGORY_NEW'])]
 final class NewController extends AbstractController
 {
 	#[Route('/admin/product/category/new/{cat}/{id}', name: 'admin.category.newedit.new', defaults: ['cat' => null, "id" => null], methods: ['GET', 'POST'])]

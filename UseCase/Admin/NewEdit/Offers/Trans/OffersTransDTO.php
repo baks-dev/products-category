@@ -16,14 +16,14 @@
  *
  */
 
-namespace App\Module\Products\Category\UseCase\Admin\NewEdit\Offers\Trans;
+namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\Trans;
 
 
-use App\Module\Products\Category\Entity\Offers\Offers;
-use App\Module\Products\Category\Entity\Offers\Trans\TransInterface;
-use App\Module\Products\Category\Entity\Section\Field\Field;
-use App\Module\Products\Category\Type\Offers\Id\OffersUid;
-use App\System\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity\Offers\Offers;
+use BaksDev\Products\Category\Entity\Offers\Trans\TransInterface;
+use BaksDev\Products\Category\Entity\Section\Field\Field;
+use BaksDev\Products\Category\Type\Offers\Id\OffersUid;
+use BaksDev\Core\Type\Locale\Locale;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class OffersTransDTO implements TransInterface

@@ -16,10 +16,10 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\CategoryParentForm;
+namespace BaksDev\Products\Category\Repository\CategoryParentForm;
 
 
-use App\Module\Products\Category\Type\Parent\ParentCategoryUid;
+use BaksDev\Products\Category\Type\Parent\ParentCategoryUid;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
 

@@ -16,22 +16,22 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\CategoryOffersForm;
+namespace BaksDev\Products\Category\Repository\CategoryOffersForm;
 
 //use App\Module\Delivery\Entity\Delivery;
 //use App\Module\Product\Entity\Category;
 //use App\Module\Product\Entity\Category\Offers;
 //use App\Module\Product\Type\Category\Id\CategoryUid;
-//use App\Module\UsersLevel\Type\Level\Event\LevelEvent;
-//use App\Module\UsersProfile\Entity\Profile;
-//use App\Module\UsersProfile\Type\Profile\Id\ProfileUid;
-//use App\Module\UsersProfile\Type\Profile\Id\ProfileUidType;
-//use App\System\Type\Locale\Locales;
+//use BaksDev\UsersLevel\Type\Level\Event\LevelEvent;
+//use BaksDev\UsersProfile\Entity\Profile;
+//use BaksDev\UsersProfile\Type\Profile\Id\ProfileUid;
+//use BaksDev\UsersProfile\Type\Profile\Id\ProfileUidType;
+//use BaksDev\Core\Type\Locale\Locales;
 
-use App\Module\Products\Category\Entity;
-use App\Module\Products\Category\Type\Id\CategoryUid;
-//use App\Module\Products\Category\Type\Offers\Id\OffersUid;
-use App\System\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity;
+use BaksDev\Products\Category\Type\Id\CategoryUid;
+//use BaksDev\Products\Category\Type\Offers\Id\OffersUid;
+use BaksDev\Core\Type\Locale\Locale;
 //use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;

@@ -16,13 +16,13 @@
  *
  */
 
-namespace App\Module\Products\Category\UseCase;
+namespace BaksDev\Products\Category\UseCase;
 
 use App\Module\Files\Res\Upload\Image\ImageUploadInterface;
-use App\Module\Products\Category\Entity as EntityCategory;
-use App\Module\Products\Category\Entity\Event\EventInterface;
-use App\Module\Products\Category\UseCase\Admin\NewEdit\Cover\CoverDTO;
-use App\System\Type\Modify\ModifyActionEnum;
+use BaksDev\Products\Category\Entity as EntityCategory;
+use BaksDev\Products\Category\Entity\Event\ProductCategoryEventInterface;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Cover\ProductCategoryCoverDTO;
+use BaksDev\Core\Type\Modify\ModifyActionEnum;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -42,7 +42,7 @@ final class CategoryAggregate
     }
     
     public function handle(
-      EventInterface $command,
+      ProductCategoryEventInterface $command,
       ?UploadedFile $cover = null
     ) : bool|string
     {
@@ -71,7 +71,7 @@ final class CategoryAggregate
         /* Загрузка файла изображения */
         if($cover !== null)
         {
-            /** @var CoverDTO $Avatar */
+            /** @var ProductCategoryCoverDTO $Avatar */
             $Cover = $command->getCover();
             
             if(!empty($Cover?->file))

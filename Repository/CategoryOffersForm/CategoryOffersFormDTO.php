@@ -16,9 +16,9 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\CategoryOffersForm;
+namespace BaksDev\Products\Category\Repository\CategoryOffersForm;
 
-use App\Module\Products\Category\Type\Offers\Id\OffersUid;
+use BaksDev\Products\Category\Type\Offers\Id\OffersUid;
 
 final class CategoryOffersFormDTO
 {

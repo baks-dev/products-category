@@ -16,17 +16,17 @@
 *
 */
 
-namespace App\Module\Products\Category\Repository\AllRecyclebinCategory;
+namespace BaksDev\Products\Category\Repository\AllRecyclebinCategory;
 
-use App\System\Handler\Search\SearchDTO;
-use App\System\Helper\Switcher\Switcher;
-use App\System\Type\Locale\Locale;
-use App\System\Type\Modify\ModifyAction;
-use App\System\Type\Modify\ModifyActionEnum;
+use BaksDev\Core\Form\Search\SearchDTO;
+use BaksDev\Core\Helper\Switcher\Switcher;
+use BaksDev\Core\Type\Locale\Locale;
+use BaksDev\Core\Type\Modify\ModifyAction;
+use BaksDev\Core\Type\Modify\ModifyActionEnum;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use App\Module\Products\Category\Entity as EntityCategory;
+use BaksDev\Products\Category\Entity as EntityCategory;
 
 final class AllRecyclebinCategoryQuery implements AllRecyclebinCategoryInterface
 {

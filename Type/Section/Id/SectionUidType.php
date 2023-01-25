@@ -16,9 +16,9 @@
  *
  */
 
-namespace App\Module\Products\Category\Type\Section\Id;
+namespace BaksDev\Products\Category\Type\Section\Id;
 
-use App\System\Type\UidType\UidType;
+use BaksDev\Core\Type\UidType\UidType;
 
 final class SectionUidType extends UidType
 {

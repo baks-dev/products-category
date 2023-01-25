@@ -16,18 +16,16 @@
 *
 */
 
-namespace App\Module\Products\Category\Controller\Admin\Recyclebin;
+namespace BaksDev\Products\Category\Controller\Admin\Recyclebin;
 
-use App\System\Controller\AbstractController;
+use BaksDev\Core\Controller\AbstractController;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\ExpressionLanguage\Expression;
+use BaksDev\Core\Services\Security\RoleSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted(new Expression('"ROLE_ADMIN" in role_names or "ROLE_PRODUCT_CATEGORY_REMOVE" in role_names'))]
+#[RoleSecurity(['ROLE_ADMIN', 'ROLE_PRODUCT_CATEGORY_REMOVE'])]
 final class TruncateController extends AbstractController
 {
     #[Route('/admin/product/category/recyclebin/truncate', name: 'admin.category.recyclebin.truncate', methods: ['GET', 'POST'])]

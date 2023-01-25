@@ -16,9 +16,9 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\CategoryPropertyById;
+namespace BaksDev\Products\Category\Repository\CategoryPropertyById;
 
-use App\Module\Products\Category\Type\Id\CategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryUid;
 
 interface CategoryPropertyByIdInterface
 {

@@ -3,7 +3,7 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 //use App\Module\Product\Type\Category\Id\CategoryUidConverter;
-//use App\Module\Users\Entity\User;
+//use BaksDev\Users\Entity\User;
 //use App\Module\Product\Entity;
 //use App\Module\Product\EntityListeners;
 
@@ -17,18 +17,18 @@ return static function (ContainerConfigurator $configurator)
 
     /** Services */
     
-    $services->load('App\Module\Products\Category\Controller\\', '../../Controller')
+    $services->load('BaksDev\Products\Category\Controller\\', '../../Controller')
       ->tag('controller.service_arguments');
     
-    $services->load('App\Module\Products\Category\Repository\\', '../../Repository')
+    $services->load('BaksDev\Products\Category\Repository\\', '../../Repository')
       ->exclude('../../Repository/**/*DTO.php');
       //->tag('controller.service_arguments');
     
-    $services->load('App\Module\Products\Category\UseCase\\', '../../UseCase')
+    $services->load('BaksDev\Products\Category\UseCase\\', '../../UseCase')
       ->exclude('../../UseCase/**/*DTO.php');
      // ->tag('controller.service_arguments');
 
-    $services->load('App\Module\Products\Category\DataFixtures\\', '../../DataFixtures')
+    $services->load('BaksDev\Products\Category\DataFixtures\\', '../../DataFixtures')
       ->exclude('../../DataFixtures/**/*DTO.php');
       //->tag('controller.service_arguments');
     

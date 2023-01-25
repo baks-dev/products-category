@@ -16,9 +16,9 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\ParentCategoryChoiceForm;
+namespace BaksDev\Products\Category\Repository\ParentCategoryChoiceForm;
 
-use App\Module\Products\Category\Type\Id\CategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryUid;
 
 interface ParentCategoryChoiceFormInterface
 {

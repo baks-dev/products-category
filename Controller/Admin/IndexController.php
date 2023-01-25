@@ -16,27 +16,22 @@
  *
  */
 
-namespace App\Module\Products\Category\Controller\Admin;
+namespace BaksDev\Products\Category\Controller\Admin;
 
-//use App\Module\Product\Repository\Category\AllCategory;
-//use App\Module\Product\Repository\Category\ParentCategory;
-use App\Module\Products\Category\Entity\Category;
-use App\Module\Products\Category\Repository\AllCategory\AllCategoryInterface;
-use App\Module\Products\Category\Type\Parent\ParentCategoryUid;
-use App\System\Controller\AbstractController;
-use App\System\Handler\Search\SearchDTO;
-use App\System\Handler\Search\SearchForm;
-use App\System\Helper\Paginator;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use BaksDev\Core\Services\Security\RoleSecurity;
+use BaksDev\Products\Category\Entity\Category;
+use BaksDev\Products\Category\Repository\AllCategory\AllCategoryInterface;
+use BaksDev\Products\Category\Type\Parent\ParentCategoryUid;
+use BaksDev\Core\Controller\AbstractController;
+use BaksDev\Core\Form\Search\SearchDTO;
+use BaksDev\Core\Form\Search\SearchForm;
+use BaksDev\Core\Helper\Paginator;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
-use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted(new Expression('"ROLE_ADMIN" in role_names or "ROLE_PRODUCT_CATEGORY" in role_names'))]
+#[RoleSecurity(['ROLE_ADMIN', 'ROLE_PRODUCT_CATEGORY'])]
 final class IndexController extends AbstractController
 {
 	

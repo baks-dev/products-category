@@ -16,12 +16,12 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\CategoryParentForm;
+namespace BaksDev\Products\Category\Repository\CategoryParentForm;
 
 
-use App\Module\Products\Category\Entity as EntityCategory;
-use App\Module\Products\Category\Type\Id\CategoryUid;
-use App\System\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity as EntityCategory;
+use BaksDev\Products\Category\Type\Id\CategoryUid;
+use BaksDev\Core\Type\Locale\Locale;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 

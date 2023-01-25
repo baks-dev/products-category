@@ -16,12 +16,12 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\CategoryPropertyById;
+namespace BaksDev\Products\Category\Repository\CategoryPropertyById;
 
 
-use App\Module\Products\Category\Entity;
-use App\Module\Products\Category\Type\Id\CategoryUid;
-use App\System\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity;
+use BaksDev\Products\Category\Type\Id\CategoryUid;
+use BaksDev\Core\Type\Locale\Locale;
 //use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 //use Doctrine\ORM\AbstractQuery;
 //use Doctrine\ORM\Cache\DefaultEntityHydrator;

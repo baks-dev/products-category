@@ -16,16 +16,16 @@
  *
  */
 
-namespace App\Module\Products\Category\UseCase\Admin\NewEdit\Section\Fields;
+namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\Fields;
 
 
 
-use App\Module\Products\Category\Entity\Section\Field\FieldInterface;
-use App\Module\Products\Category\Entity\Section\Field\Trans\TransInterface;
-use App\Module\Products\Category\Type\Section\Field\Id\FieldUid;
-use App\Module\Products\Category\UseCase\Admin\NewEdit\Section\Fields\Trans\SectionFieldTransDTO;
-use App\System\Type\Field\InputField;
-use App\System\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity\Section\Field\FieldInterface;
+use BaksDev\Products\Category\Entity\Section\Field\Trans\TransInterface;
+use BaksDev\Products\Category\Type\Section\Field\Id\FieldUid;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\Fields\Trans\SectionFieldTransDTO;
+use BaksDev\Core\Type\Field\InputField;
+use BaksDev\Core\Type\Locale\Locale;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 

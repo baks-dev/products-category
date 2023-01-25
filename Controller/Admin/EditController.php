@@ -16,14 +16,15 @@
  *
  */
 
-namespace App\Module\Products\Category\Controller\Admin;
+namespace BaksDev\Products\Category\Controller\Admin;
 
 
-use App\Module\Products\Category\Entity\Event\Event;
-use App\Module\Products\Category\UseCase\Admin\NewEdit\Category\CategoryDTO;
-use App\Module\Products\Category\UseCase\Admin\NewEdit\Category\CategoryForm;
-use App\Module\Products\Category\UseCase\CategoryAggregate;
-use App\System\Controller\AbstractController;
+use BaksDev\Core\Services\Security\RoleSecurity;
+use BaksDev\Products\Category\Entity\Event\Event;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Category\CategoryDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Category\CategoryForm;
+use BaksDev\Products\Category\UseCase\CategoryAggregate;
+use BaksDev\Core\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -33,8 +34,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-
-#[IsGranted(new Expression('"ROLE_ADMIN" in role_names or "ROLE_PRODUCT_CATEGORY_EDIT" in role_names'))]
+#[RoleSecurity(['ROLE_ADMIN', 'ROLE_PRODUCT_CATEGORY_EDIT'])]
 final class EditController extends AbstractController
 {
     

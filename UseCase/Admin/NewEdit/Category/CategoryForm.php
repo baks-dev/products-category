@@ -16,12 +16,12 @@
  *
  */
 
-namespace App\Module\Products\Category\UseCase\Admin\NewEdit\Category;
+namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Category;
 
 
-use App\Module\Products\Category\Repository\ParentCategoryChoiceForm\ParentCategoryChoiceFormInterface;
-use App\Module\Products\Category\Type\Parent\ParentCategoryUid;
-use App\Module\Products\Category\UseCase\Admin\NewEdit;
+use BaksDev\Products\Category\Repository\ParentCategoryChoiceForm\ParentCategoryChoiceFormInterface;
+use BaksDev\Products\Category\Type\Parent\ParentCategoryUid;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;

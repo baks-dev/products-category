@@ -16,28 +16,28 @@
  *
  */
 
-namespace App\Module\Products\Category\UseCase\Admin\NewEdit\Category;
+namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Category;
 
-use App\Module\Products\Category\Entity\Event\EventInterface;
-use App\Module\Products\Category\Entity\Landing\LandingInterface;
-use App\Module\Products\Category\Entity\Offers\OffersInterface;
-use App\Module\Products\Category\Entity\Section\SectionInterface;
-use App\Module\Products\Category\Entity\Seo\SeoInterface;
-use App\Module\Products\Category\Entity\Trans\TransInterface;
-use App\Module\Products\Category\Type\Event\CategoryEvent;
-use App\Module\Products\Category\Type\Parent\ParentCategoryUid;
-use App\Module\Products\Category\UseCase\Admin\NewEdit\Category\Trans\CategoryTransDTO;
-use App\Module\Products\Category\UseCase\Admin\NewEdit\Cover\CoverDTO;
-use App\Module\Products\Category\UseCase\Admin\NewEdit\Info\InfoDTO;
-use App\Module\Products\Category\UseCase\Admin\NewEdit\Landing\LandingCollectionDTO;
-use App\Module\Products\Category\UseCase\Admin\NewEdit\Offers\OffersCollectionDTO;
-use App\Module\Products\Category\UseCase\Admin\NewEdit\Section\SectionCollectionDTO;
-use App\Module\Products\Category\UseCase\Admin\NewEdit\Seo\SeoCollectionDTO;
-use App\System\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity\Event\ProductCategoryEventInterface;
+use BaksDev\Products\Category\Entity\Landing\LandingInterface;
+use BaksDev\Products\Category\Entity\Offers\OffersInterface;
+use BaksDev\Products\Category\Entity\Section\SectionInterface;
+use BaksDev\Products\Category\Entity\Seo\SeoInterface;
+use BaksDev\Products\Category\Entity\Trans\TransInterface;
+use BaksDev\Products\Category\Type\Event\CategoryEvent;
+use BaksDev\Products\Category\Type\Parent\ParentCategoryUid;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Category\Trans\CategoryTransDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Cover\ProductCategoryCoverDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Info\InfoDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Landing\LandingCollectionDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\OffersCollectionDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\SectionCollectionDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Seo\SeoCollectionDTO;
+use BaksDev\Core\Type\Locale\Locale;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class CategoryDTO implements EventInterface
+final class CategoryDTO implements ProductCategoryEventInterface
 {
     /**
      * Идентификатор события
@@ -78,7 +78,7 @@ final class CategoryDTO implements EventInterface
     private ArrayCollection $seo;
     
     #[Assert\Valid]
-    private ?CoverDTO $cover;
+    private ?ProductCategoryCoverDTO $cover;
     
     
     #[Assert\Valid]
@@ -97,7 +97,7 @@ final class CategoryDTO implements EventInterface
     {
         $this->parent = $parent;
         
-        $this->cover = new CoverDTO();
+        $this->cover = new ProductCategoryCoverDTO();
         $this->info = new InfoDTO();
         
         $this->trans = new ArrayCollection();
@@ -388,12 +388,12 @@ final class CategoryDTO implements EventInterface
     /* COVER  */
     
     
-    public function getCover() : ?CoverDTO
+    public function getCover() : ?ProductCategoryCoverDTO
     {
         return $this->cover;
     }
 	
-    public function setCover(?CoverDTO $cover) : void
+    public function setCover(?ProductCategoryCoverDTO $cover) : void
     {
         $this->cover = $cover;
     }

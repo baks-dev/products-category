@@ -16,17 +16,17 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\PropertyFieldsByCategoryChoiceForm;
+namespace BaksDev\Products\Category\Repository\PropertyFieldsByCategoryChoiceForm;
 
-use App\Module\Products\Category\Repository\CategoryPropertyById\CategoryPropertyDTO;
-use App\Module\Products\Category\Type\Id\CategoryUid;
-use App\Module\Products\Category\Type\Section\Field\Id\FieldUid;
-use App\System\Type\Locale\Locale;
+use BaksDev\Products\Category\Repository\CategoryPropertyById\CategoryPropertyDTO;
+use BaksDev\Products\Category\Type\Id\CategoryUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\FieldUid;
+use BaksDev\Core\Type\Locale\Locale;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use App\Module\Products\Category\Entity;
+use BaksDev\Products\Category\Entity;
 
 final class PropertyFieldsByCategoryChoiceRepository implements PropertyFieldsByCategoryChoiceFormInterface
 {

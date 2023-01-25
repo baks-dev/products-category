@@ -16,12 +16,12 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\CategoryChoice;
+namespace BaksDev\Products\Category\Repository\CategoryChoice;
 
 
-use App\Module\Products\Category\Entity;
-use App\Module\Products\Category\Type\Id\CategoryUid;
-use App\System\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity;
+use BaksDev\Products\Category\Type\Id\CategoryUid;
+use BaksDev\Core\Type\Locale\Locale;
 use Doctrine\ORM\EntityManagerInterface;
 use Generator;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;

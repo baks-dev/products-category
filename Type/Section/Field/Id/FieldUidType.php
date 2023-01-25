@@ -16,9 +16,9 @@
  *
  */
 
-namespace App\Module\Products\Category\Type\Section\Field\Id;
+namespace BaksDev\Products\Category\Type\Section\Field\Id;
 
-use App\System\Type\UidType\UidType;
+use BaksDev\Core\Type\UidType\UidType;
 
 final class FieldUidType extends UidType
 {

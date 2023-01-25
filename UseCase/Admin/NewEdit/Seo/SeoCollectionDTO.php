@@ -16,13 +16,13 @@
  *
  */
 
-namespace App\Module\Products\Category\UseCase\Admin\NewEdit\Seo;
+namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Seo;
 
 
-use App\Module\Products\Category\Entity\Event\Event;
-use App\Module\Products\Category\Entity\Seo\SeoInterface;
-use App\Module\Products\Category\Type\Event\CategoryEvent;
-use App\System\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity\Event\Event;
+use BaksDev\Products\Category\Entity\Seo\SeoInterface;
+use BaksDev\Products\Category\Type\Event\CategoryEvent;
+use BaksDev\Core\Type\Locale\Locale;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class SeoCollectionDTO implements SeoInterface

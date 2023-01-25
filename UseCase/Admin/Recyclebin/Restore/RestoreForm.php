@@ -17,9 +17,9 @@
 *
 */
 
-namespace App\Module\Products\Category\UseCase\Admin\Recyclebin\Restore;
+namespace BaksDev\Products\Category\UseCase\Admin\Recyclebin\Restore;
 
-use App\Module\Products\Category\UseCase\Admin\Recyclebin\Restore\Category\CategoryDTO;
+use BaksDev\Products\Category\UseCase\Admin\Recyclebin\Restore\Category\CategoryDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;

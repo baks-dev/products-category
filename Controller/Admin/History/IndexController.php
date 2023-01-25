@@ -16,15 +16,16 @@
 *
 */
 
-namespace App\Module\Products\Category\Controller\Admin\History;
+namespace BaksDev\Products\Category\Controller\Admin\History;
 
-use App\System\Controller\AbstractController;
+use BaksDev\Core\Controller\AbstractController;
 use App\Module\Product\Repository\Category\Event\AllHistoryCategory;
 use App\Module\Product\Type\Category\Id\CategoryUid;
-use App\System\Handler\Search\Command;
-use App\System\Handler\Search\SearchForm;
-use App\System\Helper\Paginator;
-use App\System\Type\Locale\Locale;
+use BaksDev\Core\Form\Search\Command;
+use BaksDev\Core\Form\Search\SearchForm;
+use BaksDev\Core\Helper\Paginator;
+use BaksDev\Core\Services\Security\RoleSecurity;
+use BaksDev\Core\Type\Locale\Locale;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\ExpressionLanguage\Expression;
@@ -33,7 +34,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted(new Expression('"ROLE_ADMIN" in role_names or "ROLE_PRODUCT_CATEGORY_HISTORY" in role_names'))]
+#[RoleSecurity(['ROLE_ADMIN', 'ROLE_PRODUCT_CATEGORY_HISTORY'])]
 final class IndexController extends AbstractController
 {
     #[Route('/admin/product/categorys/history/{id}/{page<\d+>}', name: 'admin.category.history.index',  methods: ['GET', 'POST'])]

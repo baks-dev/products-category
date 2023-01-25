@@ -16,13 +16,13 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\OfferFieldsByCategoryChoiceForm;
+namespace BaksDev\Products\Category\Repository\OfferFieldsByCategoryChoiceForm;
 
 
-use App\Module\Products\Category\Entity;
-use App\Module\Products\Category\Type\Id\CategoryUid;
-use App\Module\Products\Category\Type\Offers\Id\OffersUid;
-use App\System\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity;
+use BaksDev\Products\Category\Type\Id\CategoryUid;
+use BaksDev\Products\Category\Type\Offers\Id\OffersUid;
+use BaksDev\Core\Type\Locale\Locale;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;

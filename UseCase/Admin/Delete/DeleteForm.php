@@ -17,10 +17,10 @@
 *
 */
 
-namespace App\Module\Products\Category\UseCase\Admin\Delete;
+namespace BaksDev\Products\Category\UseCase\Admin\Delete;
 
 use App\Module\Product\Entity\Category;
-use App\Module\Products\Category\UseCase\Admin\Delete\Category\CategoryDTO;
+use BaksDev\Products\Category\UseCase\Admin\Delete\Category\CategoryDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;

@@ -16,7 +16,7 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\OfferFieldsByCategoryChoiceForm;
+namespace BaksDev\Products\Category\Repository\OfferFieldsByCategoryChoiceForm;
 
 interface OfferFieldsByCategoryChoiceInterface
 {

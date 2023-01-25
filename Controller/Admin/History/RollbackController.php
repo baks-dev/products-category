@@ -16,11 +16,12 @@
 *
 */
 
-namespace App\Module\Products\Category\Controller\Admin\History;
+namespace BaksDev\Products\Category\Controller\Admin\History;
 
 
-use App\System\Controller\AbstractController;
-use App\System\Type\Locale\Locale;
+use BaksDev\Core\Controller\AbstractController;
+use BaksDev\Core\Services\Security\RoleSecurity;
+use BaksDev\Core\Type\Locale\Locale;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +30,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[IsGranted(new Expression('"ROLE_ADMIN" in role_names or "ROLE_PRODUCT_CATEGORY_ROLLBACK" in role_names'))]
+#[RoleSecurity(['ROLE_ADMIN', 'ROLE_PRODUCT_CATEGORY_ROLLBACK'])]
 final class RollbackController extends AbstractController
 {
     #[Route('/admin/product/category/history/rollback/{id}', name: 'admin.category.history.rollback', methods: ['POST'])]

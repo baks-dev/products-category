@@ -16,9 +16,9 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\CategoryOffersForm;
+namespace BaksDev\Products\Category\Repository\CategoryOffersForm;
 
-use App\Module\Products\Category\Type\Id\CategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryUid;
 
 interface CategoryOffersFormInterface
 {

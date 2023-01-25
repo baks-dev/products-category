@@ -16,10 +16,10 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\AllCategory;
+namespace BaksDev\Products\Category\Repository\AllCategory;
 
-use App\Module\Products\Category\Type\Parent\ParentCategoryUid;
-use App\System\Handler\Search\SearchDTO;
+use BaksDev\Products\Category\Type\Parent\ParentCategoryUid;
+use BaksDev\Core\Form\Search\SearchDTO;
 
 interface AllCategoryInterface
 {

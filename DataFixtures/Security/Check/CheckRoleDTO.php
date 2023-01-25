@@ -16,12 +16,12 @@
  *
  */
 
-namespace App\Module\Products\Category\DataFixtures\Security\Check;
+namespace BaksDev\Products\Category\DataFixtures\Security\Check;
 
-use App\Module\Users\Groups\Group\Entity\CheckRole\CheckRoleInterface;
-use App\Module\Users\Groups\Group\Entity\Event\GroupEvent;
-use App\Module\Users\Groups\Role\Entity\Event\RoleEventInterface;
-use App\Module\Users\Groups\Role\Type\RolePrefix\RolePrefix;
+use BaksDev\Users\Groups\Group\Entity\CheckRole\CheckRoleInterface;
+use BaksDev\Users\Groups\Group\Entity\Event\GroupEvent;
+use BaksDev\Users\Groups\Role\Entity\Event\RoleEventInterface;
+use BaksDev\Users\Groups\Role\Type\RolePrefix\RolePrefix;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 

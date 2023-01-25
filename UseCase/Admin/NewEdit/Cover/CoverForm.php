@@ -16,7 +16,7 @@
  *
  */
 
-namespace App\Module\Products\Category\UseCase\Admin\NewEdit\Cover;
+namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Cover;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -48,7 +48,7 @@ final class CoverForm extends AbstractType
         $resolver->setDefaults
         (
           [
-            'data_class' => CoverDTO::class,
+			  'data_class' => ProductCategoryCoverDTO::class,
           ]);
     }
     

@@ -16,13 +16,14 @@
  *
  */
 
-namespace App\Module\Products\Category\Controller\Admin;
+namespace BaksDev\Products\Category\Controller\Admin;
 
-use App\Module\Products\Category\Entity;
-use App\Module\Products\Category\UseCase\Admin\Delete\Category\CategoryDTO;
-use App\Module\Products\Category\UseCase\Admin\Delete\DeleteForm;
-use App\Module\Products\Category\UseCase\CategoryAggregate;
-use App\System\Controller\AbstractController;
+use BaksDev\Core\Services\Security\RoleSecurity;
+use BaksDev\Products\Category\Entity;
+use BaksDev\Products\Category\UseCase\Admin\Delete\Category\CategoryDTO;
+use BaksDev\Products\Category\UseCase\Admin\Delete\DeleteForm;
+use BaksDev\Products\Category\UseCase\CategoryAggregate;
+use BaksDev\Core\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +31,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted(new Expression('"ROLE_ADMIN" in role_names or "ROLE_PRODUCT_CATEGORY_DELETE" in role_names'))]
+
+#[RoleSecurity(['ROLE_ADMIN', 'ROLE_PRODUCT_CATEGORY_DELETE'])]
 final class DeleteController extends AbstractController
 {
     

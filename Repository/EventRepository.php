@@ -16,9 +16,9 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository;
+namespace BaksDev\Products\Category\Repository;
 
-use App\Module\Products\Category\Entity\Event\Event;
+use BaksDev\Products\Category\Entity\Event\Event;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

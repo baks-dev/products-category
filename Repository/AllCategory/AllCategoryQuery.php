@@ -16,13 +16,13 @@
  *
  */
 
-namespace App\Module\Products\Category\Repository\AllCategory;
+namespace BaksDev\Products\Category\Repository\AllCategory;
 
-use App\Module\Products\Category\Entity as EntityCategory;
-use App\Module\Products\Category\Type\Parent\ParentCategoryUid;
-use App\System\Form\Search\SearchDTO;
-use App\System\Services\Switcher\SwitcherInterface;
-use App\System\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity as EntityCategory;
+use BaksDev\Products\Category\Type\Parent\ParentCategoryUid;
+use BaksDev\Core\Form\Search\SearchDTO;
+use BaksDev\Core\Services\Switcher\SwitcherInterface;
+use BaksDev\Core\Type\Locale\Locale;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -75,50 +75,12 @@ final class AllCategoryQuery implements AllCategoryInterface
         $qb = $this->connection->createQueryBuilder();
         
         
-//
-//        $sql = "WITH RECURSIVE temp_category (sort, id, parent_id) as (";
-//
-//        $sql .= "
-//
-//SELECT t1.category_id, t1.category_id, t1.parent_category FROM product_category_event t1 WHERE t1.parent_category IS NULL
-//
-//UNION
-//
-//SELECT t2.parent_category, t2.category_id, t2.parent_category FROM product_category_event t2 INNER JOIN temp_category on (temp_category.id = t2.parent_category)
-//
-//";
-//
-//        $sql .= ") SELECT * FROM temp_category ORDER BY sort ASC, id DESC";
-//
-//        dd($this->connection->prepare($sql)->executeQuery()->fetchAllAssociative());
-//
-//        return $pr = $this->connection->prepare($sql);
-        
-        //dd($pr->executeQuery()->fetchAllAssociative());
-    
-    
-        /* with recursive temp1 (id, parent_id, name, path) as (
-        
-    select t1.id, t1.parent_id, t1.name, cast (t1.name as varchar (50)) as path
-from hierarchy_example t1 where t1.name = 'subitem1'
-
-union
-
-select t2.id, t2.parent_id, t2.name, cast (temp1.path || '->'|| t2.name as varchar(50))
-from hierarchy_example t2 inner join temp1 on (temp1.parent_id = t2.id))
-
-
-select * from temp1 */
-        
-        
-
-        
     
         /** Категория */
         $qb->select('category.id');
         $qb->addSelect('category.id');
         $qb->addSelect('category.event'); /* ID события */
-        $qb->from(EntityCategory\Category::TABLE, 'category');
+        $qb->from(EntityCategory\ProductCategory::TABLE, 'category');
     
     
        
@@ -130,7 +92,7 @@ select * from temp1 */
         $qb->join
         (
           'category',
-          EntityCategory\Event\Event::TABLE,
+          EntityCategory\Event\ProductCategoryEvent::TABLE,
           'category_event',
           'category_event.id = category.event AND '.
           ($parent ? 'category_event.parent = :parent_category' : 'category_event.parent IS NULL')
@@ -146,7 +108,7 @@ select * from temp1 */
         $qb->addSelect('category_cover.dir');
         $qb->leftJoin(
           'category_event',
-          EntityCategory\Cover\Cover::TABLE,
+          EntityCategory\Cover\ProductCategoryCover::TABLE,
           'category_cover',
           'category_cover.event_id = category_event.id');
         
@@ -162,7 +124,7 @@ select * from temp1 */
     
         $qb->leftJoin(
           'category_event',
-          EntityCategory\Trans\Trans::TABLE,
+          EntityCategory\Trans\ProductCategoryTrans::TABLE,
           'category_trans',
           'category_trans.event_id = category_event.id AND category_trans.local = :local');
     
@@ -175,18 +137,18 @@ select * from temp1 */
         /* EXISTS Event IN Category */
         $qbCounterExist = $this->connection->createQueryBuilder();
         $qbCounterExist->select('1');
-        $qbCounterExist->from(EntityCategory\Category::TABLE, 'count_cat');
+        $qbCounterExist->from(EntityCategory\ProductCategorySettings::TABLE, 'count_cat');
         $qbCounterExist->where('count_cat.id = category_event_count.category');
         $qbCounterExist->andWhere('count_cat.event = category_event_count.id');
     
         /* COUNT Event */
         $qbCounter = $this->connection->createQueryBuilder();
         $qbCounter->select('COUNT(category_event_count.id)');
-        $qbCounter->from(EntityCategory\Event\Event::TABLE, 'category_event_count');
+        $qbCounter->from(EntityCategory\Event\ProductCategoryEvent::TABLE, 'category_event_count');
         
         $qbCounter->join(
           'category_event_count',
-          EntityCategory\Category::TABLE,
+          EntityCategory\ProductCategory::TABLE,
           'count_cat',
           'count_cat.id = category_event_count.category AND count_cat.event = category_event_count.id'
         );
