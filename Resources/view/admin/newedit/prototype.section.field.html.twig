@@ -1,0 +1,54 @@
+{% trans_default_domain 'products.category' %}
+
+{#  ФОРМА-ПРОТОТИП ЛОКАЛЕЙ СЕКЦИИ #}
+
+{% set prototype_id = section.fields.vars.prototype.vars.id|replace({"fields___name__" : "fields___FIELDS__"}) %}
+
+
+{% set prototype_sort = form_row(section.fields.vars.prototype.sort, {  label : 'admin.form.label.fields.sort'|trans, value: '__FIELD_SORT__' })|
+	replace({"[fields][__name__]" : "[fields][__FIELDS__]", "fields___name__" : "fields___FIELDS__",})
+%}
+
+
+{% set prototype_type = form_row(section.fields.vars.prototype.type)|
+	replace({"[fields][__name__]" : "[fields][__FIELDS__]", "fields___name__" : "fields___FIELDS__",})
+%}
+
+{% set prototype_required = form_row(section.fields.vars.prototype.required)|
+	replace({"[fields][__name__]" : "[fields][__FIELDS__]", "fields___name__" : "fields___FIELDS__",})
+%}
+
+{% set prototype_public = form_row(section.fields.vars.prototype.public, { label : 'admin.form.label.fields.public'|trans })|
+	replace({"[fields][__name__]" : "[fields][__FIELDS__]", "fields___name__" : "fields___FIELDS__",})
+%}
+
+{% set prototype_delete = form_row(section.fields.vars.prototype.DeleteField, {label: '<span class="svg-icon svg-icon-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
+                                                <rect opacity="0.5" x="7.05025" y="15.5356" width="12" height="2" rx="1" transform="rotate(-45 7.05025 15.5356)" fill="black"></rect>
+                                                <rect x="8.46447" y="7.05029" width="12" height="2" rx="1" transform="rotate(45 8.46447 7.05029)" fill="black"></rect>
+                                            </svg>
+                                        </span>'} )|
+	replace({"[fields][__name__]" : "[fields][__FIELDS__]", "fields___name__" : "fields___FIELDS__",})
+%}
+
+<div class="card">
+	<div class="card-body">
+<div class="d-flex gap-2 align-items-end">
+
+	{{ prototype_sort | raw }}
+
+	<div class="w-75">{{ prototype_type | raw }}</div>
+
+	<div class="p-3">{{ prototype_required | raw }}</div>
+
+	<div class="p-3">{{ prototype_public | raw }}</div>
+
+	<div class="p-1">{{ prototype_delete | raw }}</div>
+</div>
+
+
+
+{{ include(_self|replace({ "prototype.section.field.html.twig": "prototype.section.field.trans.html.twig" })) }}
+
+	</div>
+</div>

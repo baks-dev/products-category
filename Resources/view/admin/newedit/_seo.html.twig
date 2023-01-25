@@ -1,0 +1,39 @@
+{% trans_default_domain 'products.category' %}
+
+
+<nav>
+	<div class="nav nav-tabs" id="nav-{{ form.seo.vars.id }}" role="tablist">
+		{% for seo in form.seo %}
+			<button class="nav-link{{ app.request.locale == seo.vars.value.local? ' active' : '' }}"
+					id="nav-{{ seo.vars.id }}-tab" data-bs-toggle="tab"
+					data-bs-target="#nav-{{ seo.vars.id }}"
+					type="button" role="tab" aria-controls="nav-{{ seo.vars.id }}" aria-selected="true">
+				{{ seo.vars.value.local|trans({}, 'messages') }}
+			</button>
+		{% endfor %}
+	</div>
+</nav>
+
+<div class="tab-content mt-5" id="nav-{{ form.seo.vars.id }}Content">
+
+	{% for seo in form.seo %}
+		<div class="tab-pane fade{{ app.request.locale == seo.vars.value.local? ' show active' : '' }}"
+			 id="nav-{{ seo.vars.id }}" role="tabpanel"
+			 aria-labelledby="nav-{{ seo.vars.id }}-tab">
+
+			{# Локаль #}
+			{{ form_row(seo.local) }}
+
+			{# TITLE #}
+			{{ form_row(seo.title) }}
+
+			{# DESCRIPTION #}
+			{{ form_row(seo.description) }}
+
+			{# KEYWORDS #}
+			{{ form_row(seo.keywords) }}
+
+		</div>
+	{% endfor %}
+
+</div>

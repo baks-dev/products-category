@@ -1,0 +1,69 @@
+{% trans_default_domain 'products.category' %}
+
+<div class="d-flex gap-2">
+
+	<div class="d-flex flex-column gap-2 w-50 mb-2">
+		{# Настройки локали #}
+
+		<div class="card card-flush p-4">
+
+			<div class="card-header">
+				<div class="card-title">
+					<h2>
+						{# Секции профиля #}
+						Основные настройки раздела
+					</h2>
+				</div>
+			</div>
+
+			<div class="card-body pt-0">
+
+				{# Обложка раздела #}
+				{{ include(_self|replace({ "form.main.html.twig": "_cover.html.twig" })) }}
+
+				{# INFO #}
+				{{ include(_self|replace({ "form.main.html.twig": "_info.html.twig" })) }}
+			</div>
+		</div>
+
+		<div class="card card-flush p-4">
+
+			<div class="card-header">
+				<div class="card-title">
+					<h2>
+						{# Секции профиля #}
+						Настройки локали
+					</h2>
+				</div>
+			</div>
+
+			<div class="card-body pt-0">
+				{# НАСТРОЙКИ ЛОКАЛИ #}
+				{{ include(_self|replace({ "form.main.html.twig": "_trans.html.twig" })) }}
+			</div>
+		</div>
+	</div>
+
+	<div class="d-flex flex-column w-40 flex-row-fluid gap-2">
+
+		<div class="card card-flush p-4">
+
+			<div class="card-header">
+				<div class="card-title">
+					<h2>
+						{# Секции профиля #}
+						Настройки SEO информации
+					</h2>
+				</div>
+			</div>
+
+			<div class="card-body pt-0">
+				{# SEO #}
+				{{ include(_self|replace({ "form.main.html.twig": "_seo.html.twig" })) }}
+			</div>
+
+		</div>
+	</div>
+</div>
+
+

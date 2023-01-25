@@ -1,0 +1,60 @@
+{% trans_default_domain 'products.category' %}
+
+
+{#  ФОРМА-ПРОТОТИП ЛОКАЛЕЙ СЕКЦИИ #}
+
+{% set prototype_id = section.trans.vars.prototype.vars.id|replace({"trans___name__" : "trans___TRANS__"}) %}
+
+{% set prototype_local = form_row(section.trans.vars.prototype.local, { value: '__LOCALE__' })|replace({
+	"[trans][__name__]" : "[trans][__TRANS__]", "trans___name__" : "trans___TRANS__",
+}) %}
+
+{% set prototype_name = form_row(section.trans.vars.prototype.name, { label: 'admin.product.section.form.name'|trans })|replace({
+	"[trans][__name__]" : "[trans][__TRANS__]", "trans___name__" : "trans___TRANS__",
+}) %}
+
+{% set prototype_description = form_row(section.trans.vars.prototype.description, { label: 'admin.product.section.form.desc'|trans })|replace({
+	"[trans][__name__]" : "[trans][__TRANS__]", "trans___name__" : "trans___TRANS__",
+}) %}
+
+
+<nav>
+	<div class="nav nav-tabs" id="nav-{{ section.trans.vars.id }}" role="tablist">
+
+		{% for trans in form.trans %}
+
+			{%  set id = prototype_id | replace({ "__TRANS__" : loop.index0 }) %}
+
+			<button class="nav-link{{ app.request.locale == trans.vars.value.local ? ' active' : '' }}"
+					id="nav-{{ id }}-tab" data-bs-toggle="tab"
+					data-bs-target="#nav-{{ id }}"
+					type="button" role="tab" aria-controls="nav-{{ id }}" aria-selected="true">
+
+				{{ trans.vars.value.local|trans({}, 'messages') }}
+			</button>
+		{% endfor %}
+
+	</div>
+</nav>
+
+
+<div class="tab-content mt-5" id="nav-{{ section.trans.vars.id }}-content">
+
+	{% for trans in form.trans %}
+
+		{%  set id = prototype_id | replace({ "__TRANS__" : loop.index0 }) %}
+
+		<div class="tab-pane fade{{ app.request.locale == trans.vars.value.local? ' show active' : '' }}"
+			 id="nav-{{ id }}" role="tabpanel"
+			 aria-labelledby="nav-{{ id }}-tab">
+
+			{{ prototype_local| replace({ "__TRANS__" : loop.index0, "__LOCALE__" : trans.vars.value.local }) | raw }}
+
+			{{ prototype_name | replace({ "__TRANS__" : loop.index0 }) | raw }}
+
+			{{ prototype_description | replace({ "__TRANS__" : loop.index0 }) | raw }}
+
+		</div>
+
+	{% endfor %}
+</div>
