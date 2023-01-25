@@ -1,30 +1,35 @@
 <?php
 /*
- *  Copyright 2022.  Baks.dev <admin@baks.dev>
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *   limitations under the License.
- *
+ *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
  */
 
 namespace BaksDev\Products\Category\Controller\Admin;
 
 use BaksDev\Core\Services\Security\RoleSecurity;
 use BaksDev\Products\Category\Entity as CategoryEntity;
-use BaksDev\Products\Category\Type\Event\CategoryEvent;
-use BaksDev\Products\Category\Type\Parent\ParentCategoryUid;
+use BaksDev\Products\Category\Type\Event\ProductCategoryEventUid;
+use BaksDev\Products\Category\Type\Parent\ProductParentCategoryUid;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Category\CategoryDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Category\CategoryForm;
-use BaksDev\Products\Category\UseCase\CategoryAggregate;
+//use BaksDev\Products\Category\UseCase\CategoryAggregate;
 use BaksDev\Core\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -39,20 +44,20 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[RoleSecurity(['ROLE_ADMIN', 'ROLE_PRODUCT_CATEGORY_NEW'])]
 final class NewController extends AbstractController
 {
-	#[Route('/admin/product/category/new/{cat}/{id}', name: 'admin.category.newedit.new', defaults: ['cat' => null, "id" => null], methods: ['GET', 'POST'])]
+	#[Route('/admin/product/category/new/{cat}/{id}', name: 'admin.newedit.new', defaults: ['cat' => null, "id" => null], methods: ['GET', 'POST'])]
 
 	public function new(
 		Request $request,
-		CategoryAggregate $handler,
-		#[MapEntity] ?CategoryEntity\Category $cat,
-		?CategoryEvent $id,
+		//CategoryAggregate $handler,
+		#[MapEntity] ?CategoryEntity\ProductCategory $cat,
+		?ProductCategoryEventUid $id,
 		EntityManagerInterface $entityManager,
 	) : Response
 	{
-		$parent = $cat ? new ParentCategoryUid($cat->getId()) : null;
+		$parent = $cat ? new ProductParentCategoryUid($cat->getId()) : null;
 		$category = new CategoryDTO($parent);
 		
-		$Event = $entityManager->getRepository(CategoryEntity\Event\Event::class)->find($id);
+		$Event = $entityManager->getRepository(CategoryEntity\Event\ProductCategoryEvent::class)->find($id);
 		
 		/* Копируем данные из события */
 		if($Event)
@@ -72,8 +77,8 @@ final class NewController extends AbstractController
 			
 			if($handle)
 			{
-				$this->addFlash('success', 'admin.category.new.success', 'products.category');
-				return $this->redirectToRoute('ProductCategory:admin.category.index');
+				$this->addFlash('success', 'admin.new.success', 'products.category');
+				return $this->redirectToRoute('ProductCategory:admin.index');
 			}
 		}
 		

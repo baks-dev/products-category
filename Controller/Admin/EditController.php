@@ -25,7 +25,7 @@ namespace BaksDev\Products\Category\Controller\Admin;
 
 
 use BaksDev\Core\Services\Security\RoleSecurity;
-use BaksDev\Products\Category\Entity\Event\Event;
+use BaksDev\Products\Category\Entity\Event\ProductCategoryEvent;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Category\CategoryDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Category\CategoryForm;
 use BaksDev\Products\Category\UseCase\CategoryAggregate;
@@ -43,10 +43,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class EditController extends AbstractController
 {
     
-    #[Route('/admin/product/category/edit/{id}', name: 'admin.category.newedit.edit', methods: ['GET', 'POST'])]
+    #[Route('/admin/product/category/edit/{id}', name: 'admin.newedit.edit', methods: ['GET', 'POST'])]
     public function edit(
       Request $request,
-      #[MapEntity] Event $Event,
+      #[MapEntity] ProductCategoryEvent $Event,
       CategoryAggregate $handler,
     ) : Response
     {
@@ -65,8 +65,8 @@ final class EditController extends AbstractController
             
             if($handle)
             {
-                $this->addFlash('success', 'admin.category.update.success', 'products.category');
-                return $this->redirectToRoute('ProductCategory:admin.category.index');
+                $this->addFlash('success', 'admin.update.success', 'products.category');
+                return $this->redirectToRoute('ProductCategory:admin.index');
             }
         }
 		

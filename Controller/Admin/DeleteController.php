@@ -39,7 +39,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[RoleSecurity(['ROLE_ADMIN', 'ROLE_PRODUCT_CATEGORY_DELETE'])]
 final class DeleteController extends AbstractController
 {
-    #[Route('/admin/product/category/delete/{id}', name: 'admin.category.delete', methods: ['POST', 'GET'])]
+    #[Route('/admin/product/category/delete/{id}', name: 'admin.delete', methods: ['POST', 'GET'])]
     public function delete(
       Request $request,
       CategoryAggregate $handler,
@@ -51,7 +51,7 @@ final class DeleteController extends AbstractController
         $Event->getDto($category);
         
         $form = $this->createForm(DeleteForm::class, $category, [
-          'action' => $this->generateUrl('ProductCategory:admin.category.delete', ['id' => $category->getEvent()]),
+          'action' => $this->generateUrl('ProductCategory:admin.delete', ['id' => $category->getEvent()]),
         ]);
         $form->handleRequest($request);
         
@@ -64,13 +64,13 @@ final class DeleteController extends AbstractController
                 
                 if($handle)
                 {
-                    $this->addFlash('success', 'admin.category.delete.success', 'products.category');
-                    return $this->redirectToRoute('ProductCategory:admin.category.index');
+                    $this->addFlash('success', 'admin.delete.success', 'products.category');
+                    return $this->redirectToRoute('ProductCategory:admin.index');
                 }
             }
             
-            $this->addFlash('danger', 'admin.category.update.danger', 'products.category');
-            return $this->redirectToRoute('ProductCategory:admin.category.index');
+            $this->addFlash('danger', 'admin.update.danger', 'products.category');
+            return $this->redirectToRoute('ProductCategory:admin.index');
             
             //return $this->redirectToReferer();
         }

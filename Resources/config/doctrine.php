@@ -1,95 +1,69 @@
 <?php
+/*
+ *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use BaksDev\Products\Category\Type\Event\CategoryEvent;
-use BaksDev\Products\Category\Type\Event\CategoryEventConverter;
-use BaksDev\Products\Category\Type\Event\CategoryEventType;
-use BaksDev\Products\Category\Type\Id\CategoryUid;
-use BaksDev\Products\Category\Type\Id\CategoryUidConverter;
-use BaksDev\Products\Category\Type\Id\CategoryUidType;
-use BaksDev\Products\Category\Type\Landing\Id\LandingUid;
-use BaksDev\Products\Category\Type\Landing\Id\LandingUidType;
-use BaksDev\Products\Category\Type\Offers\Id\OffersUid;
-use BaksDev\Products\Category\Type\Offers\Id\OffersUidType;
-use BaksDev\Products\Category\Type\Parent\ParentCategoryUid;
-use BaksDev\Products\Category\Type\Parent\ParentCategoryUidType;
-use BaksDev\Products\Category\Type\Section\Field\Id\FieldUid;
-use BaksDev\Products\Category\Type\Section\Field\Id\FieldUidType;
-use BaksDev\Products\Category\Type\Section\Id\SectionUid;
-use BaksDev\Products\Category\Type\Section\Id\SectionUidType;
-use BaksDev\Products\Category\Type\Settings\CategorySettings;
-use BaksDev\Products\Category\Type\Settings\CategorySettingsType;
+use BaksDev\Products\Category\Type\Event\ProductCategoryEventType;
+use BaksDev\Products\Category\Type\Event\ProductCategoryEventUid;
+use BaksDev\Products\Category\Type\Id\ProductCategoryType;
+use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Landing\Id\ProductCategoryLandingType;
+use BaksDev\Products\Category\Type\Landing\Id\ProductCategoryLandingUid;
+use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersType;
+use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersUid;
+use BaksDev\Products\Category\Type\Parent\ProductParentCategoryType;
+use BaksDev\Products\Category\Type\Parent\ProductParentCategoryUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldType;
+use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
+
+
+use BaksDev\Products\Category\Type\Section\Id\ProductCategorySectionType;
+use BaksDev\Products\Category\Type\Section\Id\ProductCategorySectionUid;
+use BaksDev\Products\Category\Type\Settings\ProductCategorySettingsIdentifier;
+use BaksDev\Products\Category\Type\Settings\ProductCategorySettingsType;
 
 use Symfony\Config\DoctrineConfig;
 
-return static function (ContainerConfigurator $container, DoctrineConfig $doctrine)
-{
-    
-
-    $doctrine->dbal()->type(CategorySettings::TYPE)->class(CategorySettingsType::class);
-    
-    $doctrine->dbal()->type(FieldUid::TYPE)->class(FieldUidType::class);
-    
-    $doctrine->dbal()->type(OffersUid::TYPE)->class(OffersUidType::class);
-    
-    $doctrine->dbal()->type(LandingUid::TYPE)->class(LandingUidType::class);
-    
-    $doctrine->dbal()->type(CategoryUid::TYPE)->class(CategoryUidType::class);
-	$container->services()->set(CategoryUid::class)
-		->tag('controller.argument_value_resolver', ['priority' => 100])
-	;
+return static function(ContainerConfigurator $container, DoctrineConfig $doctrine){
 	
-    
-    $doctrine->dbal()->type(SectionUid::TYPE)->class(SectionUidType::class);
-    
-    $doctrine->dbal()->type(ParentCategoryUid::TYPE)->class(ParentCategoryUidType::class);
-    
-    /** CategoryEvent  */
-    $doctrine->dbal()->type(CategoryEvent::TYPE)->class(CategoryEventType::class);
-	$container->services()->set(CategoryEvent::class)
-		->tag('controller.argument_value_resolver', ['priority' => 100])
-	;
+	$doctrine->dbal()->type(ProductCategorySettingsIdentifier::TYPE)->class(ProductCategorySettingsType::class);
+	$doctrine->dbal()->type(ProductCategorySectionFieldUid::TYPE)->class(ProductCategorySectionFieldType::class);
+	$doctrine->dbal()->type(ProductCategoryOffersUid::TYPE)->class(ProductCategoryOffersType::class);
+	$doctrine->dbal()->type(ProductCategoryLandingUid::TYPE)->class(ProductCategoryLandingType::class);
+	$doctrine->dbal()->type(ProductCategoryUid::TYPE)->class(ProductCategoryType::class);
+	$doctrine->dbal()->type(ProductCategorySectionUid::TYPE)->class(ProductCategorySectionType::class);
+	$doctrine->dbal()->type(ProductParentCategoryUid::TYPE)->class(ProductParentCategoryType::class);
+	$doctrine->dbal()->type(ProductCategoryEventUid::TYPE)->class(ProductCategoryEventType::class);
 	
-    
-//    /** CategoryUid */
-//    $doctrine->dbal()->type(CategoryUid::TYPE)->class(CategoryUidType::class,);
-//    $container->services()->set(CategoryUidConverter::CONVERTER)
-//      ->class(CategoryUidConverter::class)
-//      ->tag('request.param_converter', ['converter' => CategoryUidConverter::CONVERTER]);
-//
-//    /** CategoryEvent */
-//    $doctrine->dbal()->type(CategoryEvent::TYPE)->class(CategoryEventType::class,);
-//
-//    $container->services()->set(CategoryEventConverter::CONVERTER)
-//      ->class(CategoryEventConverter::class)
-//      ->tag('request.param_converter', ['converter' => CategoryEventConverter::CONVERTER]);
-//
-//
-//    /** ParentCategoryUid */
-//    $doctrine->dbal()->type(ParentCategoryUid::TYPE)->class(ParentCategoryUidType::class,);
-//
-//    $container->services()->set(ParentCategoryUidConverter::CONVERTER)
-//      ->class(ParentCategoryUidConverter::class)
-//      ->tag('request.param_converter', ['converter' => ParentCategoryUidConverter::CONVERTER]);
-//
-//
-//    /** SectionUid */
-//    $doctrine->dbal()->type(SectionUid::TYPE)->class(SectionUidType::class,);
-//
-//    $container->services()->set(SectionUidConverter::CONVERTER)
-//      ->class(SectionUidConverter::class)
-//      ->tag('request.param_converter', ['converter' => SectionUidConverter::CONVERTER]);
-    
-    
-    $emDefault = $doctrine->orm()->entityManager('default');
-    
-    $emDefault->autoMapping(true);
-    $emDefault->mapping('ProductCategory')
-      ->type('attribute')
-      ->dir('%kernel.project_dir%/src/Module/Products/Category/Entity')
-      ->isBundle(false)
-      ->prefix('BaksDev\Products\Category\Entity')
-      ->alias('ProductCategory')
-    ;
+	
+	$emDefault = $doctrine->orm()->entityManager('default');
+	
+	$emDefault->autoMapping(true);
+	$emDefault->mapping('ProductCategory')
+		->type('attribute')
+		->dir(__DIR__.'/../../Entity')
+		->isBundle(false)
+		->prefix('BaksDev\Products\Category\Entity')
+		->alias('ProductCategory')
+	;
 };
