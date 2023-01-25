@@ -20,8 +20,8 @@ namespace App\Module\Products\Category\Repository\AllCategory;
 
 use App\Module\Products\Category\Entity as EntityCategory;
 use App\Module\Products\Category\Type\Parent\ParentCategoryUid;
-use App\System\Handler\Search\SearchDTO;
-use App\System\Helper\Switcher\Switcher;
+use App\System\Form\Search\SearchDTO;
+use App\System\Services\Switcher\SwitcherInterface;
 use App\System\Type\Locale\Locale;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -31,9 +31,9 @@ final class AllCategoryQuery implements AllCategoryInterface
 {
     private Connection $connection;
     private TranslatorInterface $translator;
-    private Switcher $switcher;
+    private SwitcherInterface $switcher;
     
-    public function __construct(Connection $connection, TranslatorInterface $translator, Switcher $switcher)
+    public function __construct(Connection $connection, TranslatorInterface $translator, SwitcherInterface $switcher)
     {
         $this->connection = $connection;
         $this->translator = $translator;
