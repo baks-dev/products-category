@@ -12,7 +12,7 @@ $ composer require baks-dev/products-category
 
 ## Дополнительно
 
-Установка файловых ресурсов (javascript, css, image ...):
+Установка файловых ресурсов в публичную директорию (javascript, css, image ...):
 
 ``` bash
 $ php bin/console baks:assets:install
