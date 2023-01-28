@@ -1,24 +1,29 @@
 <?php
 /*
- *  Copyright 2022.  Baks.dev <admin@baks.dev>
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *   limitations under the License.
- *
+ *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
  */
 
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\Fields;
 
-use BaksDev\Core\Type\Field\InputField;
+use BaksDev\Reference\Field\Type\InputField;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -33,7 +38,7 @@ final class SectionFieldCollectionForm extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
-        /* TextType */
+		/** Сортировка поля в секции */
         $builder->add
         (
           'sort',
@@ -44,17 +49,18 @@ final class SectionFieldCollectionForm extends AbstractType
           ]
         );
         
-        /* CollectionType */
-        $builder->add('trans', CollectionType::class, [
+        /** Настройки локали */
+        $builder->add('translate', CollectionType::class, [
           'entry_type' => Trans\SectionFieldTransForm::class,
           'entry_options' => ['label' => false],
           'label' => false,
           'by_reference' => false,
           'allow_delete' => true,
           'allow_add' => true,
+		  'prototype_name' => '__field_translate__'
         ]);
-
-
+	
+		/** Тип поля (input, select, textarea ....) */
         $builder
           ->add('type', ChoiceType::class, [
             'choices' => InputField::cases(),  // array_flip(Main::LANG),
@@ -74,17 +80,23 @@ final class SectionFieldCollectionForm extends AbstractType
           ]);
     
         
-        /* Обязательное к заполнению */
+        /** Обязательное к заполнению */
         $builder->add('required', CheckboxType::class, [
           'required' => false,
         ]);
     
-        /* Публичное свойтсво */
+        /** Публичное свойтсво */
         $builder->add('public', CheckboxType::class, [
           'required' => false,
         ]);
-    
-        $builder->add
+		
+		
+		/** Учавствует в фильтре */
+		$builder->add('filter', CheckboxType::class, [
+			'required' => false,
+		]);
+	
+		$builder->add
         (
           'DeleteField',
           ButtonType::class,
@@ -93,8 +105,7 @@ final class SectionFieldCollectionForm extends AbstractType
             'attr' =>
               ['class' => 'btn btn-sm btn-icon btn-light-danger del-item-field'],
           ]);
-        
-  
+		
     }
     
     public function configureOptions(OptionsResolver $resolver) : void

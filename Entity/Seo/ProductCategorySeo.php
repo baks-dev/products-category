@@ -1,26 +1,32 @@
 <?php
 /*
- *  Copyright 2022.  Baks.dev <admin@baks.dev>
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *   limitations under the License.
- *
+ *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
  */
 
 namespace BaksDev\Products\Category\Entity\Seo;
 
 use BaksDev\Products\Category\Entity\Event\Event;
-use BaksDev\Core\Services\EntityEvent\EntityEvent;
+use BaksDev\Core\Entity\EntityState;
 use BaksDev\Core\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity\Event\ProductCategoryEvent;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
@@ -28,117 +34,113 @@ use InvalidArgumentException;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'product_category_seo')]
-class ProductCategorySeo extends EntityEvent
+class ProductCategorySeo extends EntityState
 {
-    public const TABLE = "product_category_seo";
-    
-    /** Связь на событие */
-    #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: Event::class, cascade: ["remove", "persist"], inversedBy: "seo")]
-    #[ORM\JoinColumn(name: 'event_id', referencedColumnName: 'id')]
-    protected Event $event;
-    
-    /** Локаль */
-    #[ORM\Id]
-    #[ORM\Column(type: Locale::TYPE, length: 2, nullable: false)]
-    protected Locale $local;
-    
-    /** Шаблон META TITLE */
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    protected ?string $title;
-    
-    /** Шаблон META KEYWORDS */
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    protected ?string $keywords;
-    
-    /** Шаблон META DESCRIPTION */
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    protected ?string $description;
-    
-    
-    public function __construct(Event $event)
-    {
-        $this->event = $event;
-    }
-    
-    /**
-     * Метод заполняет объект DTO свойствами сущности и возвращает
-     * @throws Exception
-     */
-    public function getDto($dto) : mixed
-    {
-        if($dto instanceof SeoInterface)
-        {
-            return parent::getDto($dto);
-        }
-        
-        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
-    }
-    
-    /**
-     * Метод присваивает свойствам значения из объекта DTO
-     * @throws Exception
-     */
-    public function setEntity($dto) : mixed
-    {
-        if($dto instanceof SeoInterface)
-        {
-            return parent::setEntity($dto);
-        }
-        
-        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
-    }
-    
-    
-    
-    public function equals($dto) : bool
-    {
-        if($dto instanceof SeoInterface)
-        {
-            return  ($this->event->getId() === $dto->getEquals() &&
-              $dto->getLocal()->getValue() === $this->local->getValue());
-            
-        }
-        
-        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
-    }
-    
-    
-    
-    //    public function updCategorySeo(SeoInterface $seo) : void
-    //    {
-    ////        if(property_exists($seo, 'title'))
-    ////        {
-    ////            $this->title = $seo->title;
-    ////        }
-    ////
-    ////        if(property_exists($seo, 'keywords'))
-    ////        {
-    ////            $this->keywords = $seo->keywords;
-    ////        }
-    ////
-    ////        if(property_exists($seo, 'description'))
-    ////        {
-    ////            $this->description = $seo->description;
-    ////        }
-    //    }
-    
-    //    public function getCategorySeo(SeoInterface $seo) : SeoInterface
-    //    {
-    //        $oReflectionClass = new \ReflectionClass($seo);
-    //
-    //        foreach($oReflectionClass->getProperties() as $property)
-    //        {
-    //            $propertyName = $property->getName();
-    //            $propertyNameSetter =  'set'.ucfirst($propertyName);
-    //
-    //            if(property_exists($this, $propertyName) && method_exists($seo, $propertyNameSetter))
-    //            {
-    //                $seo->$propertyNameSetter($this->{$propertyName});
-    //            }
-    //        }
-    //
-    //        return $seo;
-    //    }
-    
+	public const TABLE = "product_category_seo";
+	
+	/** Связь на событие */
+	#[ORM\Id]
+	#[ORM\ManyToOne(targetEntity: ProductCategoryEvent::class, inversedBy: "seo")]
+	#[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
+	private readonly ProductCategoryEvent $event;
+	
+	/** Локаль */
+	#[ORM\Id]
+	#[ORM\Column(type: Locale::TYPE, length: 2, nullable: false)]
+	private readonly Locale $local;
+	
+	/** Шаблон META TITLE */
+	#[ORM\Column(type: Types::TEXT, nullable: true)]
+	private ?string $title;
+	
+	/** Шаблон META KEYWORDS */
+	#[ORM\Column(type: Types::TEXT, nullable: true)]
+	private ?string $keywords;
+	
+	/** Шаблон META DESCRIPTION */
+	#[ORM\Column(type: Types::TEXT, nullable: true)]
+	private ?string $description;
+	
+	
+	public function __construct(ProductCategoryEvent $event)
+	{
+		$this->event = $event;
+	}
+	
+	public function getDto($dto) : mixed
+	{
+		if($dto instanceof ProductCategorySeoInterface)
+		{
+			return parent::getDto($dto);
+		}
+		
+		throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+	}
+	
+	public function setEntity($dto) : mixed
+	{
+		if($dto instanceof ProductCategorySeoInterface)
+		{
+			if($dto->getTitle() === null && $dto->getDescription() === null && $dto->getKeywords() === null)
+			{
+				return false;
+			}
+			
+			return parent::setEntity($dto);
+		}
+		
+		throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+	}
+	
+	
+	
+	//    public function equals($dto) : bool
+	//    {
+	//        if($dto instanceof SeoInterface)
+	//        {
+	//            return  ($this->event->getId() === $dto->getEquals() &&
+	//              $dto->getLocal()->getValue() === $this->local->getValue());
+	//
+	//        }
+	//
+	//        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+	//    }
+	
+	
+	//    public function updCategorySeo(SeoInterface $seo) : void
+	//    {
+	////        if(property_exists($seo, 'title'))
+	////        {
+	////            $this->title = $seo->title;
+	////        }
+	////
+	////        if(property_exists($seo, 'keywords'))
+	////        {
+	////            $this->keywords = $seo->keywords;
+	////        }
+	////
+	////        if(property_exists($seo, 'description'))
+	////        {
+	////            $this->description = $seo->description;
+	////        }
+	//    }
+	
+	//    public function getCategorySeo(SeoInterface $seo) : SeoInterface
+	//    {
+	//        $oReflectionClass = new \ReflectionClass($seo);
+	//
+	//        foreach($oReflectionClass->getProperties() as $property)
+	//        {
+	//            $propertyName = $property->getName();
+	//            $propertyNameSetter =  'set'.ucfirst($propertyName);
+	//
+	//            if(property_exists($this, $propertyName) && method_exists($seo, $propertyNameSetter))
+	//            {
+	//                $seo->$propertyNameSetter($this->{$propertyName});
+	//            }
+	//        }
+	//
+	//        return $seo;
+	//    }
+	
 }

@@ -1,18 +1,23 @@
 /*
- *  Copyright 2022.  Baks.dev <admin@baks.dev>
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *   limitations under the License.
- *
+ *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
  */
 
 
@@ -52,18 +57,16 @@ if ($blockCollection) {
 
     /* добавить событие на удаление ко всем существующим секциям свойств */
     deleteSection($blockCollection);
+
     /* добавить событие на удаление свойства из секции */
     deleteField($blockCollection)
 
 
-    // /* кнопки Добавить поле */
-    // let $addButtonField = document.querySelectorAll('[id^="field_addCollection_"]');
-    // $addButtonField.forEach(function (item) {
-    //     //item.addEventListener('click', function (event) {
-    //     //console.log(this.dataset.index);
-    //     fieldCollection(item.dataset.index);
-    //     //});
-    // });
+    /* Существующие кнопки Добавить поле в секцию */
+    let $addButtonField = document.querySelectorAll('[id^="createSectionField"]');
+    $addButtonField.forEach(function (item) {
+        createSectionField(item.dataset.section);
+    });
 
 
     // /* Удаляем при клике колекцию ПОЛЕЙ */
@@ -106,9 +109,9 @@ if ($blockCollection) {
 
         /* Замена '__name__' в HTML-коде прототипа на
         вместо этого будет число, основанное на том, сколько коллекций */
-        newForm = newForm.replace(/__name__/g, index);
-        //newForm = newForm.replace(/__FIELDS__/g, 0);
-        newForm = newForm.replace(/__FIELDS_INDEX__/g, 1);
+        newForm = newForm.replace(/__category_section__/g, index);
+        //newForm = newForm.replace(/__FIELD_SORT__/g, 100);
+        //newForm = newForm.replace(/__FIELDS_INDEX__/g, 1);
 
 
         /* Вставляем новую коллекцию */
@@ -116,9 +119,9 @@ if ($blockCollection) {
         div.id = 'item-collection-section-' + index;
 
         div.classList.add('card');
-        div.classList.add('card-flush');
         div.classList.add('p-4');
         div.classList.add('mb-3');
+        div.classList.add('border-light');
         div.classList.add('item-collection-section');
 
 
@@ -126,56 +129,33 @@ if ($blockCollection) {
         $blockCollection.append(div);
 
 
-        let field = document.getElementById('field-collection-' + index);
-        field.innerHTML = field.innerHTML.replace(/__FIELDS__/g, '0')
-            .replace(/__FIELD_SORT__/g, '100');
 
-        //createSectionField($btnAddFields)
+        /* Плавная прокрутка к элементу */
+        div.scrollIntoView({block: "center", inline: "center", behavior: "smooth"});
+
+        // let field = document.getElementById('field-collection-' + index);
+        // field.innerHTML = field.innerHTML.replace(/__FIELDS__/g, '0')
+        //     .replace(/__FIELD_SORT__/g, '100');
+
+
+
+        /* Добавить поле в секцию */
+        createSectionField(index);
+
 
         /* Удаляем при клике СЕКЦИЮ */
         deleteSection(div);
         /* Удаляем при клике СВОЙСТВО */
         deleteField(div);
 
-
-        /* Удаляем при клике СЕКЦИЮ */
-        // div.querySelector('.del-item-section').addEventListener('click', function () {
-        //     let $counter = $blockCollection.getElementsByClassName('item-collection-section').length;
-        //     if ($counter > 1) {
-        //         this.closest('.item-collection-section').remove();
-        //     }
-        //     else
-        //     {
-        //         alert('Минимально должна быть добавлена одна секция');
-        //     }
-        // });
-
         /* Увеличиваем data-index на 1 после вставки новой коллекции */
         this.dataset.index = (index + 1).toString();
 
-
-        /* получаем кнопку Добавить поле в секцию */
-
-        // div.querySelector('.section-field_add-collection').addEventListener('click', function () {
-        //     createSectionField(this);
-        // });
-
-
-        /* получаем количество коллекций и присваеваем data-index прототипу */
-        //let $index = $blockCollection.getElementsByClassName('item-collection').length;
-
-
-        /* Добавляем новую коллекцию FIELD */
-        //fieldCollection(index);
-
-        /* Получаем блок колекций FIELD в новой коллекции SECTION */
-        //let $blockCollectionFields = document.getElementById('field_collection_'+index);
-
-        /* Добавляем в форму FIELD */
-        //createField($blockCollectionFields, index);
-
     });
 }
+
+
+
 
 /** Добавить секцию  */
 function deleteSection($block) {
@@ -200,17 +180,14 @@ function deleteSection($block) {
 /** Удалить свойство из секции  */
 function deleteField($block) {
 
-    let $delItem = $block.querySelectorAll('.del-item-field');
+    $delItem = $block.querySelectorAll('.del-item-field');
 
     /* Удаляем при клике свойство из секции */
     $delItem.forEach(function (item) {
         item.addEventListener('click', function () {
 
-            console.log($block);
-
-            console.log($block.querySelectorAll('.item-collection-field'));
-
-            let $counter = $block.querySelectorAll('.item-collection-field').length;
+            let $fieldCollection = document.getElementById('field-collection-'+this.dataset.section);
+            let $counter = $fieldCollection.querySelectorAll('.item-collection-field').length;
 
             if ($counter > 1) {
                 item.closest('.item-collection-field').remove();
@@ -223,40 +200,56 @@ function deleteField($block) {
 
 
 /** Добавить свойство в секцию  */
-function createSectionField($btnAddFields) {
+function createSectionField(section) {
 
-    //console.log($btnAddFields);
+    /* Событие на клик добавления полей в секцию */
+    let $btnAddFields = document.getElementById('createSectionField'+ section);
 
-    /* получаем прототип коллекции  */
-    let newForm = $btnAddFields.dataset.prototype;
-    let section_id = $btnAddFields.dataset.section;
-    let index = $btnAddFields.dataset.index;
+    //$btnCreateSectionField = div.querySelector('#createSectionField'+ index);
+    $btnAddFields.addEventListener('click', function ()
+    {
 
-    /* Замена '__name__' в HTML-коде прототипа на
-                вместо этого будет число, основанное на том, сколько коллекций */
-    newForm = newForm.replace(/__name__/g, section_id);
-    newForm = newForm.replace(/__FIELDS__/g, index);
-    newForm = newForm.replace(/__FIELD_SORT__/g, index * 100 + 100);
+        //$btnAddFields = document.getElementById('createSectionField'+section)
+
+        let section_id = $btnAddFields.dataset.section;
+
+        /* получаем прототип коллекции  */
+        let newForm = $btnAddFields.dataset.prototype;
+
+        let index = $btnAddFields.dataset.index;
 
 
-    /* Вставляем новую коллекцию */
-    let div = document.createElement('div');
-    div.id = 'item-collection-field-' + index;
-    div.classList.add('item-collection-field');
-    div.classList.add('pb-3');
 
-    div.innerHTML = newForm;
+        /* Замена '__name__' в HTML-коде прототипа на
+                    вместо этого будет число, основанное на том, сколько коллекций */
+        newForm = newForm.replace(/__category_section__/g, section_id);
+        newForm = newForm.replace(/__section_field__/g, index);
+        newForm = newForm.replace(/__FIELD_SORT__/g, index * 100 + 100);
 
-    document.getElementById('field-collection-' + section_id).append(div);
-    /* блок коллекции 'field-collection-'+section_id */
 
-    /* Удаляем при клике СВОЙСТВО */
-    deleteField(div);
+        /* Вставляем новую коллекцию */
+        let div = document.createElement('div');
+        div.id = 'item-collection-field-' + index;
+        div.classList.add('item-collection-field');
+        div.classList.add('pb-3');
 
-    $btnAddFields.dataset.index = (index * 1 + 1).toString();
+        div.innerHTML = newForm;
 
-    //div.innerHTML = newForm;
-    //$blockCollection.append(div);
+        document.getElementById('field-collection-' + section_id).append(div);
+
+
+        /* Плавная прокрутка к элементу */
+        div.scrollIntoView({block: "center", inline: "center", behavior: "smooth"});
+
+        /* Удаляем при клике СВОЙСТВО */
+        deleteField(div);
+
+        $btnAddFields.dataset.index = (index * 1 + 1).toString();
+
+        //div.innerHTML = newForm;
+        //$blockCollection.append(div);
+
+    });
 
 }
 
@@ -287,104 +280,41 @@ function createSectionField($btnAddFields) {
 // }
 
 
-/**
- *
- * Добавить коллекцию ТОРГОВОГО ПРЕДЛОЖЕНИЯ
- *
- *
- */
 
 
-/* кнопка Добавить коллекцию ТОРГОВОГО ПРЕДЛОЖЕНИЯ */
- let $addButtonOffers = document.getElementById('offers_addCollection');
+document.querySelectorAll('.is-reference').forEach(function (isReference) {
 
-/* Блок для новой коллекции Торговых предложений */
-let $blockCollectionOffers = document.getElementById('offers_collection');
+    /* Обрабатываем уже существующие и сохраненные ТП */
+    chanfeReferenc(isReference);
 
-if($blockCollectionOffers)
-{
-
-    /* добавить событие на удаление ко всем существующим элементам формы в блок с классом .del-item */
-    let $delItemOffers = $blockCollectionOffers.querySelectorAll('.del-item-offers');
-
-
-    /* Удаляем при клике колекцию СЕКЦИЙ */
-    $delItemOffers.forEach(function (item) {
-        item.addEventListener('click', function () {
-
-            item.closest('.item-collection-offers').remove();
-
-        });
+    isReference.addEventListener('change', function () {
+        chanfeReferenc(this);
     });
 
-
-    /* получаем количество коллекций и присваиваем data-index прототипу */
-    //$blockCollectionOffers.dataset.index = $blockCollectionOffers.getElementsByClassName('item-collection-offers').length.toString();
-
-
-    /* Добавляем новую коллекцию */
-    $addButtonOffers.addEventListener('click', function ()
-    {
-        //console.log(this.dataset.prototype);
-        //console.log(this.dataset.index);
-
-
-        /* получаем прототип коллекции  */
-        let newForm = this.dataset.prototype;
-        let index = this.dataset.index;
-
-
-        /* Замена '__name__' в HTML-коде прототипа на
-            вместо этого будет число, основанное на том, сколько коллекций */
-         newForm = newForm.replace(/__name__/g, index);
-         newForm = newForm.replace(/__OFFER_SORT__/g, index * 100 + 100);
-        //
-        //
-        // /* Вставляем новую коллекцию ТОРГОВЫХ ПРЕДЛОЖЕНИЙ */
-         let div = document.createElement('div');
-         div.innerHTML = newForm;
-         $blockCollectionOffers.append(div);
-
-
-        /* Удаляем при клике колекцию ТОРГОВЫХ ПРЕДЛОЖЕНИЙ */
-        div.querySelector('.del-item-offers').addEventListener('click', function () {
-            this.closest('.item-collection-offers').remove();
-        });
-
-        /* Увеличиваем data-index на 1 после вставки новой коллекции */
-        this.dataset.index = (index * 1 + 1).toString();
-        //
-        $blockCollectionOffers.querySelectorAll('.is-reference').forEach(function (isReference) {
-
-            isReference.addEventListener('change', function () {
-                chanfeReferenc(this);
-            });
-        });
-    });
-
-
-    $blockCollectionOffers.querySelectorAll('.is-reference').forEach(function (isReference) {
-
-        /* Обрабатываем уже существующие и сохраненные ТП */
-        chanfeReferenc(isReference);
-
-        isReference.addEventListener('change', function () {
-            chanfeReferenc(this);
-        });
-
-    });
-}
+});
 
 
 /** Получаем поле 'Название раздела' по локали для 'Символьный код категории' */
-let $name = document.querySelector("input[data-lang='category_form_trans_0_"+$lang+"']");
+let $name = document.querySelector("input[data-lang='product_category_form_translate_0_"+$lang+"']");
 
 if ($name) {
-    $name.addEventListener('input', catUrl.debounce(500));
+
+    setTimeout(function initBootstrap() {
+
+        if (typeof catUrl.debounce === 'function') {
+
+            $name.addEventListener('input', catUrl.debounce(500));
+            return;
+        }
+        setTimeout(initBootstrap, 100);
+
+    }, 100);
+
+
 
     function catUrl() {
         /* Заполняем транслитом URL */
-        document.getElementById('category_form_info_url').value = translitRuEn(this.value).toLowerCase();
+        document.getElementById('product_category_form_info_url').value = translitRuEn(this.value).toLowerCase();
     }
 }
 
@@ -401,24 +331,122 @@ if ($name) {
 // });
 
 
+/** Обрабатываем чекбоксы торговых предложений и вариантов */
+
+
+$offerSettings = document.getElementById('offer-settings');
+$checkboxOfferSettings = document.getElementById('product_category_form_offer_offer');
+$nameOfferSettings = document.querySelectorAll("input[id^='product_category_form_offer_translate']");
+
+$variationSettings = document.getElementById('variation-settings');
+$checkboxVariationSettings = document.getElementById('product_category_form_offer_variation_variation');
+$nameVariationSettings = document.querySelectorAll("input[id^='product_category_form_offer_variation_translate']");
+
+
+$checkboxOfferSettings.addEventListener('change', function () {
+
+    if (this.checked == false)
+    {
+        $offerSettings.classList.add('d-none');
+
+        $checkboxVariationSettings.checked = false;
+        $checkboxVariationSettings.disabled = true;
+
+        $variationSettings.classList.add('d-none');
+
+        /* Делаем поле Name НЕ обязательным */
+        Array.from($nameOfferSettings).forEach(e => e.removeAttribute('required'));
+        Array.from($nameVariationSettings).forEach(e => e.removeAttribute('required'));
+
+
+    }
+    else
+    {
+
+        /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
+        Array.from($nameOfferSettings).forEach(e => e.setAttribute('required', true));
+
+        $offerSettings.classList.remove('d-none');
+        $checkboxVariationSettings.disabled = false;
+    }
+});
+
+
+
+$checkboxVariationSettings.addEventListener('change', function () {
+
+
+    if (this.checked == false)
+    {
+        $variationSettings.classList.add('d-none');
+
+        /* Делаем поле Name НЕ обязательным */
+        Array.from($nameVariationSettings).forEach(e => e.removeAttribute('required'));
+
+    }
+    else
+    {
+        $variationSettings.classList.remove('d-none');
+
+        /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
+        Array.from($nameVariationSettings).forEach(e => e.setAttribute('required', true));
+
+    }
+});
+
+
+if ($checkboxOfferSettings.checked == false)
+{
+    $offerSettings.classList.add('d-none');
+
+    $checkboxVariationSettings.checked = false;
+    $checkboxVariationSettings.disabled = true;
+
+    /* Делаем поле Name НЕ обязательным */
+
+    Array.from($nameOfferSettings).forEach(e => e.removeAttribute('required'));
+    Array.from($nameVariationSettings).forEach(e => e.removeAttribute('required'));
+
+    $variationSettings.classList.add('d-none');
+}
+else
+{
+
+    $offerSettings.classList.remove('d-none');
+    $checkboxVariationSettings.disabled = false;
+
+    /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
+    Array.from($nameOfferSettings).forEach(e => e.setAttribute('required', true));
+}
+
+
+if ($checkboxVariationSettings.checked == false)
+{
+    /* Делаем поле Name НЕ обязательным */
+    Array.from($nameVariationSettings).forEach(e => e.removeAttribute('required'));
+
+    $variationSettings.classList.add('d-none');
+
+}
+else
+{
+    /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
+    Array.from($nameVariationSettings).forEach(e => e.setAttribute('required', true));
+
+
+    $variationSettings.classList.remove('d-none');
+}
+
+
+
 function chanfeReferenc($this) {
 
-
     let ref = document.getElementById($this.dataset.reference);
-
-    let multipleDiv = document.getElementById('multiple_' + $this.dataset.multiple);
-    let multiple = document.getElementById($this.dataset.multiple);
-
     if ($this.checked === true) {
         ref.classList.remove('d-none');
-        multipleDiv.classList.remove('d-none');
     } else {
-        multipleDiv.classList.add('d-none');
-        multiple.checked = false;
-
         ref.classList.add('d-none');
         ref.selectedIndex = 0; /* сбрасываем select */
-
     }
 }
 

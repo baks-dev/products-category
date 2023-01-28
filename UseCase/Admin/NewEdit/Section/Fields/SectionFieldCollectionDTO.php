@@ -1,42 +1,43 @@
 <?php
 /*
- *  Copyright 2022.  Baks.dev <admin@baks.dev>
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *   limitations under the License.
- *
+ *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
  */
 
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\Fields;
 
-
-
-use BaksDev\Products\Category\Entity\Section\Field\FieldInterface;
-use BaksDev\Products\Category\Entity\Section\Field\Trans\TransInterface;
-use BaksDev\Products\Category\Type\Section\Field\Id\FieldUid;
+use BaksDev\Products\Category\Entity\Section\Field\ProductCategorySectionFieldInterface;
+use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\Fields\Trans\SectionFieldTransDTO;
-use BaksDev\Core\Type\Field\InputField;
 use BaksDev\Core\Type\Locale\Locale;
+use BaksDev\Reference\Field\Type\InputField;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /** Поля свойств продукта в секции */
-final class SectionFieldCollectionDTO implements FieldInterface
+final class SectionFieldCollectionDTO implements ProductCategorySectionFieldInterface
 {
-    private ?FieldUid $id = null;
+	#[Assert\Uuid]
+    private ?ProductCategorySectionFieldUid $id = null;
     
-    /** Сортировка поля в секции
-     * @var int
-     */
+    /** Сортировка поля в секции */
     #[Assert\Range(min: 0, max: 999)]
     private int $sort = 100;
     
@@ -44,146 +45,116 @@ final class SectionFieldCollectionDTO implements FieldInterface
     #[Assert\NotBlank]
     private InputField $type;
     
-    /** Публичное свойство
-     * @var bool
-     */
+    /** Публичное свойство */
     private bool $public = true;
     
-    /** Обязательное к заполнению
-     * @var bool
-     */
+    /** Обязательное к заполнению */
     private bool $required = true;
+	
+    /** Учавствует в фильтре */
+    private bool $filter = false;
     
+	/** Настройки локали */
     #[Assert\Valid]
-    private ArrayCollection $trans;
+    private ArrayCollection $translate;
     
 
-    public function __construct() { $this->trans = new  ArrayCollection(); }
-    
-    /**
-     * @return FieldUid|null
-     */
-    public function getEquals() : ?FieldUid
-    {
-        return $this->id;
-    }
-    
-    /**
-     * @param FieldUid $id
-     */
-    public function setId(FieldUid $id) : void
-    {
-        $this->id = $id;
-    }
-    
-
-    
-    
-    /**
-     * @return int
-     */
+    public function __construct() { $this->translate = new  ArrayCollection(); }
+	
+	
+	/** Сортировка поля в секции */
+	
     public function getSort() : int
     {
         return $this->sort;
     }
-    
-    /**
-     * @param int $sort
-     */
+
     public function setSort(int $sort) : void
     {
         $this->sort = $sort;
     }
-    
-    /**
-     * @return InputField
-     */
+	
+	/** Тип поля (input, select, textarea ....) */
+	
     public function getType() : InputField
     {
         return $this->type;
     }
-    
-    /**
-     * @param InputField $type
-     */
+
     public function setType(InputField $type) : void
     {
         $this->type = $type;
     }
-    
-    /**
-     * @return bool
-     */
-    public function isPublic() : bool
+	
+	/** Публичное свойство */
+	
+    public function getPublic() : bool
     {
         return $this->public;
     }
-    
-    /**
-     * @param bool $public
-     */
+
     public function setPublic(bool $public) : void
     {
         $this->public = $public;
     }
-    
-    /**
-     * @return bool
-     */
-    public function isRequired() : bool
+	
+	/** Обязательное к заполнению */
+	
+    public function getRequired() : bool
     {
         return $this->required;
     }
-    
-    /**
-     * @param bool $required
-     */
+
     public function setRequired(bool $required) : void
     {
         $this->required = $required;
     }
-    
-    /**
-     * @return ArrayCollection
-     */
-    public function getTrans() : ArrayCollection
+	
+	/** Учавствует в фильтре */
+	
+	public function getFilter() : bool
+	{
+		return $this->filter;
+	}
+
+	public function setFilter(bool $filter) : void
+	{
+		$this->filter = $filter;
+	}
+	
+	
+
+	
+	
+	/** Настройки локали */
+	
+    public function getTranslate() : ArrayCollection
     {
         /* Вычисляем расхождение и добавляем неопределенные локали */
-        foreach(Locale::diffLocale($this->trans) as $locale)
+        foreach(Locale::diffLocale($this->translate) as $locale)
         {
             $SectionFieldTransDTO = new SectionFieldTransDTO();
             $SectionFieldTransDTO->setLocal($locale);
-            $this->addTran($SectionFieldTransDTO);
+            $this->addTranslate($SectionFieldTransDTO);
         }
     
-        return $this->trans;
+        return $this->translate;
     }
     
-    
-    
-    /**
-     * @param SectionFieldTransDTO $trans
-     * @return void
-     */
-    public function addTran(SectionFieldTransDTO $trans) : void
+
+    public function addTranslate(SectionFieldTransDTO $trans) : void
     {
         
-        if(!$this->trans->contains($trans))
+        if(!$this->translate->contains($trans))
         {
-            $this->trans[] = $trans;
+            $this->translate->add($trans);
         }
     }
     
-    public function removeTran(SectionFieldTransDTO $trans) : void
+    public function removeTranslate(SectionFieldTransDTO $trans) : void
     {
-        $this->trans->removeElement($trans);
+        $this->translate->removeElement($trans);
     }
-    
-    /** Метод для инициализации и маппинга сущности на DTO в коллекции  */
-    public function getTranClass() : TransInterface
-    {
-        return new SectionFieldTransDTO();
-    }
-    
+	
 }
 

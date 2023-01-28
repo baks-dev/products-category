@@ -33,10 +33,10 @@ return static function (TwigConfig $config, ContainerConfigurator $configurator)
 	
 	
 	/** Абсолютный Путь для загрузки аватарок профилей пользователя */
-	$configurator->parameters()->set(ProductCategoryCover::TABLE, '%kernel.project_dir%/public/assets/'.ProductCategoryCover::TABLE.'/');
+	$configurator->parameters()->set(ProductCategoryCover::TABLE, '%kernel.project_dir%/public/upload/'.ProductCategoryCover::TABLE.'/');
 	
 	/** Относительный путь аватарок профилей пользователя */
-	$config->global(ProductCategoryCover::TABLE)->value('/assets/'.ProductCategoryCover::TABLE.'/');
+	$config->global(ProductCategoryCover::TABLE)->value('/upload/'.ProductCategoryCover::TABLE.'/');
 	
     
 };

@@ -27,63 +27,66 @@ use BaksDev\Core\Services\Security\RoleSecurity;
 use BaksDev\Products\Category\Entity as CategoryEntity;
 use BaksDev\Products\Category\Type\Event\ProductCategoryEventUid;
 use BaksDev\Products\Category\Type\Parent\ProductParentCategoryUid;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Category\CategoryDTO;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Category\CategoryForm;
-//use BaksDev\Products\Category\UseCase\CategoryAggregate;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\ProductCategoryDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\ProductCategoryForm;
+use BaksDev\Products\Category\Entity;
 use BaksDev\Core\Controller\AbstractController;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\ProductCategoryHandler;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
-use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[RoleSecurity(['ROLE_ADMIN', 'ROLE_PRODUCT_CATEGORY_NEW'])]
 final class NewController extends AbstractController
 {
-	#[Route('/admin/product/category/new/{cat}/{id}', name: 'admin.newedit.new', defaults: ['cat' => null, "id" => null], methods: ['GET', 'POST'])]
+	#[Route('/admin/product/category/new/{cat}/{id}', name: 'admin.newedit.new', defaults: ['cat' => null, "id" => null],
+		methods: ['GET', 'POST'])]
 
 	public function new(
 		Request $request,
-		//CategoryAggregate $handler,
-		#[MapEntity] ?CategoryEntity\ProductCategory $cat,
-		?ProductCategoryEventUid $id,
 		EntityManagerInterface $entityManager,
+		ProductCategoryHandler $handler,
+		#[MapEntity] ?CategoryEntity\ProductCategory $cat = null,
+		?ProductCategoryEventUid $id = null,
+		
 	) : Response
 	{
 		$parent = $cat ? new ProductParentCategoryUid($cat->getId()) : null;
-		$category = new CategoryDTO($parent);
+		$Event = $id ? $entityManager->getRepository(CategoryEntity\Event\ProductCategoryEvent::class)->find($id) : null;
 		
-		$Event = $entityManager->getRepository(CategoryEntity\Event\ProductCategoryEvent::class)->find($id);
-		
+		$category = new ProductCategoryDTO($parent);
 		/* Копируем данные из события */
 		if($Event)
 		{
 			$Event->getDto($category);
-			$category->copy();
+			//$category->copy();
 		}
 		
 		/* Форма добавления */
-		$form = $this->createForm(CategoryForm::class, $category);
+		$form = $this->createForm(ProductCategoryForm::class, $category);
 		$form->handleRequest($request);
 		
-		if($form->isSubmitted() && $form->isValid())
+		
+		if($form->isSubmitted() && $form->isValid() && $form->has('Save'))
 		{
-			$cover = $form->get('cover')->getData();
-			$handle = $handler->handle($category, $cover->file);
+			$ProductCategory = $handler->handle($category);
 			
-			if($handle)
+			if($ProductCategory instanceof Entity\ProductCategory)
 			{
-				$this->addFlash('success', 'admin.new.success', 'products.category');
-				return $this->redirectToRoute('ProductCategory:admin.index');
+				$this->addFlash('success', 'admin.success.new', 'admin.products.category');
 			}
+			else
+			{
+				$this->addFlash('danger', 'admin.danger.new', 'admin.products.category', $ProductCategory);
+			}
+			
+			return $this->redirectToRoute('ProductCategory:admin.index');
+			
 		}
 		
 		return $this->render(['form' => $form->createView()]);
-		
 	}
 	
 }

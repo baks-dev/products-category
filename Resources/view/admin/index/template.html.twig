@@ -1,35 +1,30 @@
+{% trans_default_domain("admin.profile.type") %}
+
+{% set ROLE = 'ROLE_PRODUCT_CATEGORY' %}
+
 {# ---- ШАБЛОН ------------------------------------------------------------ #}
-{% extends '@Template/default/admin/base.html.twig' %}
+{% extends '@Core/admin/base.html.twig' %}
+
+{# ---- CSS ------------------------------------------------------------ #}
+{% block title %}
+    {{ 'admin.page.index'|trans }}
+{% endblock %}
 
 {# ---- CSS ------------------------------------------------------------ #}
 {% block stylesheets %}
     {#<link href="{{ path(app.request.attributes.get('_route')~'.css') }}" rel="stylesheet">#}
 {% endblock %}
 
-{# ---- HEADER-БЛОК ------------------------------------------------------------ #}
-{# {% block header %}
-    {{ include(_self|replace({ "template.html.twig": "header.html.twig" })) }}
-{% endblock %} #}
-
-
-{# ---- LEFT-БЛОК ------------------------------------------------------------ #}
-{# {% block left %} #}
-{#   {% include '@Template/flowers/left.html.twig' %} #}
-{# {% endblock %} #}
-
 
 {# ---- КОНТЕНТ-БЛОК ------------------------------------------------------------ #}
 {% block content %}
-    {{ include(_self|replace({ "template.html.twig": "content.html.twig" })) }}
-{% endblock %}
+    
+    {{ include(_self|replace({ "template.html.twig": settings.device~"/content.html.twig" })) }}
+    <div style="display: none !important;"
+         class="popover popover-body popover-arrow fade show rounded-pill spinner-border spinner-border-sm vertical-middle d-none">
+    </div>
 
-
-{# ---- FOOTER-БЛОК ------------------------------------------------------------ #}
-{#
-{% block footer %}
-    {{ include(_self|replace({ "template.html.twig": "footer.html.twig" })) }}
 {% endblock %}
-#}
 
 {% block javascript %}
 {#<script defer src="{{ path(app.request.attributes.get('_route')~'.js') }}"></script>#}

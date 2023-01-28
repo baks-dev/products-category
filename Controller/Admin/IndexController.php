@@ -40,13 +40,16 @@ use Symfony\Component\Routing\Annotation\Route;
 final class IndexController extends AbstractController
 {
 	
-	#[Route('/admin/product/categorys/{cat}', name: 'admin.index', defaults: ['cat' => null], methods: ['GET', 'POST'])]
+	#[Route('/admin/product/categorys/{cat}/{page<\d+>}', name: 'admin.index', //defaults: ['cat' => null],
+		methods: ['GET', 'POST'])]
 	public function index(
 		Request $request,
 		AllCategoryInterface $allCategory,
-		#[MapEntity] ?ProductCategory $cat,
+		#[MapEntity] ?ProductCategory $cat = null,
+		int $page = 0,
 	) : Response
 	{
+		
 		
 		/* Поиск */
 		$search = new SearchDTO();
@@ -55,9 +58,8 @@ final class IndexController extends AbstractController
 		
 		/* Получаем список */
 		$parent = $cat ? new ProductParentCategoryUid($cat->getId()) : null;
-		$stmt = $allCategory->get($search, $parent);
-		$query = new Paginator(0, $stmt, $request);
-		
+		$query = $allCategory->fetchProductParentAllAssociative($search, $parent);
+
 		return $this->render(
 			[
 				'query' => $query,
@@ -67,5 +69,5 @@ final class IndexController extends AbstractController
 			]
 		);
 	}
-
+	
 }

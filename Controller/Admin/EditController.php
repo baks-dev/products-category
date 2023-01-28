@@ -25,19 +25,15 @@ namespace BaksDev\Products\Category\Controller\Admin;
 
 
 use BaksDev\Core\Services\Security\RoleSecurity;
-use BaksDev\Products\Category\Entity\Event\ProductCategoryEvent;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Category\CategoryDTO;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Category\CategoryForm;
-use BaksDev\Products\Category\UseCase\CategoryAggregate;
+use BaksDev\Products\Category\Entity;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\ProductCategoryDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\ProductCategoryForm;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\ProductCategoryHandler;
 use BaksDev\Core\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
-use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[RoleSecurity(['ROLE_ADMIN', 'ROLE_PRODUCT_CATEGORY_EDIT'])]
 final class EditController extends AbstractController
@@ -46,31 +42,35 @@ final class EditController extends AbstractController
     #[Route('/admin/product/category/edit/{id}', name: 'admin.newedit.edit', methods: ['GET', 'POST'])]
     public function edit(
       Request $request,
-      #[MapEntity] ProductCategoryEvent $Event,
-      CategoryAggregate $handler,
+      #[MapEntity] Entity\Event\ProductCategoryEvent $Event,
+		ProductCategoryHandler $handler,
     ) : Response
     {
 		
-        $category = new CategoryDTO();
+        $category = new ProductCategoryDTO();
         $Event->getDto($category);
 		
         /* Форма добавления */
-        $form = $this->createForm(CategoryForm::class, $category);
+        $form = $this->createForm(ProductCategoryForm::class, $category);
         $form->handleRequest($request);
-        
-        if($form->isSubmitted() && $form->isValid())
-        {
-            $cover = $form->get('cover')->getData();
-            $handle = $handler->handle($category, $cover->file);
-            
-            if($handle)
-            {
-                $this->addFlash('success', 'admin.update.success', 'products.category');
-                return $this->redirectToRoute('ProductCategory:admin.index');
-            }
-        }
+		
+		if($form->isSubmitted() && $form->isValid() && $form->has('Save'))
+		{
+			$ProductCategory = $handler->handle($category);
+		
+			if($ProductCategory instanceof Entity\ProductCategory)
+			{
+				$this->addFlash('success', 'admin.success.update', 'admin.products.category');
+			}
+			else
+			{
+				$this->addFlash('danger', 'admin.danger.update', 'admin.products.category', $ProductCategory);
+			}
+		
+			return $this->redirectToRoute('ProductCategory:admin.index');
+		
+		}
 		
         return $this->render(['form' => $form->createView()]);
-        
     }
 }

@@ -23,11 +23,6 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-//use App\Module\Product\Type\Category\Id\CategoryUidConverter;
-//use BaksDev\Users\Entity\User;
-//use App\Module\Product\Entity;
-//use App\Module\Product\EntityListeners;
-
 return static function (ContainerConfigurator $configurator)
 {
     $services = $configurator->services()

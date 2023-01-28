@@ -31,12 +31,12 @@ use BaksDev\Products\Category\Type\Landing\Id\ProductCategoryLandingType;
 use BaksDev\Products\Category\Type\Landing\Id\ProductCategoryLandingUid;
 use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersType;
 use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersUid;
+use BaksDev\Products\Category\Type\Offers\Variation\ProductCategoryOffersVariationType;
+use BaksDev\Products\Category\Type\Offers\Variation\ProductCategoryOffersVariationUid;
 use BaksDev\Products\Category\Type\Parent\ProductParentCategoryType;
 use BaksDev\Products\Category\Type\Parent\ProductParentCategoryUid;
 use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldType;
 use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
-
-
 use BaksDev\Products\Category\Type\Section\Id\ProductCategorySectionType;
 use BaksDev\Products\Category\Type\Section\Id\ProductCategorySectionUid;
 use BaksDev\Products\Category\Type\Settings\ProductCategorySettingsIdentifier;
@@ -54,6 +54,7 @@ return static function(ContainerConfigurator $container, DoctrineConfig $doctrin
 	$doctrine->dbal()->type(ProductCategorySectionUid::TYPE)->class(ProductCategorySectionType::class);
 	$doctrine->dbal()->type(ProductParentCategoryUid::TYPE)->class(ProductParentCategoryType::class);
 	$doctrine->dbal()->type(ProductCategoryEventUid::TYPE)->class(ProductCategoryEventType::class);
+	$doctrine->dbal()->type(ProductCategoryOffersVariationUid::TYPE)->class(ProductCategoryOffersVariationType::class);
 	
 	
 	$emDefault = $doctrine->orm()->entityManager('default');

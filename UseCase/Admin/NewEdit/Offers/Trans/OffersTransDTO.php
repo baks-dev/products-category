@@ -1,161 +1,82 @@
 <?php
 /*
- *  Copyright 2022.  Baks.dev <admin@baks.dev>
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *   limitations under the License.
- *
+ *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
  */
 
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\Trans;
 
-
-use BaksDev\Products\Category\Entity\Offers\Offers;
-use BaksDev\Products\Category\Entity\Offers\Trans\TransInterface;
-use BaksDev\Products\Category\Entity\Section\Field\Field;
-use BaksDev\Products\Category\Type\Offers\Id\OffersUid;
+use BaksDev\Products\Category\Entity\Offers\Trans\ProductCategoryOffersTransInterface;
 use BaksDev\Core\Type\Locale\Locale;
+use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersUid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class OffersTransDTO implements TransInterface
+final class OffersTransDTO implements ProductCategoryOffersTransInterface
 {
-    private ?OffersUid $offer = null;
+	#[Assert\Uuid]
+    private readonly ?ProductCategoryOffersUid $offer;
     
-    private ?Field $field = null;
+    //private ?Field $field = null;
     
-    private ?Locale $local;
+	/** Локаль */
+	#[Assert\NotBlank]
+    private readonly ?Locale $local;
     
     /** Название торгового предложения (строка с точкой, нижнее подчеркивание тире процент скобки) */
-    #[Assert\NotBlank]
+    //#[Assert\NotBlank]
     #[Assert\Regex(pattern: '/^[\w \.\,\_\-\(\)\%]+$/iu')]
     private ?string $name = null;
-    
-    /** Краткое описание (строка с точкой, нижнее подчеркивание тире процент скобки) */
-    #[Assert\Regex(pattern: '/^[\w \.\,\_\-\(\)\%]+$/iu')]
-    private ?string $description = null;
-    
-    /**
-     * @return ?Offers
-     */
-    public function getEquals() : ?OffersUid
-    {
-        return $this->offer;
-    }
-    
-    /**
-     * @param Offers $offer
-     */
-    public function setOffer(Offers $offer) : void
-    {
-        $this->offer = $offer->getId();
-    }
-    
-    
-    
-    
-    /**
-     * @return Field|null
-     */
-    public function getField() : ?Field
-    {
-        return $this->field;
-    }
-    
 
-    public function setField(Field $field) : void
-    {
-        $this->field = $field;
-    }
-    
-    /**
-     * @return Locale|null
-     */
+	
+	/** Локаль */
+	
     public function getLocal() : ?Locale
     {
         return $this->local;
     }
-    
-    /**
-     * @param string|Locale $local
-     */
-    public function setLocal(string|Locale $local) : void
-    {
-        $this->local = $local instanceof Locale ? $local : new Locale($local) ;
-    }
-    
-    /**
-     * @return string|null
-     */
+	
+	/** Локаль */
+	
+	public function setLocal(Locale $local) : void
+	{
+		if(!(new \ReflectionProperty($this::class, 'local'))->isInitialized($this))
+		{
+			$this->local = $local;
+		}
+	}
+	
+	
+	
+	/** Название торгового предложения */
+	
     public function getName() : ?string
     {
         return $this->name;
     }
-    
-    /**
-     * @param string|null $name
-     */
+
     public function setName(?string $name) : void
     {
         $this->name = $name;
     }
-    
-    /**
-     * @return string|null
-     */
-    public function getDescription() : ?string
-    {
-        return $this->description;
-    }
-    
-    /**
-     * @param string|null $description
-     */
-    public function setDescription(?string $description) : void
-    {
-        $this->description = $description;
-    }
+	
     
 
-    
-    
-//    public function __construct(Locale $local = null, string $name = null, ?string $description = null)
-//    {
-//        $this->local = $local;
-//        $this->name = $name;
-//        $this->description = $description;
-//    }
-    
-//    /**
-//     * @param string|Locale $local
-//     */
-//    public function setLocal(string|Locale $local) : void
-//    {
-//        $this->local = $local instanceof Locale ? $local : new Locale($local) ;
-//    }
-//
-//    public function getLocal() : Locale
-//    {
-//        return $this->locale;
-//    }
-//
-//    public function getName() : string
-//    {
-//        return $this->name;
-//    }
-//
-//    public function getDesc() : ?string
-//    {
-//        return $this->desc;
-//    }
-    
 }
 
