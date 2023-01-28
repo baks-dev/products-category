@@ -10,6 +10,27 @@
 $ composer require baks-dev/products-category
 ```
 
+## Дополнительно
+
+Установка файловых ресурсов (javascript, css, image ...):
+
+``` bash
+$ php bin/console baks:assets:install
+```
+
+Роли администартора с помощью Fixtures
+
+``` bash
+$ php bin/console doctrine:fixtures:load --append
+```
+Внесите изменения в схеме базы данных с помощью миграции 
+
+``` bash
+$ php bin/console doctrine:migrations:diff
+
+$ php bin/console doctrine:migrations:migrate
+```
+
 ## Журнал изменений ![Changelog](https://img.shields.io/badge/changelog-yellow)
 
 О том, что изменилось за последнее время, обратитесь к [CHANGELOG](CHANGELOG.md) за дополнительной информацией.
