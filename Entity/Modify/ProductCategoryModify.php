@@ -80,20 +80,6 @@ class ProductCategoryModify extends EntityState
         $this->userAgent = 'console';
         $this->action = new ModifyAction(ModifyActionEnum::NEW);
     }
-	
-//	public function __clone() : void
-//	{
-//		$this->modDate = new DateTimeImmutable();
-//		$this->action = new ModifyAction(ModifyActionEnum::UPDATE);
-//	}
-	
-	//    public function __clone()
-//    {
-// $this->modDate = new DateTimeImmutable();
-//        $this->action = new ModifyAction(ModifyActionEnum::UPDATE);
-//$this->ipAddress = new IpAddress('127.0.0.1');
-//$this->userAgent = 'console';
-//    }
     
     public function getDto($dto) : mixed
     {
@@ -115,12 +101,20 @@ class ProductCategoryModify extends EntityState
         throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
     }
     
-    public function upModifyAgent(IpAddress $ipAddress, string $userAgent) : void
+    public function persistModifyAgent(IpAddress $ipAddress, string $userAgent) : void
     {
         $this->ipAddress = $ipAddress;
         $this->userAgent = $userAgent;
         $this->modDate = new DateTimeImmutable();
     }
+	
+	public function updateModifyAgent(IpAddress $ipAddress, string $userAgent) : void
+	{
+		$this->ipAddress = $ipAddress;
+		$this->userAgent = $userAgent;
+		$this->modDate = new DateTimeImmutable();
+		$this->action = new ModifyAction(ModifyActionEnum::UPDATE);
+	}
 
     /**
      * @param UserUid|User|null $user

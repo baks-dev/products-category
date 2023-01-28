@@ -21,28 +21,24 @@
  *  THE SOFTWARE.
  */
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Modify;
 
-use BaksDev\Products\Category\Entity;
-use BaksDev\Products\Category\EntityListeners;
+use BaksDev\Products\Category\Entity\Modify\ProductCategoryModifyInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
-return static function(ContainerConfigurator $configurator){
-	$services = $configurator->services()
-		->defaults()
-		->autowire()
-		->autoconfigure()
-	;
+final class ProductCategoryModifyDTO implements ProductCategoryModifyInterface
+{
+    /** Модификатор */
+	#[Assert\NotBlank]
+	private \DateTimeImmutable $modDate;
+    
+    public function __construct() {
+       $this->modDate = new \DateTimeImmutable();
+    }
+	
+	public function getModDate() : \DateTimeImmutable
+	{
+		return $this->modDate;
+	}
+}
 
-	/** EntityListeners */
-	$services->set(EntityListeners\ProductCategoryModifyListener::class)
-		->class(EntityListeners\ProductCategoryModifyListener::class)
-		->tag(
-			'doctrine.orm.entity_listener',
-			['event' => 'prePersist', 'lazy' => true, 'entity' => Entity\Modify\ProductCategoryModify::class]
-		)
-		->tag(
-			'doctrine.orm.entity_listener',
-			['event' => 'preUpdate', 'lazy' => true, 'entity' => Entity\Modify\ProductCategoryModify::class]
-		)
-	;
-};

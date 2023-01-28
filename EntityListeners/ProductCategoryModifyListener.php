@@ -45,6 +45,9 @@ final class ProductCategoryModifyListener
     
     public function prePersist(ProductCategoryModify $data, LifecycleEventArgs $event) : void
     {
+	
+		dd('prePersist');
+		
         $token = $this->token->getToken();
         
         if($token)
@@ -55,11 +58,32 @@ final class ProductCategoryModifyListener
         /* Если пользователь не из консоли */
         if($this->request->getCurrentRequest())
         {
-            $data->upModifyAgent(
+            $data->persistModifyAgent(
               new IpAddress($this->request->getCurrentRequest()->getClientIp()), /* Ip */
               $this->request->getCurrentRequest()->headers->get('User-Agent') /* User-Agent */
             );
         }
     }
+	
+	public function preUpdate(ProductCategoryModify $data, LifecycleEventArgs $event) : void
+	{
+		dd('preUpdate');
+		
+		$token = $this->token->getToken();
+		
+		if($token)
+		{
+			$data->setUser($token->getUser());
+		}
+		
+		/* Если пользователь не из консоли */
+		if($this->request->getCurrentRequest())
+		{
+			$data->updateModifyAgent(
+				new IpAddress($this->request->getCurrentRequest()->getClientIp()), /* Ip */
+				$this->request->getCurrentRequest()->headers->get('User-Agent') /* User-Agent */
+			);
+		}
+	}
     
 }

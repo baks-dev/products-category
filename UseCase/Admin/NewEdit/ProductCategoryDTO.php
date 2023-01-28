@@ -79,6 +79,10 @@ final class ProductCategoryDTO implements ProductCategoryEventInterface
     /** Неизменяемые свойства категории */
     #[Assert\Valid]
     private InfoDTO $info;
+	
+	/**  Модификатор события  */
+	#[Assert\Valid]
+	private readonly Modify\ProductCategoryModifyDTO $modify;
     
 
     public function __construct(
@@ -93,6 +97,7 @@ final class ProductCategoryDTO implements ProductCategoryEventInterface
         
         $this->cover = new ProductCategoryCoverDTO();
         $this->info = new InfoDTO();
+        $this->modify = new Modify\ProductCategoryModifyDTO();
         
         $this->translate = new ArrayCollection();
         $this->landing = new ArrayCollection();
@@ -273,6 +278,13 @@ final class ProductCategoryDTO implements ProductCategoryEventInterface
 	public function setOffer(ProductCategoryOffersDTO $offer) : void
 	{
 		$this->offer = $offer;
+	}
+	
+	/**  Модификатор события  */
+	
+	public function getModify() : Modify\ProductCategoryModifyDTO
+	{
+		return $this->modify;
 	}
 	
 	
