@@ -55,7 +55,7 @@ final class SectionCollectionForm extends AbstractType
 			'by_reference' => false,
 			'allow_delete' => true,
 			'allow_add' => true,
-			'prototype_name' => '__section_translate__'
+			'prototype_name' => '__section_translate__',
 		]);
 		
 		
@@ -67,7 +67,7 @@ final class SectionCollectionForm extends AbstractType
 			'by_reference' => false,
 			'allow_delete' => true,
 			'allow_add' => true,
-			'prototype_name' => '__section_field__'
+			'prototype_name' => '__section_field__',
 		]);
 		
 		$builder->add

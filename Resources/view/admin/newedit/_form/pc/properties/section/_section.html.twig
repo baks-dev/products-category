@@ -56,12 +56,12 @@
 			{# Поля свойств продукта #}
 			{# {% set include_field = include(_self|replace({ "prototype.section.html.twig": "field/prototype.field.html.twig" }), { field_prototype : section.field.vars.prototype }) %} #}
 			
-
+			
 			<div id="field-collection-{{ section.vars.name }}" class=''>
 				
 				{% for field in section.field %}
 					<div id="item-collection-field-{{ field.vars.name }}"
-					     class="item-collection-field pb-3 {{ loop.first ? 'mt-5' }}">
+							class="item-collection-field pb-3 {{ loop.first ? 'mt-5' }}">
 						{{ include(_self|replace({ "_section.html.twig": "field/_field.html.twig" })) }}
 					</div>
 				{% endfor %}
@@ -89,7 +89,7 @@
 			
 			<div class='mx-3'>
 				<button type="button"
-				        id='createSectionField{{ section.vars.name }}'
+						id='createSectionField{{ section.vars.name }}'
 						{# onclick="createSectionField(this)" #}
 						data-section="{{ section.vars.name }}"
 						data-index="{{ section.field.count }}"
@@ -98,14 +98,14 @@
 			
 			<span class="svg-icon svg-icon-2">
 				<svg xmlns="http://www.w3.org/2000/svg"
-				     width="24" height="24" viewBox="0 0 24 24"
-				     fill="none">
+						width="24" height="24" viewBox="0 0 24 24"
+						fill="none">
 					<rect opacity="0.5" x="11" y="18" width="12"
-					      height="2" rx="1"
-					      transform="rotate(-90 11 18)"
-					      fill="currentColor"></rect>
+							height="2" rx="1"
+							transform="rotate(-90 11 18)"
+							fill="currentColor"></rect>
 					<rect x="6" y="11" width="12" height="2"
-					      rx="1" fill="currentColor"></rect>
+							rx="1" fill="currentColor"></rect>
 				</svg>
 			</span> <span>Добавить поле в секцию</span>
 				</button>

@@ -42,25 +42,28 @@ final class ProductCategoryOffersVariationForm extends AbstractType
 	
 	public function buildForm(FormBuilderInterface $builder, array $options) : void
 	{
-
+		
 		/** Торговое предложение - Справочник */
 		$builder->add('isReference', CheckboxType::class, ['mapped' => false, 'required' => false,]);
 		
 		
 		/** Если ранее выбран справочник - выделяем чекбокс  */
-		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+		$builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
 			$product = $event->getData();
 			$form = $event->getForm();
 			
-			if ($product && $product->getReference() !== null) {
-				$form->add('isReference', CheckboxType::class, ['mapped' => false, 'required' => false, 'data' => true,]);
+			if($product && $product->getReference() !== null)
+			{
+				$form->add('isReference', CheckboxType::class, ['mapped' => false, 'required' => false, 'data' => true,]
+				);
 			}
 		});
 		
 		
 		/** Справочники */
 		$builder->add
-		('reference',
+		(
+			'reference',
 			ChoiceType::class,
 			[
 				'required' => false,
@@ -72,7 +75,7 @@ final class ProductCategoryOffersVariationForm extends AbstractType
 					
 					//'reference.shoe.size' => 'size_shoe', /* Размер обуви */
 				],
-				'translation_domain' => 'reference'
+				'translation_domain' => 'reference',
 			]
 		);
 		
@@ -92,7 +95,7 @@ final class ProductCategoryOffersVariationForm extends AbstractType
 			'by_reference' => false,
 			'allow_delete' => true,
 			'allow_add' => true,
-			'prototype_name' => '__offer_translate__'
+			'prototype_name' => '__offer_translate__',
 		]);
 		
 		/** Флаг, то что торговое предложение имеет множественные варианты

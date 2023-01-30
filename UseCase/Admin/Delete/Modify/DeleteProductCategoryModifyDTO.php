@@ -31,17 +31,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class DeleteProductCategoryModifyDTO implements ProductCategoryModifyInterface
 {
-    /** Модификатор */
+	/** Модификатор */
 	#[Assert\NotBlank]
-    private ModifyAction $action;
-    
-    public function __construct() {
-        $this->action = new ModifyAction(ModifyActionEnum::DELETE);
-    }
+	private ModifyAction $action;
 	
-    public function getAction() : ModifyAction
-    {
-        return $this->action;
-    }
+	public function __construct()
+	{
+		$this->action = new ModifyAction(ModifyActionEnum::DELETE);
+	}
+	
+	public function getAction() : ModifyAction
+	{
+		return $this->action;
+	}
 }
 

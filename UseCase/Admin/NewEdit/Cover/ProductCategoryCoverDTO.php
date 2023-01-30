@@ -30,85 +30,83 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class ProductCategoryCoverDTO implements ProductCategoryCoverInterface
 {
-    /** Обложка категории */
-    #[Assert\File(
-      maxSize         : '2048k',
-      mimeTypes       : [
-        'image/png',
-        'image/gif',
-        'image/jpeg',
-        'image/pjpeg',
-        'image/webp',
-      ],
-      mimeTypesMessage: 'Please upload a valid file'
-    )]
-    public ?File $file = null;
-    
-    /** Название файла */
-    private ?string $name = null;
-    
+	/** Обложка категории */
+	#[Assert\File(
+		maxSize: '2048k',
+		mimeTypes: [
+			'image/png',
+			'image/gif',
+			'image/jpeg',
+			'image/pjpeg',
+			'image/webp',
+		],
+		mimeTypesMessage: 'Please upload a valid file'
+	)]
+	public ?File $file = null;
+	
+	/** Название файла */
+	private ?string $name = null;
+	
 	/** Расширений файла */
-    private ?string $ext = null;
-    
+	private ?string $ext = null;
+	
 	/** Флаг загрузки файла CDN */
-    private bool $cdn = false;
-    
+	private bool $cdn = false;
+	
 	/** Диреткория загрузки файла */
-    private ?ProductCategoryEventUid $dir = null;
+	private ?ProductCategoryEventUid $dir = null;
 	
 	
 	/** Название файла */
 	
-    public function getName() : ?string
-    {
-        return $this->name;
-    }
-
-//    public function setName(?string $name) : void
-//    {
-//        $this->name = $name;
-//    }
+	public function getName() : ?string
+	{
+		return $this->name;
+	}
+	
+	//    public function setName(?string $name) : void
+	//    {
+	//        $this->name = $name;
+	//    }
 	
 	/** Расширений файла */
 	
-    public function getExt() : ?string
-    {
-        return $this->ext;
-    }
-    
-
-//    public function setExt(?string $ext) : void
-//    {
-//        $this->ext = $ext;
-//    }
-    
-    /**
-     * @return bool
-     */
-    public function getCdn() : bool
-    {
-        return $this->cdn;
-    }
-    
-
-//    public function setCdn(bool $cdn) : void
-//    {
-//        $this->cdn = $cdn;
-//    }
-    
-
-    public function getDir() : ?ProductCategoryEventUid
-    {
-        return $this->dir;
-    }
-
-//    public function setDir(CategoryEvent $dir) : void
-//    {
-//        $this->dir = $dir;
-//    }
-    
-    
-    
-
+	public function getExt() : ?string
+	{
+		return $this->ext;
+	}
+	
+	
+	//    public function setExt(?string $ext) : void
+	//    {
+	//        $this->ext = $ext;
+	//    }
+	
+	/**
+	 * @return bool
+	 */
+	public function getCdn() : bool
+	{
+		return $this->cdn;
+	}
+	
+	
+	//    public function setCdn(bool $cdn) : void
+	//    {
+	//        $this->cdn = $cdn;
+	//    }
+	
+	
+	public function getDir() : ?ProductCategoryEventUid
+	{
+		return $this->dir;
+	}
+	
+	//    public function setDir(CategoryEvent $dir) : void
+	//    {
+	//        $this->dir = $dir;
+	//    }
+	
+	
 }
 

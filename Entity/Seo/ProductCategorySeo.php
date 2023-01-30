@@ -81,7 +81,7 @@ class ProductCategorySeo extends EntityState
 	{
 		if($dto instanceof ProductCategorySeoInterface)
 		{
-			if($dto->getTitle() === null && $dto->getDescription() === null && $dto->getKeywords() === null)
+			if(empty($dto->getTitle()) && empty($dto->getDescription()) && empty($dto->getKeywords()))
 			{
 				return false;
 			}

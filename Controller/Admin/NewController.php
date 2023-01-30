@@ -43,18 +43,19 @@ final class NewController extends AbstractController
 {
 	#[Route('/admin/product/category/new/{cat}/{id}', name: 'admin.newedit.new', defaults: ['cat' => null, "id" => null],
 		methods: ['GET', 'POST'])]
-
 	public function new(
 		Request $request,
 		EntityManagerInterface $entityManager,
 		ProductCategoryHandler $handler,
 		#[MapEntity] ?CategoryEntity\ProductCategory $cat = null,
 		?ProductCategoryEventUid $id = null,
-		
+	
 	) : Response
 	{
 		$parent = $cat ? new ProductParentCategoryUid($cat->getId()) : null;
-		$Event = $id ? $entityManager->getRepository(CategoryEntity\Event\ProductCategoryEvent::class)->find($id) : null;
+		$Event = $id ? $entityManager->getRepository(CategoryEntity\Event\ProductCategoryEvent::class)->find(
+			$id
+		) : null;
 		
 		$category = new ProductCategoryDTO($parent);
 		/* Копируем данные из события */

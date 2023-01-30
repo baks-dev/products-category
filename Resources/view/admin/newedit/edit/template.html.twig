@@ -4,20 +4,20 @@
 {% extends '@Core/admin/base.html.twig' %}
 
 {% block title %}
-    {# Добавить профиль пользователя #}
-    {{ 'admin.page.edit'|trans }}
+	{# Добавить профиль пользователя #}
+	{{ 'admin.page.edit'|trans }}
 {% endblock %}
 
 
 {# ---- CSS ------------------------------------------------------------ #}
 {% block stylesheets %}
-    {#<link href="{{ path(app.request.attributes.get('_route')~'.css') }}" rel="stylesheet">#}
+	{# <link href="{{ path(app.request.attributes.get('_route')~'.css') }}" rel="stylesheet"> #}
 {% endblock %}
 
 
 {# ---- КОНТЕНТ-БЛОК ------------------------------------------------------------ #}
 {% block content %}
-    {{ include(_self|replace({ "template.html.twig": settings.device~"/content.html.twig" })) }}
+	{{ include(_self|replace({ "template.html.twig": settings.device~"/content.html.twig" })) }}
 {% endblock %}
 
 {% block javascript %}

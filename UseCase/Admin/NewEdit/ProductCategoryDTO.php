@@ -39,145 +39,144 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class ProductCategoryDTO implements ProductCategoryEventInterface
 {
-    /** Идентификатор события */
+	/** Идентификатор события */
 	#[Assert\Uuid]
-    private ?ProductCategoryEventUid $id = null;
-    
-    /** Идентификатор родительской категории */
-	#[Assert\Uuid]
-    private ?ProductParentCategoryUid $parent;
+	private ?ProductCategoryEventUid $id = null;
 	
-    /**  Сортировка категории */
-    #[Assert\NotBlank]
-    #[Assert\Range(min: 0, max: 999)]
-    private int $sort = 500;
-    
-    /** Настройки локали категории */
-    #[Assert\Valid]
-    private ArrayCollection $translate;
-    
-    /** Секции свойств продукта категории */
-    #[Assert\Valid]
-    private ArrayCollection $section;
-    
-    /** Посадочные блоки */
-    #[Assert\Valid]
-    private ArrayCollection $landing;
-    
-    /** Торговые предложения */
-    #[Assert\Valid]
-    private ?ProductCategoryOffersDTO $offer = null;
+	/** Идентификатор родительской категории */
+	#[Assert\Uuid]
+	private ?ProductParentCategoryUid $parent;
+	
+	/**  Сортировка категории */
+	#[Assert\NotBlank]
+	#[Assert\Range(min: 0, max: 999)]
+	private int $sort = 500;
+	
+	/** Настройки локали категории */
+	#[Assert\Valid]
+	private ArrayCollection $translate;
+	
+	/** Секции свойств продукта категории */
+	#[Assert\Valid]
+	private ArrayCollection $section;
+	
+	/** Посадочные блоки */
+	#[Assert\Valid]
+	private ArrayCollection $landing;
+	
+	/** Торговые предложения */
+	#[Assert\Valid]
+	private ?ProductCategoryOffersDTO $offer = null;
 	
 	/** Настройки SEO категории */
-    #[Assert\Valid]
-    private ArrayCollection $seo;
-    
+	#[Assert\Valid]
+	private ArrayCollection $seo;
+	
 	/** Обложка категории */
-    #[Assert\Valid]
-    private ?ProductCategoryCoverDTO $cover;
-    
-    /** Неизменяемые свойства категории */
-    #[Assert\Valid]
-    private InfoDTO $info;
+	#[Assert\Valid]
+	private ?ProductCategoryCoverDTO $cover;
+	
+	/** Неизменяемые свойства категории */
+	#[Assert\Valid]
+	private InfoDTO $info;
 	
 	/**  Модификатор события  */
 	#[Assert\Valid]
 	private readonly Modify\ProductCategoryModifyDTO $modify;
-    
-
-    public function __construct(
-      ?ProductParentCategoryUid $parent = null,
-      //CategoryEvent $event = null,
-
-     // bool $active = true,
-     // string $url = null,
-    )
-    {
-        $this->parent = $parent;
-        
-        $this->cover = new ProductCategoryCoverDTO();
-        $this->info = new InfoDTO();
-        $this->modify = new Modify\ProductCategoryModifyDTO();
-        
-        $this->translate = new ArrayCollection();
-        $this->landing = new ArrayCollection();
-        $this->section = new ArrayCollection();
-        $this->offer = new Offers\ProductCategoryOffersDTO();
-        $this->seo = new ArrayCollection();
-    }
+	
+	
+	public function __construct(
+		?ProductParentCategoryUid $parent = null,
+		//CategoryEvent $event = null,
+		
+		// bool $active = true,
+		// string $url = null,
+	)
+	{
+		$this->parent = $parent;
+		
+		$this->cover = new ProductCategoryCoverDTO();
+		$this->info = new InfoDTO();
+		$this->modify = new Modify\ProductCategoryModifyDTO();
+		
+		$this->translate = new ArrayCollection();
+		$this->landing = new ArrayCollection();
+		$this->section = new ArrayCollection();
+		$this->offer = new Offers\ProductCategoryOffersDTO();
+		$this->seo = new ArrayCollection();
+	}
 	
 	/** Идентификатор события */
-
-    public function getEvent() : ?ProductCategoryEventUid
-    {
-        return $this->id;
-    }
+	
+	public function getEvent() : ?ProductCategoryEventUid
+	{
+		return $this->id;
+	}
 	
 	/** Идентификатор родительской категории */
 	
-    public function getParent() : ?ProductParentCategoryUid
-    {
-        return $this->parent;
-    }
+	public function getParent() : ?ProductParentCategoryUid
+	{
+		return $this->parent;
+	}
 	
 	
-    public function setParent(?ProductParentCategoryUid $parent) : void
-    {
-        $this->parent = $parent?->getValue() ? $parent : null;
-    }
+	public function setParent(?ProductParentCategoryUid $parent) : void
+	{
+		$this->parent = $parent?->getValue() ? $parent : null;
+	}
 	
 	/**  Сортировка категории */
 	
-    public function getSort() : int
-    {
-        return $this->sort;
-    }
-    
-
-    public function setSort(int $sort) : void
-    {
-        $this->sort = $sort;
-    }
-    
-
-   
+	public function getSort() : int
+	{
+		return $this->sort;
+	}
+	
+	
+	public function setSort(int $sort) : void
+	{
+		$this->sort = $sort;
+	}
+	
+	
 	/** Неизменяемые свойства категории INFO */
-
-    public function getInfo() : InfoDTO
-    {
-        return $this->info;
-    }
-    
-
-    public function setInfo(InfoDTO $info) : void
-    {
-        $this->info = $info;
-    }
+	
+	public function getInfo() : InfoDTO
+	{
+		return $this->info;
+	}
+	
+	
+	public function setInfo(InfoDTO $info) : void
+	{
+		$this->info = $info;
+	}
 	
 	
 	/** Настройки локали категории */
 	
 	
-    public function getTranslate() : ArrayCollection
-    {
-        /* Вычисляем расхождение и добавляем неопределенные локали */
-        foreach(Locale::diffLocale($this->translate) as $locale)
-        {
-            $CategoryTransDTO = new CategoryTransDTO();
-            $CategoryTransDTO->setLocal($locale);
-            $this->addTranslate($CategoryTransDTO);
-        }
-        
-        return $this->translate;
-    }
+	public function getTranslate() : ArrayCollection
+	{
+		/* Вычисляем расхождение и добавляем неопределенные локали */
+		foreach(Locale::diffLocale($this->translate) as $locale)
+		{
+			$CategoryTransDTO = new CategoryTransDTO();
+			$CategoryTransDTO->setLocal($locale);
+			$this->addTranslate($CategoryTransDTO);
+		}
+		
+		return $this->translate;
+	}
 	
-    public function addTranslate(CategoryTransDTO $trans) : void
-    {
-        if(!$this->translate->contains($trans))
-        {
-            $this->translate->add($trans);
-        }
-    }
+	public function addTranslate(CategoryTransDTO $trans) : void
+	{
+		if(!$this->translate->contains($trans))
+		{
+			$this->translate->add($trans);
+		}
+	}
 	
 	public function removeTranslate(CategoryTransDTO $trans) : void
 	{
@@ -187,32 +186,32 @@ final class ProductCategoryDTO implements ProductCategoryEventInterface
 	
 	/** Посадочные блоки */
 	
-    public function getLanding() : ArrayCollection
-    {
-        /* Вычисляем расхождение и добавляем неопределенные локали */
-        foreach(Locale::diffLocale($this->landing) as $locale)
-        {
-            $CategoryLandingDTO = new LandingCollectionDTO();
-            $CategoryLandingDTO->setLocal($locale);
-            $this->addLanding($CategoryLandingDTO);
-        }
-        
-        return $this->landing;
-    }
+	public function getLanding() : ArrayCollection
+	{
+		/* Вычисляем расхождение и добавляем неопределенные локали */
+		foreach(Locale::diffLocale($this->landing) as $locale)
+		{
+			$CategoryLandingDTO = new LandingCollectionDTO();
+			$CategoryLandingDTO->setLocal($locale);
+			$this->addLanding($CategoryLandingDTO);
+		}
+		
+		return $this->landing;
+	}
 	
-    public function addLanding(LandingCollectionDTO $landing) : void
-    {
-        if(!$this->landing->contains($landing))
-        {
-            $this->landing->add($landing);
-        }
-    }
-    
-    public function removeLanding(LandingCollectionDTO $landing) : void
-    {
-        $this->landing->removeElement($landing);
-    }
-    
+	public function addLanding(LandingCollectionDTO $landing) : void
+	{
+		if(!$this->landing->contains($landing))
+		{
+			$this->landing->add($landing);
+		}
+	}
+	
+	public function removeLanding(LandingCollectionDTO $landing) : void
+	{
+		$this->landing->removeElement($landing);
+	}
+	
 	
 	/** Настройки SEO категории */
 	
@@ -230,20 +229,19 @@ final class ProductCategoryDTO implements ProductCategoryEventInterface
 		
 		return $this->seo;
 	}
-
-    public function addSeo(SeoCollectionDTO $seo) : void
-    {
-        if(!$this->seo->contains($seo))
-        {
-            $this->seo[] = $seo;
-        }
-    }
-    
-    public function removeSeo(SeoCollectionDTO $seo) : void
-    {
-        $this->seo->removeElement($seo);
-    }
 	
+	public function addSeo(SeoCollectionDTO $seo) : void
+	{
+		if(!$this->seo->contains($seo))
+		{
+			$this->seo[] = $seo;
+		}
+	}
+	
+	public function removeSeo(SeoCollectionDTO $seo) : void
+	{
+		$this->seo->removeElement($seo);
+	}
 	
 	
 	/** Секции свойств продукта категории */
@@ -253,28 +251,27 @@ final class ProductCategoryDTO implements ProductCategoryEventInterface
 		return $this->section;
 	}
 	
-    public function addSection(SectionCollectionDTO $section) : void
-    {
-        if(!$this->section->contains($section))
-        {
-            $this->section->add($section);
-        }
-    }
-    
-    public function removeSection(SectionCollectionDTO $section) : void
-    {
-        $this->section->removeElement($section);
-    }
+	public function addSection(SectionCollectionDTO $section) : void
+	{
+		if(!$this->section->contains($section))
+		{
+			$this->section->add($section);
+		}
+	}
 	
-
+	public function removeSection(SectionCollectionDTO $section) : void
+	{
+		$this->section->removeElement($section);
+	}
+	
 	
 	/** Торговые предложения */
-
+	
 	public function getOffer() : ?ProductCategoryOffersDTO
 	{
 		return $this->offer;
 	}
-
+	
 	public function setOffer(ProductCategoryOffersDTO $offer) : void
 	{
 		$this->offer = $offer;
@@ -288,40 +285,36 @@ final class ProductCategoryDTO implements ProductCategoryEventInterface
 	}
 	
 	
-    /*public function getOffer() : ArrayCollection
-    {
-        return $this->offer;
-    }
+	/*public function getOffer() : ArrayCollection
+	{
+		return $this->offer;
+	}
 	
-    public function addOffer(ProductCategoryOffersDTO $offer) : void
-    {
-        if(!$this->offer->contains($offer))
-        {
-            $this->offer->add($offer);
-        }
-    }
-    
-    public function removeOffer(ProductCategoryOffersDTO $offer) : void
-    {
-        $this->offer->removeElement($offer);
-    }*/
+	public function addOffer(ProductCategoryOffersDTO $offer) : void
+	{
+		if(!$this->offer->contains($offer))
+		{
+			$this->offer->add($offer);
+		}
+	}
 	
-	
-	
-	
+	public function removeOffer(ProductCategoryOffersDTO $offer) : void
+	{
+		$this->offer->removeElement($offer);
+	}*/
 	
 	
 	/** Обложка категории */
 	
-    public function getCover() : ?ProductCategoryCoverDTO
-    {
-        return $this->cover;
-    }
+	public function getCover() : ?ProductCategoryCoverDTO
+	{
+		return $this->cover;
+	}
 	
-    public function setCover(?ProductCategoryCoverDTO $cover) : void
-    {
-        $this->cover = $cover;
-    }
+	public function setCover(?ProductCategoryCoverDTO $cover) : void
+	{
+		$this->cover = $cover;
+	}
 	
 }
 

@@ -29,7 +29,7 @@ use Symfony\Component\Uid\Uuid;
 
 class ProductParentCategoryUid extends Uid
 {
-    public const TYPE = 'product_parent_category_uid';
+	public const TYPE = 'product_parent_category_uid';
 	
 	private ?string $option;
 	
@@ -44,5 +44,5 @@ class ProductParentCategoryUid extends Uid
 	{
 		return $this->option;
 	}
-
+	
 }

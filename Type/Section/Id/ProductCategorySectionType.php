@@ -27,14 +27,14 @@ use BaksDev\Core\Type\UidType\UidType;
 
 final class ProductCategorySectionType extends UidType
 {
-    public function getClassType() : string
-    {
-        return ProductCategorySectionUid::class;
-    }
-    
-    public function getName() : string
-    {
-        return ProductCategorySectionUid::TYPE;
-    }
-    
+	public function getClassType() : string
+	{
+		return ProductCategorySectionUid::class;
+	}
+	
+	public function getName() : string
+	{
+		return ProductCategorySectionUid::TYPE;
+	}
+	
 }

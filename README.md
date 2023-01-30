@@ -23,7 +23,8 @@ $ php bin/console baks:assets:install
 ``` bash
 $ php bin/console doctrine:fixtures:load --append
 ```
-Внесите изменения в схеме базы данных с помощью миграции 
+
+Изменения в схеме базы данных с помощью миграции
 
 ``` bash
 $ php bin/console doctrine:migrations:diff

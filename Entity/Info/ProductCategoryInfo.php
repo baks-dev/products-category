@@ -58,7 +58,7 @@ class ProductCategoryInfo extends EntityState
 	/** Количество товаров в разделе */
 	#[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
 	private int $counter = 0;
-
+	
 	public function __construct(ProductCategoryEvent $event)
 	{
 		$this->event = $event;
@@ -74,7 +74,7 @@ class ProductCategoryInfo extends EntityState
 		throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
 	}
 	
-
+	
 	public function setEntity($dto) : mixed
 	{
 		if($dto instanceof ProductCategoryInfoInterface)
@@ -84,9 +84,6 @@ class ProductCategoryInfo extends EntityState
 		
 		throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
 	}
-	
-	
-	
 	
 	
 }

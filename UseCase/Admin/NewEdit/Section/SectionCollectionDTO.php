@@ -35,86 +35,86 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class SectionCollectionDTO implements ProductCategorySectionInterface
 {
 	#[Assert\Uuid]
-    private ?ProductCategorySectionUid $id = null;
-    
-    /** Сортировка секции свойств продукта категории */
-    #[Assert\NotBlank]
-    #[Assert\Range(min: 0, max: 999)]
-    private int $sort = 100;
-    
-    /** Настройки локали секции */
-    #[Assert\Valid]
-    private ArrayCollection $translate;
-    
-    /** Коллекция свойств продукта в секции */
-    #[Assert\Valid]
-    private ArrayCollection $field;
-    
-    public function __construct()
-    {
-        $this->translate = new ArrayCollection();
-        $this->field = new ArrayCollection();
-    }
+	private ?ProductCategorySectionUid $id = null;
+	
+	/** Сортировка секции свойств продукта категории */
+	#[Assert\NotBlank]
+	#[Assert\Range(min: 0, max: 999)]
+	private int $sort = 100;
+	
+	/** Настройки локали секции */
+	#[Assert\Valid]
+	private ArrayCollection $translate;
+	
+	/** Коллекция свойств продукта в секции */
+	#[Assert\Valid]
+	private ArrayCollection $field;
+	
+	public function __construct()
+	{
+		$this->translate = new ArrayCollection();
+		$this->field = new ArrayCollection();
+	}
 	
 	/** Сортировка секции свойств продукта категории */
 	
-    public function getSort() : int
-    {
-        return $this->sort;
-    }
-
-    public function setSort(int $sort) : void
-    {
-        $this->sort = $sort;
-    }
+	public function getSort() : int
+	{
+		return $this->sort;
+	}
+	
+	public function setSort(int $sort) : void
+	{
+		$this->sort = $sort;
+	}
 	
 	
 	/** Настройки локали секции */
 	
-    public function getTranslate() : ArrayCollection
-    {
-        /* Вычисляем расхождение и добавляем неопределенные локали */
-        foreach(Locale::diffLocale($this->translate) as $locale)
-        {
-            $SectionTransDTO = new SectionTransDTO();
-            $SectionTransDTO->setLocal($locale);
-            $this->addTranslate($SectionTransDTO);
-        }
-        
-        return $this->translate;
-    }
-
-    public function addTranslate(SectionTransDTO $trans) : void
-    {
-        if(!$this->translate->contains($trans))
-        {
-            $this->translate->add($trans);
-        }
-    }
-    
-    public function removeTranslate(SectionTransDTO $trans) : void
-    {
-        $this->translate->removeElement($trans);
-    }
+	public function getTranslate() : ArrayCollection
+	{
+		/* Вычисляем расхождение и добавляем неопределенные локали */
+		foreach(Locale::diffLocale($this->translate) as $locale)
+		{
+			$SectionTransDTO = new SectionTransDTO();
+			$SectionTransDTO->setLocal($locale);
+			$this->addTranslate($SectionTransDTO);
+		}
+		
+		return $this->translate;
+	}
+	
+	public function addTranslate(SectionTransDTO $trans) : void
+	{
+		if(!$this->translate->contains($trans))
+		{
+			$this->translate->add($trans);
+		}
+	}
+	
+	public function removeTranslate(SectionTransDTO $trans) : void
+	{
+		$this->translate->removeElement($trans);
+	}
 	
 	/** Коллекция свойств продукта в секции */
 	
-    public function getField() : ArrayCollection
-    {
-        return $this->field;
-    }
-
-    public function addField(SectionFieldCollectionDTO $field) : void
-    {
-        if(!$this->field->contains($field))
-        {
-            $this->field->add($field);
-        }
-    }
-    
-    public function removeField(SectionFieldCollectionDTO $field) : void
-    {
-        $this->field->removeElement($field);
-    }
+	public function getField() : ArrayCollection
+	{
+		return $this->field;
+	}
+	
+	public function addField(SectionFieldCollectionDTO $field) : void
+	{
+		if(!$this->field->contains($field))
+		{
+			$this->field->add($field);
+		}
+	}
+	
+	public function removeField(SectionFieldCollectionDTO $field) : void
+	{
+		$this->field->removeElement($field);
+	}
 	
 }

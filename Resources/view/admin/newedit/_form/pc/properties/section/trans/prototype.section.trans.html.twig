@@ -12,14 +12,14 @@
 			
 			<li class="nav-item" role="presentation">
 				<button class="btn fw-bolder nav-link{{ app.request.locale == translate.vars.value.local? ' active' : '' }}"
-				        data-bs-toggle="tab"
-				        type="button"
-				        role="tab"
-				        aria-selected="true"
-				
-				        id="nav-{{ trans_prototype.vars.id }}-{{ translate.vars.value.local }}-tab"
-				        data-bs-target="#nav-{{ trans_prototype.vars.id }}-{{ translate.vars.value.local }}"
-				        aria-controls="nav-{{ trans_prototype.vars.id }}-{{ translate.vars.value.local }}"
+						data-bs-toggle="tab"
+						type="button"
+						role="tab"
+						aria-selected="true"
+						
+						id="nav-{{ trans_prototype.vars.id }}-{{ translate.vars.value.local }}-tab"
+						data-bs-target="#nav-{{ trans_prototype.vars.id }}-{{ translate.vars.value.local }}"
+						aria-controls="nav-{{ trans_prototype.vars.id }}-{{ translate.vars.value.local }}"
 				>
 					<small class="text-uppercase px-3">{{ translate.vars.value.local|trans({}, 'core') }}</small>
 				</button>
@@ -35,8 +35,8 @@
 	
 	{% for translate in form.translate %}
 		<div class="tab-pane fade{{ app.request.locale == translate.vars.value.local? ' show active' : '' }}"
-		     id="nav-{{ trans_prototype.vars.id }}-{{ translate.vars.value.local }}" role="tabpanel"
-		     aria-labelledby="nav-{{ trans_prototype.vars.id }}-{{ translate.vars.value.local }}-tab">
+				id="nav-{{ trans_prototype.vars.id }}-{{ translate.vars.value.local }}" role="tabpanel"
+				aria-labelledby="nav-{{ trans_prototype.vars.id }}-{{ translate.vars.value.local }}-tab">
 			
 			{{ prototype_local|replace({"__section_translate__" : loop.index0, "__LOCALE__" : translate.vars.value.local }) | raw }}
 			

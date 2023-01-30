@@ -69,7 +69,7 @@ final class AllCategory implements AllCategoryInterface
 	 * category_description - краткое описание обложки <br>
 	 * category_child_count - количество вложенных категорий <br>
 	 *
-	*/
+	 */
 	
 	public function fetchProductParentAllAssociative(
 		SearchDTO $search,

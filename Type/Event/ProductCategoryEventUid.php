@@ -29,6 +29,6 @@ use Symfony\Component\Uid\Uuid;
 
 final class ProductCategoryEventUid extends Uid
 {
-    public const TYPE = 'product_category_event_uid';
-
+	public const TYPE = 'product_category_event_uid';
+	
 }

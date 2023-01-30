@@ -28,5 +28,5 @@ use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
 
 interface ParentCategoryChoiceFormInterface
 {
-    public function get(?ProductCategoryUid $categoryUid = null) : array;
+	public function get(?ProductCategoryUid $categoryUid = null) : array;
 }

@@ -31,25 +31,25 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class LandingCollectionDTO implements ProductCategoryLandingInterface
 {
 	#[Assert\Uuid]
-    private readonly ?ProductCategoryEventUid $event;
-    
-    /** Локаль */
+	private readonly ?ProductCategoryEventUid $event;
+	
+	/** Локаль */
 	#[Assert\NotBlank]
-    private readonly Locale $local;
-    
-    /** Верхний посадочный блок */
-    private ?string $header = null;
-    
-    /** Нижний посадочный блок */
-    private ?string $bottom = null;
+	private readonly Locale $local;
+	
+	/** Верхний посадочный блок */
+	private ?string $header = null;
+	
+	/** Нижний посадочный блок */
+	private ?string $bottom = null;
 	
 	
 	/** Локаль */
 	
-    public function getLocal() : Locale
-    {
-        return $this->local;
-    }
+	public function getLocal() : Locale
+	{
+		return $this->local;
+	}
 	
 	/** Локаль */
 	
@@ -63,29 +63,29 @@ final class LandingCollectionDTO implements ProductCategoryLandingInterface
 	
 	/** Верхний посадочный блок */
 	
-    public function getHeader() : ?string
-    {
-        return $this->header;
-    }
-    
-
-    public function setHeader(?string $header) : void
-    {
-        $this->header = $header;
-    }
+	public function getHeader() : ?string
+	{
+		return $this->header;
+	}
+	
+	
+	public function setHeader(?string $header) : void
+	{
+		$this->header = $header;
+	}
 	
 	/** Нижний посадочный блок */
 	
 	
-    public function getBottom() : ?string
-    {
-        return $this->bottom;
-    }
+	public function getBottom() : ?string
+	{
+		return $this->bottom;
+	}
 	
-    public function setBottom(?string $bottom) : void
-    {
-        $this->bottom = $bottom;
-    }
+	public function setBottom(?string $bottom) : void
+	{
+		$this->bottom = $bottom;
+	}
 	
 }
 

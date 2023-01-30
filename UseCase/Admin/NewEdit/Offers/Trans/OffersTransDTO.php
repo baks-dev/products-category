@@ -31,26 +31,26 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class OffersTransDTO implements ProductCategoryOffersTransInterface
 {
 	#[Assert\Uuid]
-    private readonly ?ProductCategoryOffersUid $offer;
-    
-    //private ?Field $field = null;
-    
+	private readonly ?ProductCategoryOffersUid $offer;
+	
+	//private ?Field $field = null;
+	
 	/** Локаль */
 	#[Assert\NotBlank]
-    private readonly ?Locale $local;
-    
-    /** Название торгового предложения (строка с точкой, нижнее подчеркивание тире процент скобки) */
-    //#[Assert\NotBlank]
-    #[Assert\Regex(pattern: '/^[\w \.\,\_\-\(\)\%]+$/iu')]
-    private ?string $name = null;
-
+	private readonly ?Locale $local;
+	
+	/** Название торгового предложения (строка с точкой, нижнее подчеркивание тире процент скобки) */
+	//#[Assert\NotBlank]
+	#[Assert\Regex(pattern: '/^[\w \.\,\_\-\(\)\%]+$/iu')]
+	private ?string $name = null;
+	
 	
 	/** Локаль */
 	
-    public function getLocal() : ?Locale
-    {
-        return $this->local;
-    }
+	public function getLocal() : ?Locale
+	{
+		return $this->local;
+	}
 	
 	/** Локаль */
 	
@@ -63,20 +63,18 @@ final class OffersTransDTO implements ProductCategoryOffersTransInterface
 	}
 	
 	
-	
 	/** Название торгового предложения */
 	
-    public function getName() : ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(?string $name) : void
-    {
-        $this->name = $name;
-    }
+	public function getName() : ?string
+	{
+		return $this->name;
+	}
 	
-    
-
+	public function setName(?string $name) : void
+	{
+		$this->name = $name;
+	}
+	
+	
 }
 

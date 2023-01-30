@@ -29,9 +29,9 @@ use Symfony\Component\Uid\Uuid;
 
 final class ProductCategoryOffersUid extends Uid
 {
-    public const TYPE = 'product_category_offers_uid';
+	public const TYPE = 'product_category_offers_uid';
 	
-    private bool $multiple;
+	private bool $multiple;
 	
 	private ?string $option;
 	
@@ -48,9 +48,9 @@ final class ProductCategoryOffersUid extends Uid
 		return $this->option;
 	}
 	
-    public function isMultiple() : bool
-    {
-        return $this->multiple;
-    }
-
+	public function isMultiple() : bool
+	{
+		return $this->multiple;
+	}
+	
 }

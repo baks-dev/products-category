@@ -31,31 +31,31 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class SeoCollectionDTO implements ProductCategorySeoInterface
 {
 	#[Assert\Uuid]
-    private readonly ProductCategoryEventUid $event;
-    
-    /** Локаль */
+	private readonly ProductCategoryEventUid $event;
+	
+	/** Локаль */
 	#[Assert\NotBlank]
-    private readonly Locale $local;
-    
-    /** Шаблон META TITLE (строка с точкой, запятой, нижнее подчеркивание тире процент скобки) */
-    #[Assert\Regex(pattern: '/^[\w \.\,\_\-\(\)\%]+$/iu')]
-    private ?string $title = null;
-
-    /** Шаблон META DESCRIPTION (строка с точкой, запятой, нижнее подчеркивание тире процент скобки) */
-    #[Assert\Regex(pattern: '/^[\w \.\,\_\-\(\)\%]+$/iu')]
-    private ?string $description = null;
-    
-    /** Шаблон META KEYWORDS (строка с точкой, запятой, нижнее подчеркивание тире процент скобки) */
-    #[Assert\Regex(pattern: '/^[\w \.\,\_\-\(\)\%]+$/iu')]
-    private ?string $keywords= null;
+	private readonly Locale $local;
+	
+	/** Шаблон META TITLE (строка с точкой, запятой, нижнее подчеркивание тире процент скобки) */
+	#[Assert\Regex(pattern: '/^[\w \.\,\_\-\(\)\%]+$/iu')]
+	private ?string $title = null;
+	
+	/** Шаблон META DESCRIPTION (строка с точкой, запятой, нижнее подчеркивание тире процент скобки) */
+	#[Assert\Regex(pattern: '/^[\w \.\,\_\-\(\)\%]+$/iu')]
+	private ?string $description = null;
+	
+	/** Шаблон META KEYWORDS (строка с точкой, запятой, нижнее подчеркивание тире процент скобки) */
+	#[Assert\Regex(pattern: '/^[\w \.\,\_\-\(\)\%]+$/iu')]
+	private ?string $keywords = null;
 	
 	
 	/** Локаль */
 	
-    public function getLocal() : Locale
-    {
-        return $this->local;
-    }
+	public function getLocal() : Locale
+	{
+		return $this->local;
+	}
 	
 	/** Локаль */
 	
@@ -70,88 +70,88 @@ final class SeoCollectionDTO implements ProductCategorySeoInterface
 	/** Шаблон META TITLE */
 	
 	public function getTitle() : ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(?string $title) : void
-    {
-        $this->title = $title;
-    }
+	{
+		return $this->title;
+	}
+	
+	public function setTitle(?string $title) : void
+	{
+		$this->title = $title;
+	}
 	
 	/** Шаблон META KEYWORDS */
 	
-    public function getKeywords() : ?string
-    {
-        return $this->keywords;
-    }
-
-    public function setKeywords(?string $keywords) : void
-    {
-        $this->keywords = $keywords;
-    }
+	public function getKeywords() : ?string
+	{
+		return $this->keywords;
+	}
+	
+	public function setKeywords(?string $keywords) : void
+	{
+		$this->keywords = $keywords;
+	}
 	
 	/** Шаблон META DESCRIPTION */
 	
-    public function getDescription() : ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description) : void
-    {
-        $this->description = $description;
-    }
-    
-    
-    
-    
-    
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-//
-//    /**
-//     * @return Locale
-//     */
-//    public function getLocal() : Locale
-//    {
-//        return $this->local;
-//    }
-//
-//    /**
-//     * @return string
-//     */
-//    public function getTitle() : string
-//    {
-//        return $this->title;
-//    }
-//
-//    /**
-//     * @return string
-//     */
-//    public function getKeywords() : string
-//    {
-//        return $this->keywords;
-//    }
-//
-//    /**
-//     * @return string
-//     */
-//    public function getDescription() : string
-//    {
-//        return $this->description;
-//    }
-//
-    
+	public function getDescription() : ?string
+	{
+		return $this->description;
+	}
+	
+	public function setDescription(?string $description) : void
+	{
+		$this->description = $description;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//
+	//    /**
+	//     * @return Locale
+	//     */
+	//    public function getLocal() : Locale
+	//    {
+	//        return $this->local;
+	//    }
+	//
+	//    /**
+	//     * @return string
+	//     */
+	//    public function getTitle() : string
+	//    {
+	//        return $this->title;
+	//    }
+	//
+	//    /**
+	//     * @return string
+	//     */
+	//    public function getKeywords() : string
+	//    {
+	//        return $this->keywords;
+	//    }
+	//
+	//    /**
+	//     * @return string
+	//     */
+	//    public function getDescription() : string
+	//    {
+	//        return $this->description;
+	//    }
+	//
+	
 }

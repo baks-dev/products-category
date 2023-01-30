@@ -1,19 +1,24 @@
 <?php
 /*
- *  Copyright 2022.  Baks.dev <admin@baks.dev>
+ *  Copyright 2023.  Baks.dev <admin@baks.dev>
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *   limitations under the License.
- *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
  */
 
 namespace BaksDev\Products\Category\Repository\CategoryParentForm;
@@ -28,43 +33,56 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /** Клас получает массив категорий для формы и перобразует названия (path) согласно вложенности */
 final class CategoryParentFormRepository implements CategoryParentFormInterface
 {
-
-    private Locale $local;
-    private EntityManagerInterface $entityManager;
-    
-
-    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator) {
-        $this->entityManager = $entityManager;
-        $this->local = new Locale($translator->getLocale());
-    }
-    
-    public function get(?CategoryUid $categoryUid = null) : array
-    {
-        $qb = $this->entityManager->createQueryBuilder();
-
-        
-        $qb->select('
+	
+	private Locale $local;
+	private EntityManagerInterface $entityManager;
+	
+	
+	public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator)
+	{
+		$this->entityManager = $entityManager;
+		$this->local = new Locale($translator->getLocale());
+	}
+	
+	public function get(?CategoryUid $categoryUid = null) : array
+	{
+		$qb = $this->entityManager->createQueryBuilder();
+		
+		
+		$qb->select(
+			'
         category.id,
         trans.name,
          category.event,
         event.parent
-        ');
-    
-        $qb->select('category.id');
-        
-        $qb->addSelect('category.event');
-        $qb->addSelect('event.parent');
-        
-        $qb->addSelect('trans.name');
-
-        $qb->from(EntityCategory\Category::class, 'category', 'category.id');
-        $qb->join(EntityCategory\Event\Event::class, 'event', 'WITH', 'event.id = category.event AND event.category = category.id');
-        $qb->leftJoin(EntityCategory\Trans\Trans::class, 'trans', 'WITH', 'trans.event = event.id AND trans.local = :locale');
-
-        $qb->setParameter('locale', $this->local, Locale::TYPE);
-        
-        $qb->orderBy(
-          'CASE
+        '
+		);
+		
+		$qb->select('category.id');
+		
+		$qb->addSelect('category.event');
+		$qb->addSelect('event.parent');
+		
+		$qb->addSelect('trans.name');
+		
+		$qb->from(EntityCategory\Category::class, 'category', 'category.id');
+		$qb->join(
+			EntityCategory\Event\Event::class,
+			'event',
+			'WITH',
+			'event.id = category.event AND event.category = category.id'
+		);
+		$qb->leftJoin(
+			EntityCategory\Trans\Trans::class,
+			'trans',
+			'WITH',
+			'trans.event = event.id AND trans.local = :locale'
+		);
+		
+		$qb->setParameter('locale', $this->local, Locale::TYPE);
+		
+		$qb->orderBy(
+			'CASE
         WHEN
             event.parent IS NULL
         THEN
@@ -72,30 +90,31 @@ final class CategoryParentFormRepository implements CategoryParentFormInterface
         ELSE
             event.parent
         END',
-          'DESC');
-        
-
-       $result = $qb->getQuery()->getResult();
-
-        /* Преобразуем названия (path) разделов с учетом вложенных */
-        $CategoryParent = [];
-
-        foreach($result as $key => $item)
-        {
-
-            $choice_label = $item['name'];
-            
-            $parentCat = (string) $item['parent']->getValue();
-            
-            if(!empty($parentCat))
-            {
-                $choice_label = $result[$parentCat]['name'].' / '.$choice_label;
-            }
-
-            $CategoryParent[$choice_label] = $key;
-        }
-
-        return $CategoryParent;
-    }
-    
+			'DESC'
+		);
+		
+		
+		$result = $qb->getQuery()->getResult();
+		
+		/* Преобразуем названия (path) разделов с учетом вложенных */
+		$CategoryParent = [];
+		
+		foreach($result as $key => $item)
+		{
+			
+			$choice_label = $item['name'];
+			
+			$parentCat = (string) $item['parent']->getValue();
+			
+			if(!empty($parentCat))
+			{
+				$choice_label = $result[$parentCat]['name'].' / '.$choice_label;
+			}
+			
+			$CategoryParent[$choice_label] = $key;
+		}
+		
+		return $CategoryParent;
+	}
+	
 }

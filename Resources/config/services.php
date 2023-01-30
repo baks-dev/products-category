@@ -23,29 +23,31 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-return static function (ContainerConfigurator $configurator)
-{
-    $services = $configurator->services()
-      ->defaults()
-      ->autowire()
-      ->autoconfigure()
-    ;
+return static function(ContainerConfigurator $configurator){
+	$services = $configurator->services()
+		->defaults()
+		->autowire()
+		->autoconfigure()
+	;
 	
-	$namespace =  'BaksDev\Products\Category';
-
-    /** Services */
-    
-    $services->load($namespace.'\Controller\\', __DIR__.'/../../Controller')
-      ->tag('controller.service_arguments');
-    
-    $services->load($namespace.'\Repository\\', __DIR__.'/../../Repository');
-
-    $services->load($namespace.'\UseCase\\', __DIR__.'/../../UseCase')
-      ->exclude(__DIR__.'/../../UseCase/**/*DTO.php');
-
-    $services->load($namespace.'\DataFixtures\\', __DIR__.'/../../DataFixtures')
-      ->exclude(__DIR__.'/../../DataFixtures/**/*DTO.php');
-
-
+	$namespace = 'BaksDev\Products\Category';
+	
+	/** Services */
+	
+	$services->load($namespace.'\Controller\\', __DIR__.'/../../Controller')
+		->tag('controller.service_arguments')
+	;
+	
+	$services->load($namespace.'\Repository\\', __DIR__.'/../../Repository');
+	
+	$services->load($namespace.'\UseCase\\', __DIR__.'/../../UseCase')
+		->exclude(__DIR__.'/../../UseCase/**/*DTO.php')
+	;
+	
+	$services->load($namespace.'\DataFixtures\\', __DIR__.'/../../DataFixtures')
+		->exclude(__DIR__.'/../../DataFixtures/**/*DTO.php')
+	;
+	
+	
 };
 

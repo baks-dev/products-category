@@ -28,39 +28,39 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class InfoDTO implements ProductCategoryInfoInterface
 {
-    /** Семантическая ссылка на раздел (строка с тире и нижним подчеркиванием) */
-    #[Assert\NotBlank]
-    #[Assert\Regex(
-      pattern: '/^[a-z0-9\_\-]+$/i'
-    )]
-    private ?string $url = null;
-    
-    /** Статус активности раздела */
-    private bool $active = false;
+	/** Семантическая ссылка на раздел (строка с тире и нижним подчеркиванием) */
+	#[Assert\NotBlank]
+	#[Assert\Regex(
+		pattern: '/^[a-z0-9\_\-]+$/i'
+	)]
+	private ?string $url = null;
+	
+	/** Статус активности раздела */
+	private bool $active = false;
 	
 	/** Семантическая ссылка на раздел */
-
-    public function getUrl() : ?string
-    {
-        return $this->url;
-    }
-    
-    public function setUrl(string $url) : void
-    {
-        $this->url = $url;
-    }
+	
+	public function getUrl() : ?string
+	{
+		return $this->url;
+	}
+	
+	public function setUrl(string $url) : void
+	{
+		$this->url = $url;
+	}
 	
 	/** Статус активности раздела */
 	
-    public function getActive() : bool
-    {
-        return $this->active;
-    }
-
-    public function setActive(bool $active) : void
-    {
-        $this->active = $active;
-    }
+	public function getActive() : bool
+	{
+		return $this->active;
+	}
+	
+	public function setActive(bool $active) : void
+	{
+		$this->active = $active;
+	}
 	
 	public function updateUrlUniq() : void
 	{

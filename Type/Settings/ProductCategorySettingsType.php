@@ -28,24 +28,24 @@ use Doctrine\DBAL\Types\StringType;
 
 final class ProductCategorySettingsType extends StringType
 {
- 
-    public function convertToDatabaseValue($value, AbstractPlatform $platform) : mixed
-    {
-        return $value instanceof ProductCategorySettingsIdentifier ? $value->getValue() : $value;
-    }
-    
-    public function convertToPHPValue($value, AbstractPlatform $platform) : mixed
-    {
-        return !empty($value) ? new ProductCategorySettingsIdentifier() : $value;
-    }
-    
-    public function getName() : string
-    {
-        return ProductCategorySettingsIdentifier::TYPE;
-    }
-    
-    public function requiresSQLCommentHint(AbstractPlatform $platform) : bool
-    {
-        return true;
-    }
+	
+	public function convertToDatabaseValue($value, AbstractPlatform $platform) : mixed
+	{
+		return $value instanceof ProductCategorySettingsIdentifier ? $value->getValue() : $value;
+	}
+	
+	public function convertToPHPValue($value, AbstractPlatform $platform) : mixed
+	{
+		return !empty($value) ? new ProductCategorySettingsIdentifier() : $value;
+	}
+	
+	public function getName() : string
+	{
+		return ProductCategorySettingsIdentifier::TYPE;
+	}
+	
+	public function requiresSQLCommentHint(AbstractPlatform $platform) : bool
+	{
+		return true;
+	}
 }

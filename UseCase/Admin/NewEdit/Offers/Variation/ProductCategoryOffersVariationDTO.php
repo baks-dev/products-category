@@ -55,9 +55,10 @@ final class ProductCategoryOffersVariationDTO implements ProductCategoryOffersVa
 	private ArrayCollection $translate;
 	
 	
-	
-	public function __construct() { $this->translate = new ArrayCollection(); }
-	
+	public function __construct()
+	{
+		$this->translate = new ArrayCollection();
+	}
 	
 	
 	/** Справочник */
@@ -143,7 +144,6 @@ final class ProductCategoryOffersVariationDTO implements ProductCategoryOffersVa
 	}
 	
 	
-	
 	/** Количественный учет */
 	
 	public function getQuantitative() : bool
@@ -162,10 +162,10 @@ final class ProductCategoryOffersVariationDTO implements ProductCategoryOffersVa
 	{
 		return $this->variation;
 	}
-
+	
 	public function setVariation(bool $variation) : void
 	{
 		$this->variation = $variation;
 	}
-
+	
 }

@@ -38,43 +38,46 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'product_category')]
 class ProductCategory
 {
-    
-    public const TABLE = 'product_category';
-    
-    /** ID */
-    #[ORM\Id]
-    #[ORM\Column(type: ProductCategoryUid::TYPE)]
-    private ProductCategoryUid $id;
-    
-    /** ID События */
-    #[ORM\Column(type: ProductCategoryEventUid::TYPE, unique: true, nullable: false)]
-    private ?ProductCategoryEventUid $event = null;
-    
-
-    public function __construct() { $this->id = new ProductCategoryUid(); }
-    
-
-    public function getId() : ProductCategoryUid
-    {
-        return $this->id;
-    }
-    
-
-    public function restore(ProductCategoryUid $id) : void
-    {
-        $this->id = $id;
-    }
-    
-
-    public function getEvent() : ?ProductCategoryEventUid
-    {
-        return $this->event;
-    }
-    
-
-    public function setEvent(ProductCategoryEvent|ProductCategoryEventUid $event) : void
-    {
-        $this->event = $event instanceof ProductCategoryEvent ? $event->getId() : $event;
-    }
-    
+	
+	public const TABLE = 'product_category';
+	
+	/** ID */
+	#[ORM\Id]
+	#[ORM\Column(type: ProductCategoryUid::TYPE)]
+	private ProductCategoryUid $id;
+	
+	/** ID События */
+	#[ORM\Column(type: ProductCategoryEventUid::TYPE, unique: true, nullable: false)]
+	private ?ProductCategoryEventUid $event = null;
+	
+	
+	public function __construct()
+	{
+		$this->id = new ProductCategoryUid();
+	}
+	
+	
+	public function getId() : ProductCategoryUid
+	{
+		return $this->id;
+	}
+	
+	
+	public function restore(ProductCategoryUid $id) : void
+	{
+		$this->id = $id;
+	}
+	
+	
+	public function getEvent() : ?ProductCategoryEventUid
+	{
+		return $this->event;
+	}
+	
+	
+	public function setEvent(ProductCategoryEvent|ProductCategoryEventUid $event) : void
+	{
+		$this->event = $event instanceof ProductCategoryEvent ? $event->getId() : $event;
+	}
+	
 }

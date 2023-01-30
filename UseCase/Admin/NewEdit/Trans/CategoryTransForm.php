@@ -33,39 +33,40 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class CategoryTransForm extends AbstractType
 {
-
-    
-    public function buildForm(FormBuilderInterface $builder, array $options) : void
-    {
+	
+	
+	public function buildForm(FormBuilderInterface $builder, array $options) : void
+	{
 		/** Локаль */
 		$builder->add('local', HiddenType::class);
-	
+		
 		$builder->get('local')->addModelTransformer(
 			new CallbackTransformer(
-				function ($price)
-				{
+				function($price){
 					return $price instanceof Locale ? $price->getValue() : $price;
 				},
-				function ($price) {
-				
+				function($price){
+					
 					return new Locale($price);
 				}
-			));
-	
+			)
+		);
+		
 		/** Название раздела */
 		$builder->add('name', TextType::class);
-	
+		
 		/** Краткое описание */
-        $builder->add('description', TextType::class, ['required' => false]);
-    }
-    
-    public function configureOptions(OptionsResolver $resolver) : void
-    {
-        $resolver->setDefaults
-        (
-          [
-            'data_class' => CategoryTransDTO::class,
-          ]);
-    }
-    
+		$builder->add('description', TextType::class, ['required' => false]);
+	}
+	
+	public function configureOptions(OptionsResolver $resolver) : void
+	{
+		$resolver->setDefaults
+		(
+			[
+				'data_class' => CategoryTransDTO::class,
+			]
+		);
+	}
+	
 }

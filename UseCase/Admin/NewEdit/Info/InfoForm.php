@@ -33,24 +33,25 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class InfoForm extends AbstractType
 {
-
-    
-    public function buildForm(FormBuilderInterface $builder, array $options) : void
-    {
-		/** Семантическая ссылка на раздел */
-        $builder->add('url', TextType::class);
 	
+	
+	public function buildForm(FormBuilderInterface $builder, array $options) : void
+	{
+		/** Семантическая ссылка на раздел */
+		$builder->add('url', TextType::class);
+		
 		/** Статус активности раздела */
-        $builder->add('active', CheckboxType::class, ['required' => false]);
-    }
-    
-    public function configureOptions(OptionsResolver $resolver) : void
-    {
-        $resolver->setDefaults
-        (
-          [
-            'data_class' => InfoDTO::class,
-          ]);
-    }
-    
+		$builder->add('active', CheckboxType::class, ['required' => false]);
+	}
+	
+	public function configureOptions(OptionsResolver $resolver) : void
+	{
+		$resolver->setDefaults
+		(
+			[
+				'data_class' => InfoDTO::class,
+			]
+		);
+	}
+	
 }

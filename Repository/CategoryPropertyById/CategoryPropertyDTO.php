@@ -1,104 +1,82 @@
 <?php
 /*
- *  Copyright 2022.  Baks.dev <admin@baks.dev>
+ *  Copyright 2023.  Baks.dev <admin@baks.dev>
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *   limitations under the License.
- *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
  */
 
 namespace BaksDev\Products\Category\Repository\CategoryPropertyById;
 
 
-use BaksDev\Products\Category\Type\Section\Field\Id\FieldUid;
-use BaksDev\Products\Category\Type\Section\Id\SectionUid;
-use BaksDev\Core\Type\Field\InputField;
+use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
+use BaksDev\Products\Category\Type\Section\Id\ProductCategorySectionUid;
+
+//use BaksDev\Core\Type\Field\InputField;
+use BaksDev\Reference\Field\Type\InputField;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class CategoryPropertyDTO
 {
-    
-    /**
-     * ID Секции
-     * @var SectionUid
-     */
-    public SectionUid $sectionUid;
-    
-    /**
-     * Перевод секции
-     * @var string
-     */
-    public string $sectionTrans;
-    
-    /**
-     * ID поля
-     * @var FieldUid
-     */
-    public FieldUid $fieldUid;
-    
-    /**
-     * Перевод поля
-     * @var string
-     */
-    public string $fieldTrans;
-    
-    /**
-     * Перевод поля
-     * @var ?string
-     */
-    public ?string $fieldDesc;
-    
-    /**
-     * Тип поля (input|select|integer|textarea|.....)
-     * @var string
-     */
-    public string $fieldType;
-    
-    /**
-     * Обязательное к заполнению поле
-     * @var bool
-     */
-    public bool $fieldRequired;
-    
-    /**
-     * @param SectionUid $sectionUid
-     * @param string $sectionTrans
-     * @param FieldUid $fieldUid
-     * @param string $fieldTrans
-     * @param InputField $fieldType
-     * @param bool $fieldRequired
-     * @param ?string $fieldDesc
-     */
-    public function __construct(
-      SectionUid $sectionUid,
-      string $sectionTrans,
-      FieldUid $fieldUid,
-      string $fieldTrans,
-      InputField $fieldType,
-      bool $fieldRequired,
-      ?string $fieldDesc,
-    
-    )
-    {
-        $this->sectionUid = $sectionUid;   /* ID Секции  */
-        $this->sectionTrans = $sectionTrans; /* Перевод секции */
-        
-        $this->fieldUid = $fieldUid; /* ID поля   */
-        $this->fieldTrans = $fieldTrans; /* Перевод поля */
-        $this->fieldType = $fieldType->getType()->value; /* Тип поля (input|select|integer|textarea|.....) */
-        $this->fieldRequired = $fieldRequired; /* Обязательное к заполнению поле */
-        $this->fieldDesc = $fieldDesc; /* Описание */
-    }
-    
+	
+	/** Идентификатор Секции */
+	public ProductCategorySectionUid $sectionUid;
+	
+	/** Перевод секции */
+	public string $sectionTrans;
+	
+	/** Идентификатор поля */
+	public ProductCategorySectionFieldUid $fieldUid;
+	
+	/** Перевод поля */
+	public string $fieldTrans;
+	
+	/** Опсиание поля */
+	public ?string $fieldDesc;
+	
+	/** Тип поля (input|select|integer|textarea|.....)  */
+	public string $fieldType;
+	
+	/** Обязательное к заполнению поле */
+	public bool $fieldRequired;
+	
+	
+	public function __construct(
+		ProductCategorySectionUid $sectionUid,
+		string $sectionTrans,
+		ProductCategorySectionFieldUid $fieldUid,
+		string $fieldTrans,
+		InputField $fieldType,
+		bool $fieldRequired,
+		?string $fieldDesc,
+	
+	)
+	{
+		$this->sectionUid = $sectionUid;   /* ID Секции  */
+		$this->sectionTrans = $sectionTrans; /* Перевод секции */
+		
+		$this->fieldUid = $fieldUid; /* ID поля   */
+		$this->fieldTrans = $fieldTrans; /* Перевод поля */
+		$this->fieldType = $fieldType->getType()->value; /* Тип поля (input|select|integer|textarea|.....) */
+		$this->fieldRequired = $fieldRequired; /* Обязательное к заполнению поле */
+		$this->fieldDesc = $fieldDesc; /* Описание */
+	}
+	
 }
 

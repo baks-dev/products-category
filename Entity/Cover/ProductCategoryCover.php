@@ -38,98 +38,101 @@ use InvalidArgumentException;
 #[ORM\Table(name: 'product_category_cover')]
 class ProductCategoryCover extends EntityState implements UploadEntityInterface
 {
-    public const TABLE = 'product_category_cover';
-
-    /** Связь на событие */
-    #[ORM\Id]
-    #[ORM\OneToOne(inversedBy: 'cover', targetEntity: ProductCategoryEvent::class)]
-    #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
-    private ProductCategoryEvent $event;
-    
-    /** Название директории */
-    #[ORM\Column(type: ProductCategoryEventUid::TYPE, nullable: false)]
-    private ProductCategoryEventUid $dir;
-    
-    /** Название файла */
-    #[ORM\Column(type: Types::STRING, length: 100)]
-    private string $name;
-    
-    /** Расширение файла */
-    #[ORM\Column(type: Types::STRING, length: 64)]
-    private string $ext;
-    
-    /** Размер файла */
-    #[ORM\Column(type: Types::INTEGER)]
-    private int $size = 0;
-    
-    /** Файл загружен на CDN */
-    #[ORM\Column(type: Types::BOOLEAN)]
-    private bool $cdn = false;
-    
-
-    public function __construct(ProductCategoryEvent $event) { $this->event = $event; }
-    
-
-    public function getId() : ProductCategoryEvent
-    {
-        return $this->event;
-    }
-
-
-    public function getDto($dto) : mixed
-    {
-        if($dto instanceof ProductCategoryCoverInterface)
-        {
-            return parent::getDto($dto);
-        }
-        
-        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
-    }
-    
-    /**
-     * @throws Exception
-     */
-    public function setEntity($dto) : mixed
-    {
-
-        /* Если размер файла нулевой - не заполняем сущность */
-        if(
-          (empty($dto->file) && empty($dto->getName())) ||
-          (!empty($dto->file) && empty($dto->getName()))
-        )
-        {
-            return false;
-        }
-
-        if($dto instanceof ProductCategoryCoverInterface)
-        {
-            return parent::setEntity($dto);
-        }
-        
-        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
-    }
-    
-    
-    public function updFile(string $name, string $ext, int $size) : void
-    {
-        $this->cdn = false;
-        $this->name = $name;
-        $this->ext = $ext;
-        $this->size = $size;
-        $this->dir = $this->event->getId();
-        $this->cdn = false;
-    }
-
-    public function updCdn(string $ext): void
-    {
-        $this->ext = $ext;
-        $this->cdn = true;
-    }
-    
-    
-    public function getUploadDir() : object
-    {
-        return $this->event->getId();
-    }
-    
+	public const TABLE = 'product_category_cover';
+	
+	/** Связь на событие */
+	#[ORM\Id]
+	#[ORM\OneToOne(inversedBy: 'cover', targetEntity: ProductCategoryEvent::class)]
+	#[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
+	private ProductCategoryEvent $event;
+	
+	/** Название директории */
+	#[ORM\Column(type: ProductCategoryEventUid::TYPE, nullable: false)]
+	private ProductCategoryEventUid $dir;
+	
+	/** Название файла */
+	#[ORM\Column(type: Types::STRING, length: 100)]
+	private string $name;
+	
+	/** Расширение файла */
+	#[ORM\Column(type: Types::STRING, length: 64)]
+	private string $ext;
+	
+	/** Размер файла */
+	#[ORM\Column(type: Types::INTEGER)]
+	private int $size = 0;
+	
+	/** Файл загружен на CDN */
+	#[ORM\Column(type: Types::BOOLEAN)]
+	private bool $cdn = false;
+	
+	
+	public function __construct(ProductCategoryEvent $event)
+	{
+		$this->event = $event;
+	}
+	
+	
+	public function getId() : ProductCategoryEvent
+	{
+		return $this->event;
+	}
+	
+	
+	public function getDto($dto) : mixed
+	{
+		if($dto instanceof ProductCategoryCoverInterface)
+		{
+			return parent::getDto($dto);
+		}
+		
+		throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+	}
+	
+	/**
+	 * @throws Exception
+	 */
+	public function setEntity($dto) : mixed
+	{
+		
+		/* Если размер файла нулевой - не заполняем сущность */
+		if(
+			(empty($dto->file) && empty($dto->getName())) ||
+			(!empty($dto->file) && empty($dto->getName()))
+		)
+		{
+			return false;
+		}
+		
+		if($dto instanceof ProductCategoryCoverInterface)
+		{
+			return parent::setEntity($dto);
+		}
+		
+		throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+	}
+	
+	
+	public function updFile(string $name, string $ext, int $size) : void
+	{
+		$this->cdn = false;
+		$this->name = $name;
+		$this->ext = $ext;
+		$this->size = $size;
+		$this->dir = $this->event->getId();
+		$this->cdn = false;
+	}
+	
+	public function updCdn(string $ext) : void
+	{
+		$this->ext = $ext;
+		$this->cdn = true;
+	}
+	
+	
+	public function getUploadDir() : object
+	{
+		return $this->event->getId();
+	}
+	
 }

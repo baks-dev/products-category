@@ -57,139 +57,139 @@ use InvalidArgumentException;
 #[ORM\Index(columns: ['parent'])]
 class ProductCategoryEvent extends EntityState
 {
-    public const TABLE = 'product_category_event';
-    
-    /** ID */
-    #[ORM\Id]
-    #[ORM\Column(type: ProductCategoryEventUid::TYPE)]
-    private readonly ProductCategoryEventUid $id;
-    
-    /** ID Category */
-    #[ORM\Column(type: ProductCategoryUid::TYPE, nullable: false)]
-    private ?ProductCategoryUid $category = null;
-    
-    /** ID родительской Category */
-    #[ORM\Column(type: ProductParentCategoryUid::TYPE, nullable: true)]
-    private ?ProductParentCategoryUid $parent = null;
-    
-    /** Сортировка */
-    #[ORM\Column(type: Types::SMALLINT, length: 3, options: ['default' => 500])]
-    private int $sort = 500;
-    
-    /** Перевод */
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: ProductCategoryTrans::class, cascade: ['all'])]
-    private Collection $translate;
-    
-    /** Модификатор */
-    #[ORM\OneToOne(mappedBy: 'event', targetEntity: ProductCategoryModify::class, cascade: ['all'])]
-    private ProductCategoryModify $modify;
-    
-    /** Info */
-    #[ORM\OneToOne(mappedBy: 'event', targetEntity: ProductCategoryInfo::class, cascade: ['all'])]
-    private ?ProductCategoryInfo $info;
-    
-    /** Cover */
-    #[ORM\OneToOne(mappedBy: 'event', targetEntity: ProductCategoryCover::class, cascade: ['all'])]
-    private ?ProductCategoryCover $cover = null;
-    
-    /**  Настройки SEO информации  */
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: ProductCategorySeo::class, cascade: ['all'])]
-    private Collection $seo;
-    
-    /** Секции для свойств продукта */
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: ProductCategorySection::class, cascade: ['all'])]
+	public const TABLE = 'product_category_event';
+	
+	/** ID */
+	#[ORM\Id]
+	#[ORM\Column(type: ProductCategoryEventUid::TYPE)]
+	private readonly ProductCategoryEventUid $id;
+	
+	/** ID Category */
+	#[ORM\Column(type: ProductCategoryUid::TYPE, nullable: false)]
+	private ?ProductCategoryUid $category = null;
+	
+	/** ID родительской Category */
+	#[ORM\Column(type: ProductParentCategoryUid::TYPE, nullable: true)]
+	private ?ProductParentCategoryUid $parent = null;
+	
+	/** Сортировка */
+	#[ORM\Column(type: Types::SMALLINT, length: 3, options: ['default' => 500])]
+	private int $sort = 500;
+	
+	/** Перевод */
+	#[ORM\OneToMany(mappedBy: 'event', targetEntity: ProductCategoryTrans::class, cascade: ['all'])]
+	private Collection $translate;
+	
+	/** Модификатор */
+	#[ORM\OneToOne(mappedBy: 'event', targetEntity: ProductCategoryModify::class, cascade: ['all'])]
+	private ProductCategoryModify $modify;
+	
+	/** Info */
+	#[ORM\OneToOne(mappedBy: 'event', targetEntity: ProductCategoryInfo::class, cascade: ['all'])]
+	private ?ProductCategoryInfo $info;
+	
+	/** Cover */
+	#[ORM\OneToOne(mappedBy: 'event', targetEntity: ProductCategoryCover::class, cascade: ['all'])]
+	private ?ProductCategoryCover $cover = null;
+	
+	/**  Настройки SEO информации  */
+	#[ORM\OneToMany(mappedBy: 'event', targetEntity: ProductCategorySeo::class, cascade: ['all'])]
+	private Collection $seo;
+	
+	/** Секции для свойств продукта */
+	#[ORM\OneToMany(mappedBy: 'event', targetEntity: ProductCategorySection::class, cascade: ['all'])]
 	#[ORM\OrderBy(['sort' => 'ASC'])]
-    private Collection $section;
- 
-    /** Посадочные блоки */
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: ProductCategoryLanding::class, cascade: ['all'])]
-    private Collection $landing;
+	private Collection $section;
+	
+	/** Посадочные блоки */
+	#[ORM\OneToMany(mappedBy: 'event', targetEntity: ProductCategoryLanding::class, cascade: ['all'])]
+	private Collection $landing;
 	
 	/** Торговые предложения */
 	#[ORM\OneToOne(mappedBy: 'event', targetEntity: ProductCategoryOffers::class, cascade: ['all'])]
 	private ProductCategoryOffers $offer;
 	
-    
-    public function __construct(?ProductParentCategoryUid $parent = null)
-    {
-        $this->id = new ProductCategoryEventUid();
-        $this->info = new ProductCategoryInfo($this);
-        $this->modify = new ProductCategoryModify($this);
-        
-        $this->parent = $parent;
-    }
 	
- 
+	public function __construct(?ProductParentCategoryUid $parent = null)
+	{
+		$this->id = new ProductCategoryEventUid();
+		$this->info = new ProductCategoryInfo($this);
+		$this->modify = new ProductCategoryModify($this);
+		
+		$this->parent = $parent;
+	}
+	
+	
 	public function __toString() : string
 	{
 		return $this->id;
 	}
 	
-
-    public function getId() : ProductCategoryEventUid
-    {
-        return $this->id;
-    }
 	
-    public function getNameByLocale(Locale $locale) : ?string
-    {
-        $name = null;
-        
-        /** @var ProductCategoryTrans $trans */
-        foreach($this->translate as $trans)
-        {
-            if($name = $trans->getNameByLocale($locale))
-            {
-                break;
-            }
-        }
-        
-        return $name;
-    }
-    
-
-    public function getCategory() : ?ProductCategoryUid
-    {
-        return $this->category;
-    }
-    
-    public function setCategory(ProductCategory|ProductCategoryUid $category) : void
-    {
-        $this->category = $category instanceof ProductCategory ? $category->getId() : $category;
-    }
-    
-
-    public function getDto($dto) : mixed
-    {
+	public function getId() : ProductCategoryEventUid
+	{
+		return $this->id;
+	}
+	
+	public function getNameByLocale(Locale $locale) : ?string
+	{
+		$name = null;
 		
-        if($dto instanceof ProductCategoryEventInterface)
-        {
-            return parent::getDto($dto);
-        }
-        
-        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
-    }
+		/** @var ProductCategoryTrans $trans */
+		foreach($this->translate as $trans)
+		{
+			if($name = $trans->getNameByLocale($locale))
+			{
+				break;
+			}
+		}
+		
+		return $name;
+	}
 	
-    public function setEntity($dto) : mixed
-    {
-        if($dto instanceof ProductCategoryEventInterface)
-        {
-            return parent::setEntity($dto);
-        }
-        
-        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
-    }
 	
-    public function getUploadCover() : ProductCategoryCover
-    {
-        return $this->cover ?: $this->cover = new ProductCategoryCover($this);
-    }
+	public function getCategory() : ?ProductCategoryUid
+	{
+		return $this->category;
+	}
 	
-//
-//    public function isModifyActionEquals(ModifyActionEnum $action) : bool
-//    {
-//        return $this->modify->equals($action);
-//    }
-    
-    
+	public function setCategory(ProductCategory|ProductCategoryUid $category) : void
+	{
+		$this->category = $category instanceof ProductCategory ? $category->getId() : $category;
+	}
+	
+	
+	public function getDto($dto) : mixed
+	{
+		
+		if($dto instanceof ProductCategoryEventInterface)
+		{
+			return parent::getDto($dto);
+		}
+		
+		throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+	}
+	
+	public function setEntity($dto) : mixed
+	{
+		if($dto instanceof ProductCategoryEventInterface)
+		{
+			return parent::setEntity($dto);
+		}
+		
+		throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+	}
+	
+	public function getUploadCover() : ProductCategoryCover
+	{
+		return $this->cover ?: $this->cover = new ProductCategoryCover($this);
+	}
+	
+	//
+	//    public function isModifyActionEquals(ModifyActionEnum $action) : bool
+	//    {
+	//        return $this->modify->equals($action);
+	//    }
+	
+	
 }

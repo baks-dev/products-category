@@ -26,7 +26,6 @@
 // const $lang = $htmlLang[0].getAttribute('lang');
 
 
-
 /** Коллекция СЕКЦИЙ для свойств продукта*/
 
 /* кнопка Добавить коллекцию */
@@ -129,14 +128,12 @@ if ($blockCollection) {
         $blockCollection.append(div);
 
 
-
         /* Плавная прокрутка к элементу */
         div.scrollIntoView({block: "center", inline: "center", behavior: "smooth"});
 
         // let field = document.getElementById('field-collection-' + index);
         // field.innerHTML = field.innerHTML.replace(/__FIELDS__/g, '0')
         //     .replace(/__FIELD_SORT__/g, '100');
-
 
 
         /* Добавить поле в секцию */
@@ -153,8 +150,6 @@ if ($blockCollection) {
 
     });
 }
-
-
 
 
 /** Добавить секцию  */
@@ -186,7 +181,7 @@ function deleteField($block) {
     $delItem.forEach(function (item) {
         item.addEventListener('click', function () {
 
-            let $fieldCollection = document.getElementById('field-collection-'+this.dataset.section);
+            let $fieldCollection = document.getElementById('field-collection-' + this.dataset.section);
             let $counter = $fieldCollection.querySelectorAll('.item-collection-field').length;
 
             if ($counter > 1) {
@@ -203,11 +198,10 @@ function deleteField($block) {
 function createSectionField(section) {
 
     /* Событие на клик добавления полей в секцию */
-    let $btnAddFields = document.getElementById('createSectionField'+ section);
+    let $btnAddFields = document.getElementById('createSectionField' + section);
 
     //$btnCreateSectionField = div.querySelector('#createSectionField'+ index);
-    $btnAddFields.addEventListener('click', function ()
-    {
+    $btnAddFields.addEventListener('click', function () {
 
         //$btnAddFields = document.getElementById('createSectionField'+section)
 
@@ -217,7 +211,6 @@ function createSectionField(section) {
         let newForm = $btnAddFields.dataset.prototype;
 
         let index = $btnAddFields.dataset.index;
-
 
 
         /* Замена '__name__' в HTML-коде прототипа на
@@ -280,8 +273,6 @@ function createSectionField(section) {
 // }
 
 
-
-
 document.querySelectorAll('.is-reference').forEach(function (isReference) {
 
     /* Обрабатываем уже существующие и сохраненные ТП */
@@ -295,7 +286,7 @@ document.querySelectorAll('.is-reference').forEach(function (isReference) {
 
 
 /** Получаем поле 'Название раздела' по локали для 'Символьный код категории' */
-let $name = document.querySelector("input[data-lang='product_category_form_translate_0_"+$lang+"']");
+let $name = document.querySelector("input[data-lang='product_category_form_translate_0_" + $lang + "']");
 
 if ($name) {
 
@@ -309,7 +300,6 @@ if ($name) {
         setTimeout(initBootstrap, 100);
 
     }, 100);
-
 
 
     function catUrl() {
@@ -345,8 +335,7 @@ $nameVariationSettings = document.querySelectorAll("input[id^='product_category_
 
 $checkboxOfferSettings.addEventListener('change', function () {
 
-    if (this.checked == false)
-    {
+    if (this.checked == false) {
         $offerSettings.classList.add('d-none');
 
         $checkboxVariationSettings.checked = false;
@@ -359,9 +348,7 @@ $checkboxOfferSettings.addEventListener('change', function () {
         Array.from($nameVariationSettings).forEach(e => e.removeAttribute('required'));
 
 
-    }
-    else
-    {
+    } else {
 
         /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
         Array.from($nameOfferSettings).forEach(e => e.setAttribute('required', true));
@@ -372,20 +359,16 @@ $checkboxOfferSettings.addEventListener('change', function () {
 });
 
 
-
 $checkboxVariationSettings.addEventListener('change', function () {
 
 
-    if (this.checked == false)
-    {
+    if (this.checked == false) {
         $variationSettings.classList.add('d-none');
 
         /* Делаем поле Name НЕ обязательным */
         Array.from($nameVariationSettings).forEach(e => e.removeAttribute('required'));
 
-    }
-    else
-    {
+    } else {
         $variationSettings.classList.remove('d-none');
 
         /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
@@ -395,8 +378,7 @@ $checkboxVariationSettings.addEventListener('change', function () {
 });
 
 
-if ($checkboxOfferSettings.checked == false)
-{
+if ($checkboxOfferSettings.checked == false) {
     $offerSettings.classList.add('d-none');
 
     $checkboxVariationSettings.checked = false;
@@ -408,9 +390,7 @@ if ($checkboxOfferSettings.checked == false)
     Array.from($nameVariationSettings).forEach(e => e.removeAttribute('required'));
 
     $variationSettings.classList.add('d-none');
-}
-else
-{
+} else {
 
     $offerSettings.classList.remove('d-none');
     $checkboxVariationSettings.disabled = false;
@@ -420,23 +400,19 @@ else
 }
 
 
-if ($checkboxVariationSettings.checked == false)
-{
+if ($checkboxVariationSettings.checked == false) {
     /* Делаем поле Name НЕ обязательным */
     Array.from($nameVariationSettings).forEach(e => e.removeAttribute('required'));
 
     $variationSettings.classList.add('d-none');
 
-}
-else
-{
+} else {
     /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
     Array.from($nameVariationSettings).forEach(e => e.setAttribute('required', true));
 
 
     $variationSettings.classList.remove('d-none');
 }
-
 
 
 function chanfeReferenc($this) {
@@ -453,21 +429,21 @@ function chanfeReferenc($this) {
 
 //function fieldCollection(index) {
 
-    // /** Коллекция FIELDS */
-    //
-    // /* кнопка Добавить коллекцию */
-    // let $addButtonFields = document.getElementById('field_addCollection_'+index);
-    //
-    // /* Блок для новой коллекции */
-    // let $blockCollectionFields = document.getElementById('field_collection_'+index);
-    //
-    // /* получаем количество коллекций и присваиваем data-index прототипу */
-    // $blockCollectionFields.dataset.index = $blockCollectionFields.getElementsByClassName('item-collection-field').length.toString();
-    //
-    // $addButtonFields.addEventListener('click', function () {
-    //     /* Добавляем в форму FIELD */
-    //     createField($blockCollectionFields, index);
-    // });
+// /** Коллекция FIELDS */
+//
+// /* кнопка Добавить коллекцию */
+// let $addButtonFields = document.getElementById('field_addCollection_'+index);
+//
+// /* Блок для новой коллекции */
+// let $blockCollectionFields = document.getElementById('field_collection_'+index);
+//
+// /* получаем количество коллекций и присваиваем data-index прототипу */
+// $blockCollectionFields.dataset.index = $blockCollectionFields.getElementsByClassName('item-collection-field').length.toString();
+//
+// $addButtonFields.addEventListener('click', function () {
+//     /* Добавляем в форму FIELD */
+//     createField($blockCollectionFields, index);
+// });
 //}
 
 

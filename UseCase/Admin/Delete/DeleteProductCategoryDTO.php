@@ -43,7 +43,8 @@ final class DeleteProductCategoryDTO implements ProductCategoryEventInterface
 	#[Assert\Valid]
 	private Info\InfoDTO $info;
 	
-	public function __construct() {
+	public function __construct()
+	{
 		$this->modify = new Modify\DeleteProductCategoryModifyDTO();
 	}
 	
@@ -57,7 +58,7 @@ final class DeleteProductCategoryDTO implements ProductCategoryEventInterface
 		return $this->modify;
 	}
 	
-
+	
 	public function getInfo() : Info\InfoDTO
 	{
 		return $this->info;

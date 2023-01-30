@@ -33,37 +33,38 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class LandingCollectionForm extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options) : void
-    {
+	public function buildForm(FormBuilderInterface $builder, array $options) : void
+	{
 		/** Локаль */
-        $builder->add('local', HiddenType::class);
-	
+		$builder->add('local', HiddenType::class);
+		
 		$builder->get('local')->addModelTransformer(
 			new CallbackTransformer(
-				function ($price)
-				{
+				function($price){
 					return $price instanceof Locale ? $price->getValue() : $price;
 				},
-				function ($price) {
-				
+				function($price){
+					
 					return new Locale($price);
 				}
-			));
+			)
+		);
 		
 		/** Верхний посадочный блок */
-        $builder->add('header', TextareaType::class, ['required' => false]);
-	
+		$builder->add('header', TextareaType::class, ['required' => false]);
+		
 		/** Нижний посадочный блок */
-        $builder->add('bottom', TextareaType::class, ['required' => false]);
-    }
-    
-    public function configureOptions(OptionsResolver $resolver) : void
-    {
-        $resolver->setDefaults
-        (
-          [
-            'data_class' => LandingCollectionDTO::class,
-          ]);
-    }
-    
+		$builder->add('bottom', TextareaType::class, ['required' => false]);
+	}
+	
+	public function configureOptions(OptionsResolver $resolver) : void
+	{
+		$resolver->setDefaults
+		(
+			[
+				'data_class' => LandingCollectionDTO::class,
+			]
+		);
+	}
+	
 }

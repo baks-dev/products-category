@@ -40,102 +40,102 @@ use InvalidArgumentException;
 #[ORM\Table(name: 'product_category_section')]
 class ProductCategorySection extends EntityState
 {
-    public const TABLE = 'product_category_section';
-    
-    /** ID */
-    #[ORM\Id]
-    #[ORM\Column(type: ProductCategorySectionUid::TYPE)]
-    private readonly ProductCategorySectionUid $id;
-    
-    /** Связь на событие */
-    #[ORM\ManyToOne(targetEntity: ProductCategoryEvent::class, inversedBy: "section")]
-    #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id', nullable: true)]
-    private ?ProductCategoryEvent $event;
-    
-    /** Перевод */
-    #[ORM\OneToMany(mappedBy: 'section', targetEntity: Trans\ProductCategorySectionTrans::class, cascade: ['all'])]
-    private Collection $translate;
-    
-    /** Поля секции */
-    #[ORM\OneToMany(mappedBy: 'section', targetEntity: Field\ProductCategorySectionField::class, cascade: ['all'])]
+	public const TABLE = 'product_category_section';
+	
+	/** ID */
+	#[ORM\Id]
+	#[ORM\Column(type: ProductCategorySectionUid::TYPE)]
+	private readonly ProductCategorySectionUid $id;
+	
+	/** Связь на событие */
+	#[ORM\ManyToOne(targetEntity: ProductCategoryEvent::class, inversedBy: "section")]
+	#[ORM\JoinColumn(name: 'event', referencedColumnName: 'id', nullable: true)]
+	private ?ProductCategoryEvent $event;
+	
+	/** Перевод */
+	#[ORM\OneToMany(mappedBy: 'section', targetEntity: Trans\ProductCategorySectionTrans::class, cascade: ['all'])]
+	private Collection $translate;
+	
+	/** Поля секции */
+	#[ORM\OneToMany(mappedBy: 'section', targetEntity: Field\ProductCategorySectionField::class, cascade: ['all'])]
 	#[ORM\OrderBy(['sort' => 'ASC'])]
-    private Collection $field;
-    
-    /** Сортировка */
-    #[ORM\Column(type: Types::SMALLINT, length: 3, nullable: false, options: ['default' => 100])]
-    private int $sort = 100;
-
-    public function __construct(ProductCategoryEvent $event) {
-        
-        $this->id = new ProductCategorySectionUid();
-        $this->event = $event;
-        
-        //$this->trans = new ArrayCollection();
-        //$this->getTrans();
-        //$this->fields = new ArrayCollection();
-        //$this->getFields();
-        
-    }
-    
-//    public function __clone()
-//    {
-//        $this->id = new SectionUid();
-//    }
- 
+	private Collection $field;
+	
+	/** Сортировка */
+	#[ORM\Column(type: Types::SMALLINT, length: 3, nullable: false, options: ['default' => 100])]
+	private int $sort = 100;
+	
+	public function __construct(ProductCategoryEvent $event)
+	{
+		
+		$this->id = new ProductCategorySectionUid();
+		$this->event = $event;
+		
+		//$this->trans = new ArrayCollection();
+		//$this->getTrans();
+		//$this->fields = new ArrayCollection();
+		//$this->getFields();
+		
+	}
+	
+	//    public function __clone()
+	//    {
+	//        $this->id = new SectionUid();
+	//    }
+	
 	public function __toString() : string
 	{
 		return $this->id;
 	}
 	
-
-    public function getId() : ProductCategorySectionUid
-    {
-        return $this->id;
-    }
-    
-    
-    
-    /**
-     * @throws Exception
-     */
-    public function getDto($dto) : mixed
-    {
-        if($dto instanceof ProductCategorySectionInterface)
-        {
-            return parent::getDto($dto);
-        }
-        
-        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
-    }
-    
-    /**
-     * @throws Exception
-     */
-    public function setEntity($dto) : mixed
-    {
-        if($dto instanceof ProductCategorySectionInterface)
-        {
-            return parent::setEntity($dto);
-        }
-        
-        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
-    }
-    
-//    public function removeElement() : void
-//    {
-//        $this->event = null;
-//    }
-    
-    
-//    private function equals($dto) : bool
-//    {
-//        if($dto instanceof SectionInterface)
-//        {
-//            return $this->id === $dto->getEquals();
-//        }
-//
-//        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
-//    }
-    
-    
+	
+	public function getId() : ProductCategorySectionUid
+	{
+		return $this->id;
+	}
+	
+	
+	/**
+	 * @throws Exception
+	 */
+	public function getDto($dto) : mixed
+	{
+		if($dto instanceof ProductCategorySectionInterface)
+		{
+			return parent::getDto($dto);
+		}
+		
+		throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+	}
+	
+	/**
+	 * @throws Exception
+	 */
+	public function setEntity($dto) : mixed
+	{
+		if($dto instanceof ProductCategorySectionInterface)
+		{
+			return parent::setEntity($dto);
+		}
+		
+		throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+	}
+	
+	//    public function removeElement() : void
+	//    {
+	//        $this->event = null;
+	//    }
+	
+	
+	//    private function equals($dto) : bool
+	//    {
+	//        if($dto instanceof SectionInterface)
+	//        {
+	//            return $this->id === $dto->getEquals();
+	//        }
+	//
+	//        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+	//    }
+	
+	
 }

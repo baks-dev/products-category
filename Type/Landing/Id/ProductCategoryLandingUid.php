@@ -27,6 +27,6 @@ use BaksDev\Core\Type\UidType\Uid;
 
 final class ProductCategoryLandingUid extends Uid
 {
-    public const TYPE = 'product_category_landing_uid';
+	public const TYPE = 'product_category_landing_uid';
 	
 }

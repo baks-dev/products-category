@@ -33,9 +33,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class DeleteProductCategoryForm extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options) : void
-    {
-        /* Удалить ******************************************************/
+	public function buildForm(FormBuilderInterface $builder, array $options) : void
+	{
 		/* Удалить ******************************************************/
 		$builder->add
 		(
@@ -43,18 +42,19 @@ final class DeleteProductCategoryForm extends AbstractType
 			SubmitType::class,
 			['label' => 'Delete', 'label_html' => true, 'attr' => ['class' => 'btn-danger']]
 		);
-    }
-    
-    
-    public function configureOptions(OptionsResolver $resolver) : void
-    {
-        $resolver->setDefaults
-        (
-          [
-            'data_class' => DeleteProductCategoryDTO::class,
-            'method' => 'POST',
-            'attr' => ['class' => 'w-100'],
-          ]);
-    }
-    
+	}
+	
+	
+	public function configureOptions(OptionsResolver $resolver) : void
+	{
+		$resolver->setDefaults
+		(
+			[
+				'data_class' => DeleteProductCategoryDTO::class,
+				'method' => 'POST',
+				'attr' => ['class' => 'w-100'],
+			]
+		);
+	}
+	
 }

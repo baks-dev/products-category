@@ -29,5 +29,5 @@ use Symfony\Component\Uid\Uuid;
 
 final class ProductCategorySectionFieldUid extends Uid
 {
-    public const TYPE = 'product_category_section_field_uid';
+	public const TYPE = 'product_category_section_field_uid';
 }

@@ -7,25 +7,16 @@
 
 {# ---- CSS ------------------------------------------------------------ #}
 {% block title %}
-    {{ 'admin.page.index'|trans }}
-{% endblock %}
-
-{# ---- CSS ------------------------------------------------------------ #}
-{% block stylesheets %}
-    {#<link href="{{ path(app.request.attributes.get('_route')~'.css') }}" rel="stylesheet">#}
+	{{ 'admin.page.index'|trans }}
 {% endblock %}
 
 
 {# ---- КОНТЕНТ-БЛОК ------------------------------------------------------------ #}
 {% block content %}
-    
-    {{ include(_self|replace({ "template.html.twig": settings.device~"/content.html.twig" })) }}
-    <div style="display: none !important;"
-         class="popover popover-body popover-arrow fade show rounded-pill spinner-border spinner-border-sm vertical-middle d-none">
-    </div>
+	
+	{{ include(_self|replace({ "template.html.twig": settings.device~"/content.html.twig" })) }}
+	<div style="display: none !important;"
+			class="popover popover-body popover-arrow fade show rounded-pill spinner-border spinner-border-sm vertical-middle d-none">
+	</div>
 
-{% endblock %}
-
-{% block javascript %}
-{#<script defer src="{{ path(app.request.attributes.get('_route')~'.js') }}"></script>#}
 {% endblock %}

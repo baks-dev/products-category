@@ -28,13 +28,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class ProductCategoryModifyDTO implements ProductCategoryModifyInterface
 {
-    /** Модификатор */
+	/** Модификатор */
 	#[Assert\NotBlank]
 	private \DateTimeImmutable $modDate;
-    
-    public function __construct() {
-       $this->modDate = new \DateTimeImmutable();
-    }
+	
+	public function __construct()
+	{
+		$this->modDate = new \DateTimeImmutable();
+	}
 	
 	public function getModDate() : \DateTimeImmutable
 	{

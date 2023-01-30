@@ -27,7 +27,7 @@ use BaksDev\Core\Type\Locale\Locale;
 
 interface ProductCategoryTransInterface
 {
-    //public function __construct(Locale $locale, string $name, ?string $description = null);
-    
-    //public function setLocal(string $local) : void;
+	//public function __construct(Locale $locale, string $name, ?string $description = null);
+	
+	//public function setLocal(string $local) : void;
 }

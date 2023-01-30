@@ -32,48 +32,49 @@ use Symfony\Component\Routing\Annotation\Route;
 #[RoleSecurity(['ROLE_ADMIN', 'ROLE_PRODUCT_CATEGORY_SETTINGS'])]
 final class SettingsController extends AbstractController
 {
-    #[Route('/admin/product/category/recyclebin/settings', name: 'admin.recyclebin.settings', methods: [
-      'GET',
-      'POST'
-    ])]
-    public function index(
-      Request $request,
-//      SettingsCategory $getSettings,
-//      Handler $handler,
-//      TranslatorInterface $translator,
-    ) : Response
-    {
-        
-        dd();
-        
-        $settings = $getSettings();
-        
-        /* Генерируем форму */
-        $form = $this->createForm(
-          SettingsForm::class,
-          $settings,
-          ['action' => $this->generateUrl('Product:admin.recyclebin.settings')]
-        );
-        $form->handleRequest($request);
-        
-        /* сохраняем изменения */
-        if($form->isSubmitted() && $form->isValid())
-        {
-            
-            if($form->has('categorySettings'))
-            {
-                /* Обновляем настройки */
-                $handler->handle($settings);
-                
-                $this->addFlash(
-                  'success',
-                  $translator->trans('admin.settings.success', domain: 'product.category'));
-            }
-            
-            return $this->redirect($request->headers->get('referer'));
-        }
-        
-        return $this->render(['form' => $form->createView()]);
-    }
-    
+	#[Route('/admin/product/category/recyclebin/settings', name: 'admin.recyclebin.settings', methods: [
+		'GET',
+		'POST',
+	])]
+	public function index(
+		Request $request,
+		//      SettingsCategory $getSettings,
+		//      Handler $handler,
+		//      TranslatorInterface $translator,
+	) : Response
+	{
+		
+		dd();
+		
+		$settings = $getSettings();
+		
+		/* Генерируем форму */
+		$form = $this->createForm(
+			SettingsForm::class,
+			$settings,
+			['action' => $this->generateUrl('Product:admin.recyclebin.settings')]
+		);
+		$form->handleRequest($request);
+		
+		/* сохраняем изменения */
+		if($form->isSubmitted() && $form->isValid())
+		{
+			
+			if($form->has('categorySettings'))
+			{
+				/* Обновляем настройки */
+				$handler->handle($settings);
+				
+				$this->addFlash(
+					'success',
+					$translator->trans('admin.settings.success', domain: 'product.category')
+				);
+			}
+			
+			return $this->redirect($request->headers->get('referer'));
+		}
+		
+		return $this->render(['form' => $form->createView()]);
+	}
+	
 }

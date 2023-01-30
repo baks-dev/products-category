@@ -27,14 +27,14 @@ use BaksDev\Core\Type\UidType\UidType;
 
 final class ProductCategoryLandingType extends UidType
 {
-    public function getClassType() : string
-    {
-        return ProductCategoryLandingUid::class;
-    }
-    
-    public function getName() : string
-    {
-        return ProductCategoryLandingUid::TYPE;
-    }
-    
+	public function getClassType() : string
+	{
+		return ProductCategoryLandingUid::class;
+	}
+	
+	public function getName() : string
+	{
+		return ProductCategoryLandingUid::TYPE;
+	}
+	
 }

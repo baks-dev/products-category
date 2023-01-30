@@ -35,40 +35,51 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class CategoryChoice implements CategoryChoiceInterface
 {
-    private Locale $local;
-    private EntityManagerInterface $entityManager;
-    private FilesystemAdapter $cacheQueries;
-    
-    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator) {
-        $this->entityManager = $entityManager;
-        $this->local = new Locale($translator->getLocale());
-    
-        $this->cacheQueries = new FilesystemAdapter('ProductCategory');
-    }
-    
-    public function get()
-    {
-        $qb = $this->entityManager->createQueryBuilder();
-        
-        $select = sprintf('new %s(category.id, trans.name)', ProductCategoryUid::class);
-    
-        $qb->select($select);
-    
-        $qb->from(Entity\ProductCategory::class, 'category', 'category.id');
-        $qb->join(Entity\Event\ProductCategoryEvent::class, 'event', 'WITH', 'event.id = category.event AND event.category = category.id');
-        $qb->leftJoin(Entity\Trans\ProductCategoryTrans::class, 'trans', 'WITH', 'trans.event = event.id AND trans.local = :local');
-
-    
-        /* Кеширование */
-        $query = $this->entityManager->createQuery($qb->getDQL());
-        $query->setQueryCache($this->cacheQueries);
-        $query->setResultCache($this->cacheQueries);
-        $query->enableResultCache();
-    
-        $query->setParameter('local', $this->local, Locale::TYPE);
-    
-        return $query->getResult();
-        
-    }
-    
+	private Locale $local;
+	private EntityManagerInterface $entityManager;
+	private FilesystemAdapter $cacheQueries;
+	
+	public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator)
+	{
+		$this->entityManager = $entityManager;
+		$this->local = new Locale($translator->getLocale());
+		
+		$this->cacheQueries = new FilesystemAdapter('ProductCategory');
+	}
+	
+	public function get()
+	{
+		$qb = $this->entityManager->createQueryBuilder();
+		
+		$select = sprintf('new %s(category.id, trans.name)', ProductCategoryUid::class);
+		
+		$qb->select($select);
+		
+		$qb->from(Entity\ProductCategory::class, 'category', 'category.id');
+		$qb->join(
+			Entity\Event\ProductCategoryEvent::class,
+			'event',
+			'WITH',
+			'event.id = category.event AND event.category = category.id'
+		);
+		$qb->leftJoin(
+			Entity\Trans\ProductCategoryTrans::class,
+			'trans',
+			'WITH',
+			'trans.event = event.id AND trans.local = :local'
+		);
+		
+		
+		/* Кеширование */
+		$query = $this->entityManager->createQuery($qb->getDQL());
+		$query->setQueryCache($this->cacheQueries);
+		$query->setResultCache($this->cacheQueries);
+		$query->enableResultCache();
+		
+		$query->setParameter('local', $this->local, Locale::TYPE);
+		
+		return $query->getResult();
+		
+	}
+	
 }

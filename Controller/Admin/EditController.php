@@ -38,26 +38,26 @@ use Symfony\Component\Routing\Annotation\Route;
 #[RoleSecurity(['ROLE_ADMIN', 'ROLE_PRODUCT_CATEGORY_EDIT'])]
 final class EditController extends AbstractController
 {
-    
-    #[Route('/admin/product/category/edit/{id}', name: 'admin.newedit.edit', methods: ['GET', 'POST'])]
-    public function edit(
-      Request $request,
-      #[MapEntity] Entity\Event\ProductCategoryEvent $Event,
+	
+	#[Route('/admin/product/category/edit/{id}', name: 'admin.newedit.edit', methods: ['GET', 'POST'])]
+	public function edit(
+		Request $request,
+		#[MapEntity] Entity\Event\ProductCategoryEvent $Event,
 		ProductCategoryHandler $handler,
-    ) : Response
-    {
+	) : Response
+	{
 		
-        $category = new ProductCategoryDTO();
-        $Event->getDto($category);
+		$category = new ProductCategoryDTO();
+		$Event->getDto($category);
 		
-        /* Форма добавления */
-        $form = $this->createForm(ProductCategoryForm::class, $category);
-        $form->handleRequest($request);
+		/* Форма добавления */
+		$form = $this->createForm(ProductCategoryForm::class, $category);
+		$form->handleRequest($request);
 		
 		if($form->isSubmitted() && $form->isValid() && $form->has('Save'))
 		{
 			$ProductCategory = $handler->handle($category);
-		
+			
 			if($ProductCategory instanceof Entity\ProductCategory)
 			{
 				$this->addFlash('success', 'admin.success.update', 'admin.products.category');
@@ -66,11 +66,11 @@ final class EditController extends AbstractController
 			{
 				$this->addFlash('danger', 'admin.danger.update', 'admin.products.category', $ProductCategory);
 			}
-		
+			
 			return $this->redirectToRoute('ProductCategory:admin.index');
-		
+			
 		}
 		
-        return $this->render(['form' => $form->createView()]);
-    }
+		return $this->render(['form' => $form->createView()]);
+	}
 }

@@ -29,39 +29,37 @@ use BaksDev\Products\Category\Type\Event\ProductCategoryEventUid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-
 final class CategoryTransDTO implements ProductCategoryTransInterface
 {
 	#[Assert\Uuid]
-    private readonly ?ProductCategoryEventUid $event;
+	private readonly ?ProductCategoryEventUid $event;
 	
 	/** Локаль */
 	#[Assert\NotBlank]
-    private readonly Locale $local;
-
-    /** Название раздела (строка с точкой, нижнее подчеркивание тире процент скобки) */
-    #[Assert\NotBlank]
-    #[Assert\Regex(pattern: '/^[\w \.\_\-\(\)\%]+$/iu')]
-    private ?string $name = null;
-    
-    /** Краткое описание */
-    #[Assert\Regex(pattern: '/^[\w \,\'\.\_\-\(\)\%]+$/iu')]
-    private ?string $description = null;
-    
-
+	private readonly Locale $local;
 	
-//    public function setEvent(ProductCategoryEventUid $event) : void
-//    {
-//        $this->event = $event->getId();
-//    }
+	/** Название раздела (строка с точкой, нижнее подчеркивание тире процент скобки) */
+	#[Assert\NotBlank]
+	#[Assert\Regex(pattern: '/^[\w \.\_\-\(\)\%]+$/iu')]
+	private ?string $name = null;
+	
+	/** Краткое описание */
+	#[Assert\Regex(pattern: '/^[\w \,\'\.\_\-\(\)\%]+$/iu')]
+	private ?string $description = null;
+	
+	
+	//    public function setEvent(ProductCategoryEventUid $event) : void
+	//    {
+	//        $this->event = $event->getId();
+	//    }
 	
 	
 	/** Локаль */
 	
-    public function getLocal() : Locale
-    {
-        return $this->local;
-    }
+	public function getLocal() : Locale
+	{
+		return $this->local;
+	}
 	
 	/** Локаль */
 	
@@ -76,27 +74,27 @@ final class CategoryTransDTO implements ProductCategoryTransInterface
 	
 	/** Название раздела */
 	
-    public function getName() : ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(?string $name) : void
-    {
-        $this->name = $name;
-    }
+	public function getName() : ?string
+	{
+		return $this->name;
+	}
+	
+	public function setName(?string $name) : void
+	{
+		$this->name = $name;
+	}
 	
 	/** Краткое описание */
 	
-    public function getDescription() : ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description) : void
-    {
-        $this->description = $description;
-    }
-
+	public function getDescription() : ?string
+	{
+		return $this->description;
+	}
+	
+	public function setDescription(?string $description) : void
+	{
+		$this->description = $description;
+	}
+	
 }
 

@@ -26,19 +26,21 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use BaksDev\Products\Category\Entity\Cover\ProductCategoryCover;
 use Symfony\Config\TwigConfig;
 
-return static function (TwigConfig $config, ContainerConfigurator $configurator)
-{
-
+return static function(TwigConfig $config, ContainerConfigurator $configurator){
+	
 	$config->path(__DIR__.'/../view', 'ProductCategory');
 	
 	
 	/** Абсолютный Путь для загрузки аватарок профилей пользователя */
-	$configurator->parameters()->set(ProductCategoryCover::TABLE, '%kernel.project_dir%/public/upload/'.ProductCategoryCover::TABLE.'/');
+	$configurator->parameters()->set(
+		ProductCategoryCover::TABLE,
+		'%kernel.project_dir%/public/upload/'.ProductCategoryCover::TABLE.'/'
+	);
 	
 	/** Относительный путь аватарок профилей пользователя */
 	$config->global(ProductCategoryCover::TABLE)->value('/upload/'.ProductCategoryCover::TABLE.'/');
 	
-    
+	
 };
 
 

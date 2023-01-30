@@ -31,44 +31,39 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 final class ProductCategoryModifyListener
 {
-    private RequestStack $request;
-    private TokenStorageInterface $token;
-    
-    public function __construct(
-      RequestStack $request,
-      TokenStorageInterface $token,
-    )
-    {
-        $this->request = $request;
-        $this->token = $token;
-    }
-    
-    public function prePersist(ProductCategoryModify $data, LifecycleEventArgs $event) : void
-    {
+	private RequestStack $request;
+	private TokenStorageInterface $token;
 	
-		dd('prePersist');
+	public function __construct(
+		RequestStack $request,
+		TokenStorageInterface $token,
+	)
+	{
+		$this->request = $request;
+		$this->token = $token;
+	}
+	
+	public function prePersist(ProductCategoryModify $data, LifecycleEventArgs $event) : void
+	{
+		$token = $this->token->getToken();
 		
-        $token = $this->token->getToken();
-        
-        if($token)
-        {
-            $data->setUser($token->getUser());
-        }
-        
-        /* Если пользователь не из консоли */
-        if($this->request->getCurrentRequest())
-        {
-            $data->persistModifyAgent(
-              new IpAddress($this->request->getCurrentRequest()->getClientIp()), /* Ip */
-              $this->request->getCurrentRequest()->headers->get('User-Agent') /* User-Agent */
-            );
-        }
-    }
+		if($token)
+		{
+			$data->setUser($token->getUser());
+		}
+		
+		/* Если пользователь не из консоли */
+		if($this->request->getCurrentRequest())
+		{
+			$data->persistModifyAgent(
+				new IpAddress($this->request->getCurrentRequest()->getClientIp()), /* Ip */
+				$this->request->getCurrentRequest()->headers->get('User-Agent') /* User-Agent */
+			);
+		}
+	}
 	
 	public function preUpdate(ProductCategoryModify $data, LifecycleEventArgs $event) : void
 	{
-		dd('preUpdate');
-		
 		$token = $this->token->getToken();
 		
 		if($token)
@@ -85,5 +80,5 @@ final class ProductCategoryModifyListener
 			);
 		}
 	}
-    
+	
 }

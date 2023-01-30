@@ -37,51 +37,52 @@ use InvalidArgumentException;
 #[ORM\Table(name: 'product_category_trans')]
 class ProductCategoryTrans extends EntityState
 {
-    public const TABLE = 'product_category_trans';
-    
-    /** Связь на событие */
-    #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: ProductCategoryEvent::class, inversedBy: "translate")]
-    #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
-    private readonly ProductCategoryEvent $event;
-    
-    /** Локаль */
-    #[ORM\Id]
-    #[ORM\Column(type: Locale::TYPE, length: 2)]
-    private readonly Locale $local;
-    
-    /** Название */
-    #[ORM\Column( type: Types::STRING, length: 100)]
-    private string $name;
-    
-    /** Описание */
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $description = null;
-    
-    public function __construct(ProductCategoryEvent $event) {
-        $this->event = $event;
-    }
+	public const TABLE = 'product_category_trans';
 	
-
-    public function getDto($dto) : mixed
-    {
-        if($dto instanceof ProductCategoryTransInterface)
-        {
-            return parent::getDto($dto);
-        }
-        
-        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
-    }
+	/** Связь на событие */
+	#[ORM\Id]
+	#[ORM\ManyToOne(targetEntity: ProductCategoryEvent::class, inversedBy: "translate")]
+	#[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
+	private readonly ProductCategoryEvent $event;
 	
-    public function setEntity($dto) : mixed
-    {
-        if($dto instanceof ProductCategoryTransInterface)
-        {
-            return parent::setEntity($dto);
-        }
-        
-        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
-    }
+	/** Локаль */
+	#[ORM\Id]
+	#[ORM\Column(type: Locale::TYPE, length: 2)]
+	private readonly Locale $local;
+	
+	/** Название */
+	#[ORM\Column(type: Types::STRING, length: 100)]
+	private string $name;
+	
+	/** Описание */
+	#[ORM\Column(type: Types::TEXT, nullable: true)]
+	private ?string $description = null;
+	
+	public function __construct(ProductCategoryEvent $event)
+	{
+		$this->event = $event;
+	}
+	
+	
+	public function getDto($dto) : mixed
+	{
+		if($dto instanceof ProductCategoryTransInterface)
+		{
+			return parent::getDto($dto);
+		}
+		
+		throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+	}
+	
+	public function setEntity($dto) : mixed
+	{
+		if($dto instanceof ProductCategoryTransInterface)
+		{
+			return parent::setEntity($dto);
+		}
+		
+		throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+	}
 	
 	
 	public function getNameByLocale(Locale $locale) : ?string
@@ -97,49 +98,49 @@ class ProductCategoryTrans extends EntityState
 	
 	
 	
-    
-//    public function equals($dto) : bool
-//    {
-//        if($dto instanceof TransInterface)
-//        {
-//            return  ($this->event->getId() === $dto->getEquals() &&
-//               $dto->getLocal()->getValue() === $this->local->getValue());
-//
-//        }
-//
-//        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
-//    }
-    
-    
-    //    public function updCategoryTrans(TransInterface $categoryTrans) : void
-//    {
-////        if(property_exists($categoryTrans, 'name'))
-////        {
-////            $this->name = $categoryTrans->name;
-////        }
-////
-////        if(property_exists($categoryTrans, 'description'))
-////        {
-////            $this->description = $categoryTrans->description;
-////        }
-//    }
-    
-//    public function getCategoryTrans(TransInterface $categoryTrans) : TransInterface
-//    {
-//        $oReflectionClass = new \ReflectionClass($categoryTrans);
-//
-//        foreach($oReflectionClass->getProperties() as $property)
-//        {
-//            $propertyName = $property->getName();
-//            $propertyNameSetter =  'set'.ucfirst($propertyName);
-//
-//            if(property_exists($this, $propertyName) && method_exists($categoryTrans, $propertyNameSetter))
-//            {
-//                $categoryTrans->$propertyNameSetter($this->{$propertyName});
-//            }
-//        }
-//
-//        return $categoryTrans;
-//    }
-//
+	
+	//    public function equals($dto) : bool
+	//    {
+	//        if($dto instanceof TransInterface)
+	//        {
+	//            return  ($this->event->getId() === $dto->getEquals() &&
+	//               $dto->getLocal()->getValue() === $this->local->getValue());
+	//
+	//        }
+	//
+	//        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+	//    }
+	
+	
+	//    public function updCategoryTrans(TransInterface $categoryTrans) : void
+	//    {
+	////        if(property_exists($categoryTrans, 'name'))
+	////        {
+	////            $this->name = $categoryTrans->name;
+	////        }
+	////
+	////        if(property_exists($categoryTrans, 'description'))
+	////        {
+	////            $this->description = $categoryTrans->description;
+	////        }
+	//    }
+	
+	//    public function getCategoryTrans(TransInterface $categoryTrans) : TransInterface
+	//    {
+	//        $oReflectionClass = new \ReflectionClass($categoryTrans);
+	//
+	//        foreach($oReflectionClass->getProperties() as $property)
+	//        {
+	//            $propertyName = $property->getName();
+	//            $propertyNameSetter =  'set'.ucfirst($propertyName);
+	//
+	//            if(property_exists($this, $propertyName) && method_exists($categoryTrans, $propertyNameSetter))
+	//            {
+	//                $categoryTrans->$propertyNameSetter($this->{$propertyName});
+	//            }
+	//        }
+	//
+	//        return $categoryTrans;
+	//    }
+	//
 }

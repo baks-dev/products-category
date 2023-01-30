@@ -33,40 +33,51 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /** Клас получает массив категорий для формы и перобразует названия (path) согласно вложенности */
 final class ParentCategoryChoiceFormRepository implements ParentCategoryChoiceFormInterface
 {
-
-    private Locale $local;
-    private EntityManagerInterface $entityManager;
-    
-    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator) {
-        $this->entityManager = $entityManager;
-        $this->local = new Locale($translator->getLocale());
-    }
-    
-    public function get(?ProductCategoryUid $categoryUid = null) : array
-    {
-
-        $qb = $this->entityManager->createQueryBuilder();
-        
-        $select = sprintf('new %s(category.id, trans.name)', ProductParentCategoryUid::class);
-        
-
-        $qb->select($select);
-    
-//        $qb->select('category.id');
-//
-//        $qb->addSelect('category.event');
-//        $qb->addSelect('event.parent');
-//
-//        $qb->addSelect('trans.name');
-
-        $qb->from(EntityCategory\ProductCategory::class, 'category', 'category.id');
-        $qb->join(EntityCategory\Event\ProductCategoryEvent::class, 'event', 'WITH', 'event.id = category.event AND event.category = category.id');
-        $qb->leftJoin(EntityCategory\Trans\ProductCategoryTrans::class, 'trans', 'WITH', 'trans.event = event.id AND trans.local = :locale');
-
-        $qb->setParameter('locale', $this->local, Locale::TYPE);
-        
-        $qb->orderBy(
-          'CASE
+	
+	private Locale $local;
+	private EntityManagerInterface $entityManager;
+	
+	public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator)
+	{
+		$this->entityManager = $entityManager;
+		$this->local = new Locale($translator->getLocale());
+	}
+	
+	public function get(?ProductCategoryUid $categoryUid = null) : array
+	{
+		
+		$qb = $this->entityManager->createQueryBuilder();
+		
+		$select = sprintf('new %s(category.id, trans.name)', ProductParentCategoryUid::class);
+		
+		
+		$qb->select($select);
+		
+		//        $qb->select('category.id');
+		//
+		//        $qb->addSelect('category.event');
+		//        $qb->addSelect('event.parent');
+		//
+		//        $qb->addSelect('trans.name');
+		
+		$qb->from(EntityCategory\ProductCategory::class, 'category', 'category.id');
+		$qb->join(
+			EntityCategory\Event\ProductCategoryEvent::class,
+			'event',
+			'WITH',
+			'event.id = category.event AND event.category = category.id'
+		);
+		$qb->leftJoin(
+			EntityCategory\Trans\ProductCategoryTrans::class,
+			'trans',
+			'WITH',
+			'trans.event = event.id AND trans.local = :locale'
+		);
+		
+		$qb->setParameter('locale', $this->local, Locale::TYPE);
+		
+		$qb->orderBy(
+			'CASE
         WHEN
             event.parent IS NULL
         THEN
@@ -74,33 +85,34 @@ final class ParentCategoryChoiceFormRepository implements ParentCategoryChoiceFo
         ELSE
             event.parent
         END',
-          'DESC');
-        
+			'DESC'
+		);
 		
-        return $qb->getQuery()->getResult();
-        
-
-       $result = $qb->getQuery()->getResult();
-
-        /* Преобразуем названия (path) разделов с учетом вложенных */
-        $CategoryParent = [];
-
-        foreach($result as $key => $item)
-        {
-
-            $choice_label = $item['name'];
-            
-            $parentCat = (string) $item['parent']->getValue();
-            
-            if(!empty($parentCat))
-            {
-                $choice_label = $result[$parentCat]['name'].' / '.$choice_label;
-            }
-
-            $CategoryParent[$choice_label] = $key;
-        }
-
-        return $CategoryParent;
-    }
-    
+		
+		return $qb->getQuery()->getResult();
+		
+		
+		$result = $qb->getQuery()->getResult();
+		
+		/* Преобразуем названия (path) разделов с учетом вложенных */
+		$CategoryParent = [];
+		
+		foreach($result as $key => $item)
+		{
+			
+			$choice_label = $item['name'];
+			
+			$parentCat = (string) $item['parent']->getValue();
+			
+			if(!empty($parentCat))
+			{
+				$choice_label = $result[$parentCat]['name'].' / '.$choice_label;
+			}
+			
+			$CategoryParent[$choice_label] = $key;
+		}
+		
+		return $CategoryParent;
+	}
+	
 }

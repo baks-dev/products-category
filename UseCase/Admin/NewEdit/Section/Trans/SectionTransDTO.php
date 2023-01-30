@@ -31,27 +31,27 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class SectionTransDTO implements ProductCategorySectionTransInterface
 {
 	#[Assert\Uuid]
-    private ?ProductCategorySectionUid $section = null;
-    
+	private ?ProductCategorySectionUid $section = null;
+	
 	/** Локаль */
 	#[Assert\NotBlank]
-    private ?Locale $local;
-    
-    /** Название секции (строка с точкой, нижнее подчеркивание тире процент скобки) */
-    #[Assert\NotBlank]
-    #[Assert\Regex(pattern: '/^[\w \.\,\_\-\(\)\%]+$/iu')]
-    private ?string $name = null;
-    
-    /** Краткое описание (строка с точкой, нижнее подчеркивание тире процент скобки) */
-    #[Assert\Regex(pattern: '/^[\w \.\,\_\-\(\)\%]+$/iu')]
-    private ?string $description = null;
+	private ?Locale $local;
+	
+	/** Название секции (строка с точкой, нижнее подчеркивание тире процент скобки) */
+	#[Assert\NotBlank]
+	#[Assert\Regex(pattern: '/^[\w \.\,\_\-\(\)\%]+$/iu')]
+	private ?string $name = null;
+	
+	/** Краткое описание (строка с точкой, нижнее подчеркивание тире процент скобки) */
+	#[Assert\Regex(pattern: '/^[\w \.\,\_\-\(\)\%]+$/iu')]
+	private ?string $description = null;
 	
 	/** Локаль */
 	
-    public function getLocal() : ?Locale
-    {
-        return $this->local;
-    }
+	public function getLocal() : ?Locale
+	{
+		return $this->local;
+	}
 	
 	/** Локаль */
 	
@@ -67,64 +67,64 @@ final class SectionTransDTO implements ProductCategorySectionTransInterface
 	/** Название секции */
 	
 	public function setName(?string $name) : void
-    {
-        $this->name = $name;
-    }
-
-    public function getName() : ?string
-    {
-        return $this->name;
-    }
+	{
+		$this->name = $name;
+	}
+	
+	public function getName() : ?string
+	{
+		return $this->name;
+	}
 	
 	/** Краткое описание */
 	
-    public function getDescription() : ?string
-    {
-        return $this->description;
-    }
+	public function getDescription() : ?string
+	{
+		return $this->description;
+	}
 	
 	public function setDescription(?string $description) : void
 	{
 		$this->description = $description;
 	}
-    
-    
-    
-    
-    
-    
-    
-    
-    
-//    public function __construct(Locale $locale = null, string $name = null, string $description = null)
-//    {
-//        $this->local = $locale;
-//        $this->name = $name;
-//        $this->description = $description;
-//    }
-//
-//    /**
-//     * @param string|Locale $local
-//     */
-//    public function setLocal(string|Locale $local) : void
-//    {
-//        $this->local = $local instanceof Locale ? $local : new Locale($local) ;
-//    }
-//
-//    public function getLocal() : Locale
-//    {
-//        return $this->local;
-//    }
-//
-//    public function getName() : string
-//    {
-//        return $this->name;
-//    }
-//
-//    public function getDesc() : ?string
-//    {
-//        return $this->desc;
-//    }
-    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//    public function __construct(Locale $locale = null, string $name = null, string $description = null)
+	//    {
+	//        $this->local = $locale;
+	//        $this->name = $name;
+	//        $this->description = $description;
+	//    }
+	//
+	//    /**
+	//     * @param string|Locale $local
+	//     */
+	//    public function setLocal(string|Locale $local) : void
+	//    {
+	//        $this->local = $local instanceof Locale ? $local : new Locale($local) ;
+	//    }
+	//
+	//    public function getLocal() : Locale
+	//    {
+	//        return $this->local;
+	//    }
+	//
+	//    public function getName() : string
+	//    {
+	//        return $this->name;
+	//    }
+	//
+	//    public function getDesc() : ?string
+	//    {
+	//        return $this->desc;
+	//    }
+	
 }
 

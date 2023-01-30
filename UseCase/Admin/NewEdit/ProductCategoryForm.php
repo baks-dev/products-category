@@ -81,7 +81,7 @@ final class ProductCategoryForm extends AbstractType
 			'by_reference' => false,
 			'allow_delete' => true,
 			'allow_add' => true,
-			'prototype_name' => '__category_translate__'
+			'prototype_name' => '__category_translate__',
 		]);
 		
 		/** Настройки SEO категории */
@@ -92,7 +92,7 @@ final class ProductCategoryForm extends AbstractType
 			'by_reference' => false,
 			'allow_delete' => true,
 			'allow_add' => true,
-			'prototype_name' => '__category_seo__'
+			'prototype_name' => '__category_seo__',
 		]);
 		
 		/** Посадочные блоки */
@@ -103,7 +103,7 @@ final class ProductCategoryForm extends AbstractType
 			'by_reference' => false,
 			'allow_delete' => true,
 			'allow_add' => true,
-			'prototype_name' => '__category_landing__'
+			'prototype_name' => '__category_landing__',
 		]);
 		
 		/** Секции свойств продукта категории */
@@ -114,7 +114,7 @@ final class ProductCategoryForm extends AbstractType
 			'by_reference' => false,
 			'allow_delete' => true,
 			'allow_add' => true,
-			'prototype_name' => '__category_section__'
+			'prototype_name' => '__category_section__',
 		]);
 		
 		/** Торговые предложения */

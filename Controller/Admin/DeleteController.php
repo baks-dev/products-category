@@ -34,50 +34,47 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+
 #[RoleSecurity(['ROLE_ADMIN', 'ROLE_PRODUCT_CATEGORY_DELETE'])]
 final class DeleteController extends AbstractController
 {
-    #[Route('/admin/product/category/delete/{id}', name: 'admin.delete', methods: ['POST', 'GET'])]
-    public function delete(
-      Request $request,
-      DeleteProductCategoryHandler $handler,
-      Entity\Event\ProductCategoryEvent $Event,
-    ) : Response
-    {
-        
-        $category = new DeleteProductCategoryDTO();
-        $Event->getDto($category);
-        
-        $form = $this->createForm(DeleteProductCategoryForm::class, $category, [
-          'action' => $this->generateUrl('ProductCategory:admin.delete', ['id' => $category->getEvent()]),
-        ]);
-        $form->handleRequest($request);
-	
-	
-		if($form->isSubmitted() && $form->isValid() && $form->has('delete'))
-		{
+	#[Route('/admin/product/category/delete/{id}', name: 'admin.delete', methods: ['POST', 'GET'])]
+	public function delete(
+		Request $request,
+		DeleteProductCategoryHandler $handler,
+		Entity\Event\ProductCategoryEvent $Event,
+	) : Response
+	{
 		
-			$ProductCategory = $handler->handle($category);
+		$category = new DeleteProductCategoryDTO();
+		$Event->getDto($category);
+		$form = $this->createForm(DeleteProductCategoryForm::class, $category, [
+			'action' => $this->generateUrl('ProductCategory:admin.delete', ['id' => $category->getEvent()]),
+		]);
+		$form->handleRequest($request);
+		if($form->isSubmitted() && $form->isValid() && $form->has('delete')) {
 			
-			if($ProductCategory instanceof Entity\ProductCategory)
-			{
+			$ProductCategory = $handler->handle($category);
+			if($ProductCategory instanceof Entity\ProductCategory) {
 				$this->addFlash('admin.form.header.delete', 'admin.success.delete', 'admin.products.category');
+				
 				return $this->redirectToRoute('ProductCategory:admin.index');
 			}
-		
-			$this->addFlash('admin.form.header.delete', 'admin.danger.delete', 'admin.products.category', $ProductCategory);
+			$this->addFlash(
+				'admin.form.header.delete',
+				'admin.danger.delete',
+				'admin.products.category',
+				$ProductCategory
+			);
+			
 			return $this->redirectToRoute('ProductCategory:admin.index', status: 400);
-		
 		}
-	
-		return $this->render
-		(
-			[
-				'form' => $form->createView(),
-				'name' => $Event->getNameByLocale($this->getLocale()), /*  название согласно локали  */
-			],
+		
+		return $this->render([
+			'form' => $form->createView(),
+			'name' => $Event->getNameByLocale($this->getLocale()), /*  название согласно локали  */
+		],
 			'content.html.twig'
 		);
-    }
-    
+	}
 }

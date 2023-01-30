@@ -29,7 +29,7 @@ use Symfony\Component\Uid\Uuid;
 
 final class ProductCategoryUid extends Uid
 {
-    public const TYPE = 'product_category_uid';
+	public const TYPE = 'product_category_uid';
 	
 	private mixed $options;
 	
@@ -39,7 +39,7 @@ final class ProductCategoryUid extends Uid
 		$this->options = $options;
 	}
 	
-
+	
 	public function getOptions() : mixed
 	{
 		return $this->options;

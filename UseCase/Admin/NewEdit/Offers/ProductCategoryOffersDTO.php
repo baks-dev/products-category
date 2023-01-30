@@ -34,117 +34,118 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class ProductCategoryOffersDTO implements ProductCategoryOffersInterface
 {
 	#[Assert\Uuid]
-    private ?ProductCategoryOffersUid $id = null;
+	private ?ProductCategoryOffersUid $id = null;
 	
 	/** Флаг, что товары в категории с торговым предложением */
 	private bool $offer = false;
-    
-    /** Справочник */
-    private ?string $reference = null;
-    
-    /** Загрузка пользовательских изображений */
-    private bool $image = false;
-    
-    /** Торговое предложение с ценой */
-    private bool $price = false;
 	
-    /** Количественный учет */
-    private bool $quantitative = false;
-    
-    /** Торговое предложение с артикулом */
+	/** Справочник */
+	private ?string $reference = null;
+	
+	/** Загрузка пользовательских изображений */
+	private bool $image = false;
+	
+	/** Торговое предложение с ценой */
+	private bool $price = false;
+	
+	/** Количественный учет */
+	private bool $quantitative = false;
+	
+	/** Торговое предложение с артикулом */
 	private bool $article = false;
-
-    
-    /** Настройки локали торгового предложения */
-    #[Assert\Valid]
-    private ArrayCollection $translate;
+	
+	
+	/** Настройки локали торгового предложения */
+	#[Assert\Valid]
+	private ArrayCollection $translate;
 	
 	/** Множественные варианты торговых предложений  */
 	private Variation\ProductCategoryOffersVariationDTO $variation;
 	
-
-	public function __construct() {
+	
+	public function __construct()
+	{
 		$this->translate = new ArrayCollection();
 		$this->variation = new Variation\ProductCategoryOffersVariationDTO();
 	}
 	
-//	/**  Сортировка */
-//
-//    public function getSort() : int
-//    {
-//        return $this->sort;
-//    }
-//
-//    public function setSort(int $sort) : void
-//    {
-//        $this->sort = $sort;
-//    }
+	//	/**  Сортировка */
+	//
+	//    public function getSort() : int
+	//    {
+	//        return $this->sort;
+	//    }
+	//
+	//    public function setSort(int $sort) : void
+	//    {
+	//        $this->sort = $sort;
+	//    }
 	
 	/** Справочник */
 	
-    public function getReference() : ?string
-    {
-        return $this->reference;
-    }
-
-    public function setReference(?string $reference) : void
-    {
-        $this->reference = $reference;
-    }
+	public function getReference() : ?string
+	{
+		return $this->reference;
+	}
+	
+	public function setReference(?string $reference) : void
+	{
+		$this->reference = $reference;
+	}
 	
 	/** Загрузка пользовательских изображений */
 	
-    public function getImage() : bool
-    {
-        return $this->image;
-    }
+	public function getImage() : bool
+	{
+		return $this->image;
+	}
 	
-    public function setImage(bool $image) : void
-    {
-        $this->image = $image;
-    }
+	public function setImage(bool $image) : void
+	{
+		$this->image = $image;
+	}
 	
 	/** Торговое предложение с ценой */
 	
 	
-    public function getPrice() : bool
-    {
-        return $this->price;
-    }
-
-    public function setPrice(bool $price) : void
-    {
-        $this->price = $price;
-    }
+	public function getPrice() : bool
+	{
+		return $this->price;
+	}
 	
-//	/** Множественный выбор */
-//
-//    public function getMultiple() : bool
-//    {
-//        return $this->multiple;
-//    }
-//
-//    public function setMultiple(bool $multiple) : void
-//    {
-//        $this->multiple = $multiple;
-//    }
+	public function setPrice(bool $price) : void
+	{
+		$this->price = $price;
+	}
+	
+	//	/** Множественный выбор */
+	//
+	//    public function getMultiple() : bool
+	//    {
+	//        return $this->multiple;
+	//    }
+	//
+	//    public function setMultiple(bool $multiple) : void
+	//    {
+	//        $this->multiple = $multiple;
+	//    }
 	
 	/** Торговое предложение с артикулом */
 	
-    public function getArticle() : bool
-    {
-        return $this->article;
-    }
-
-    public function setArticle(bool $article) : void
-    {
-        $this->article = $article;
-    }
+	public function getArticle() : bool
+	{
+		return $this->article;
+	}
+	
+	public function setArticle(bool $article) : void
+	{
+		$this->article = $article;
+	}
 	
 	/** Настройки локали торгового предложения */
-
-    public function getTranslate() : ArrayCollection
-    {
+	
+	public function getTranslate() : ArrayCollection
+	{
 		if(!$this->translate->isEmpty())
 		{
 			$this->offer = true;
@@ -158,36 +159,34 @@ final class ProductCategoryOffersDTO implements ProductCategoryOffersInterface
 			$this->addTranslate($OffersTransDTO);
 		}
 		
-        return $this->translate;
-    }
-
-    public function addTranslate(OffersTransDTO $trans) : void
-    {
-        if(!$this->translate->contains($trans))
-        {
-            $this->translate->add($trans);
-        }
-    }
-    
-    public function removeTranslate(OffersTransDTO $trans) : void
-    {
-        $this->translate->removeElement($trans);
-    }
+		return $this->translate;
+	}
 	
+	public function addTranslate(OffersTransDTO $trans) : void
+	{
+		if(!$this->translate->contains($trans))
+		{
+			$this->translate->add($trans);
+		}
+	}
 	
+	public function removeTranslate(OffersTransDTO $trans) : void
+	{
+		$this->translate->removeElement($trans);
+	}
 	
 	
 	/** Количественный учет */
 	
-    public function getQuantitative() : bool
-    {
-        return $this->quantitative;
-    }
-
-    public function setQuantitative(bool $quantitative) : void
-    {
-        $this->quantitative = $quantitative;
-    }
+	public function getQuantitative() : bool
+	{
+		return $this->quantitative;
+	}
+	
+	public function setQuantitative(bool $quantitative) : void
+	{
+		$this->quantitative = $quantitative;
+	}
 	
 	/** Флаг, что товары в категории с торговым предложением */
 	
@@ -196,7 +195,7 @@ final class ProductCategoryOffersDTO implements ProductCategoryOffersInterface
 		
 		return $this->offer;
 	}
-
+	
 	public function setOffer(bool $offer) : void
 	{
 		$this->offer = $offer;
@@ -217,8 +216,6 @@ final class ProductCategoryOffersDTO implements ProductCategoryOffersInterface
 	{
 		$this->variation = $variation;
 	}
-	
-
 	
 	
 }

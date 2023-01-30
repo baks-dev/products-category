@@ -112,11 +112,10 @@ final class DeleteProductCategoryHandler
 			return $uniqid;
 		}
 		
-
+		
 		/* Применяем зменения к событию */
 		$Event->setEntity($command);
 		$this->entityManager->persist($Event);
-		
 		
 		
 		/* Удаляем корень агрегата */

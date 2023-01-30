@@ -44,7 +44,6 @@ final class ProductCategoryOffersVariationTransDTO implements ProductCategoryOff
 	#[Assert\Regex(pattern: '/^[\w \.\_\-\(\)\%]+$/iu')]
 	private ?string $name = null;
 	
-
 	
 	//    public function setEvent(ProductCategoryEventUid $event) : void
 	//    {
@@ -82,6 +81,5 @@ final class ProductCategoryOffersVariationTransDTO implements ProductCategoryOff
 		$this->name = $name;
 	}
 	
-
 	
 }

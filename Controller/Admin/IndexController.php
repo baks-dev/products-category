@@ -59,7 +59,7 @@ final class IndexController extends AbstractController
 		/* Получаем список */
 		$parent = $cat ? new ProductParentCategoryUid($cat->getId()) : null;
 		$query = $allCategory->fetchProductParentAllAssociative($search, $parent);
-
+		
 		return $this->render(
 			[
 				'query' => $query,

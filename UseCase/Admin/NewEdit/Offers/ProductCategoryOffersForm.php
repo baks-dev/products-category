@@ -36,93 +36,96 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class ProductCategoryOffersForm extends AbstractType
 {
-  
-    public function buildForm(FormBuilderInterface $builder, array $options) : void
-    {
-
-        /** Множественный выбор справочника */
-        //$builder->add('multiple', CheckboxType::class, ['required' => false,]);
 	
-
-    
-        /** Торговое предложение - Справочник */
-        $builder->add('isReference', CheckboxType::class, ['mapped' => false, 'required' => false,]);
-        
-        /** Если ранее выбран справочник - выделяем чекбокс  */
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $product = $event->getData();
-            $form = $event->getForm();
-
-            if ($product && $product->getReference() !== null) {
-                $form->add('isReference', CheckboxType::class, ['mapped' => false, 'required' => false, 'data' => true,]);
-            }
-        });
-        
-        
-        /** Справочники */
-        $builder->add
-        ('reference',
-         ChoiceType::class,
-         [
-           'required' => false,
-           'choices' => [
-             'reference.color' => 'color', /* Цвет */
-             'reference.clothing.size' => 'size_clothing', /* Размер одежды */
-             'reference.clothing.child' => 'child_size_clothing', /* Детский Размер одежды */
-             'reference.pants' => 'pants', /* Размер брюк (джинс) */
-             
-             //'reference.shoe.size' => 'size_shoe', /* Размер обуви */
-           ],
-           'translation_domain' => 'reference'
-         ]
-        );
-    
-        $builder->add('image', CheckboxType::class, ['required' => false]);
-    
-        $builder->add('price', CheckboxType::class, ['required' => false]);
-        
-        $builder->add('quantitative', CheckboxType::class, ['required' => false]);
-        
-        $builder->add('article', CheckboxType::class, ['required' => false]);
-    
-        /* Offers Trans */
-        $builder->add('translate', CollectionType::class, [
-          'entry_type' => Trans\OffersTransForm::class,
-          'entry_options' => ['label' => false],
-          'label' => false,
-          'by_reference' => false,
-          'allow_delete' => true,
-          'allow_add' => true,
-		  'prototype_name' => '__offer_translate__'
-        ]);
-	
+	public function buildForm(FormBuilderInterface $builder, array $options) : void
+	{
+		
+		/** Множественный выбор справочника */
+		//$builder->add('multiple', CheckboxType::class, ['required' => false,]);
+		
+		
+		/** Торговое предложение - Справочник */
+		$builder->add('isReference', CheckboxType::class, ['mapped' => false, 'required' => false,]);
+		
+		/** Если ранее выбран справочник - выделяем чекбокс  */
+		$builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
+			$product = $event->getData();
+			$form = $event->getForm();
+			
+			if($product && $product->getReference() !== null)
+			{
+				$form->add('isReference', CheckboxType::class, ['mapped' => false, 'required' => false, 'data' => true,]
+				);
+			}
+		});
+		
+		
+		/** Справочники */
+		$builder->add
+		(
+			'reference',
+			ChoiceType::class,
+			[
+				'required' => false,
+				'choices' => [
+					'reference.color' => 'color', /* Цвет */
+					'reference.clothing.size' => 'size_clothing', /* Размер одежды */
+					'reference.clothing.child' => 'child_size_clothing', /* Детский Размер одежды */
+					'reference.pants' => 'pants', /* Размер брюк (джинс) */
+					
+					//'reference.shoe.size' => 'size_shoe', /* Размер обуви */
+				],
+				'translation_domain' => 'reference',
+			]
+		);
+		
+		$builder->add('image', CheckboxType::class, ['required' => false]);
+		
+		$builder->add('price', CheckboxType::class, ['required' => false]);
+		
+		$builder->add('quantitative', CheckboxType::class, ['required' => false]);
+		
+		$builder->add('article', CheckboxType::class, ['required' => false]);
+		
+		/* Offers Trans */
+		$builder->add('translate', CollectionType::class, [
+			'entry_type' => Trans\OffersTransForm::class,
+			'entry_options' => ['label' => false],
+			'label' => false,
+			'by_reference' => false,
+			'allow_delete' => true,
+			'allow_add' => true,
+			'prototype_name' => '__offer_translate__',
+		]);
+		
 		
 		/** Флаг, что товары в категории с торговым предложением
 		 * !!! Должен распологаться ниже свойства translate
 		 */
 		$builder->add('offer', CheckboxType::class, ['required' => false, 'label' => false]);
-	
+		
 		/** Множественные варианты торгового предложения */
 		$builder->add('variation', Variation\ProductCategoryOffersVariationForm::class);
-    
-/*        $builder->add
-        (
-          'DeleteOffers',
-          ButtonType::class,
-          [
-            'label_html' => true,
-            'attr' =>
-              ['class' => 'btn btn-sm  btn-light-danger del-item-offers'],
-          ]);*/
-    }
-    
-    public function configureOptions(OptionsResolver $resolver) : void
-    {
-        $resolver->setDefaults
-        (
-          [
-			  'data_class' => ProductCategoryOffersDTO::class,
-          ]);
-    }
-    
+		
+		/*        $builder->add
+				(
+				  'DeleteOffers',
+				  ButtonType::class,
+				  [
+					'label_html' => true,
+					'attr' =>
+					  ['class' => 'btn btn-sm  btn-light-danger del-item-offers'],
+				  ]);*/
+	}
+	
+	public function configureOptions(OptionsResolver $resolver) : void
+	{
+		$resolver->setDefaults
+		(
+			[
+				'data_class' => ProductCategoryOffersDTO::class,
+			]
+		);
+	}
+	
 }

@@ -25,16 +25,16 @@ namespace BaksDev\Products\Category\Type\Parent;
 
 use BaksDev\Core\Type\UidType\UidType;
 
-final class ProductParentCategoryType  extends UidType
+final class ProductParentCategoryType extends UidType
 {
-    public function getClassType() : string
-    {
-        return ProductParentCategoryUid::class;
-    }
-    
-    public function getName() : string
-    {
-        return ProductParentCategoryUid::TYPE;
-    }
-    
+	public function getClassType() : string
+	{
+		return ProductParentCategoryUid::class;
+	}
+	
+	public function getName() : string
+	{
+		return ProductParentCategoryUid::TYPE;
+	}
+	
 }

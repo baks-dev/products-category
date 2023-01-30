@@ -27,5 +27,5 @@ use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
 
 interface CategoryChoiceInterface
 {
-    public function get();
+	public function get();
 }

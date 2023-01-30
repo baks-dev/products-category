@@ -32,7 +32,7 @@ return static function(ContainerConfigurator $configurator){
 		->autowire()
 		->autoconfigure()
 	;
-
+	
 	/** EntityListeners */
 	$services->set(EntityListeners\ProductCategoryModifyListener::class)
 		->class(EntityListeners\ProductCategoryModifyListener::class)
