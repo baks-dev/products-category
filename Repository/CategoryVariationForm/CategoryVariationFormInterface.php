@@ -21,11 +21,11 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Products\Category\Repository\CategoryOffersForm;
+namespace BaksDev\Products\Category\Repository\CategoryVariationForm;
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersUid;
 
-interface CategoryOffersFormInterface
+interface CategoryVariationFormInterface
 {
-	public function get(ProductCategoryUid $category) : ?CategoryOffersFormDTO;
+	public function get(ProductCategoryOffersUid $category) : ?CategoryVariationFormDTO;
 }

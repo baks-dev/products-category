@@ -26,7 +26,10 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\Variation;
 
 
+use BaksDev\Core\Services\Reference\ReferenceChoice;
+use BaksDev\Core\Services\Reference\ReferenceChoiceInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -36,9 +39,21 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class ProductCategoryOffersVariationForm extends AbstractType
 {
+	
+	private ReferenceChoice $reference;
+	
+	private TranslatorInterface $translator;
+	
+	
+	public function __construct(ReferenceChoice $reference, TranslatorInterface $translator)
+	{
+		$this->reference = $reference;
+		$this->translator = $translator;
+	}
 	
 	public function buildForm(FormBuilderInterface $builder, array $options) : void
 	{
@@ -67,17 +82,29 @@ final class ProductCategoryOffersVariationForm extends AbstractType
 			ChoiceType::class,
 			[
 				'required' => false,
-				'choices' => [
-					'reference.color' => 'color', /* Цвет */
-					'reference.clothing.size' => 'size_clothing', /* Размер одежды */
-					'reference.clothing.child' => 'child_size_clothing', /* Детский Размер одежды */
-					'reference.pants' => 'pants', /* Размер брюк (джинс) */
-					
-					//'reference.shoe.size' => 'size_shoe', /* Размер обуви */
-				],
-				'translation_domain' => 'reference',
+				'choices' => $this->reference->getReference(),
+				'choice_value' => function($choice) {
+					return $choice instanceof ReferenceChoiceInterface ? $choice?->type() : $choice;
+				},
+				'choice_label' => function($choice) {
+					return $this->translator->trans('label', domain: $choice->domain());
+				},
 			]
 		);
+		
+		$builder->get('reference')->addModelTransformer(
+			new CallbackTransformer(
+				function($reference) {
+					return $reference;
+				},
+				function($reference) {
+					return $reference instanceof ReferenceChoiceInterface ? $reference->type() : $reference;
+				}
+			)
+		);
+		
+		
+		
 		
 		$builder->add('image', CheckboxType::class, ['required' => false]);
 		

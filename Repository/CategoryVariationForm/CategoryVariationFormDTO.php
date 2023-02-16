@@ -21,11 +21,40 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Products\Category\Repository\CategoryOffersForm;
+namespace BaksDev\Products\Category\Repository\CategoryVariationForm;
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Offers\Id\OffersUid;
+use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersUid;
+use BaksDev\Products\Category\Type\Offers\Variation\ProductCategoryOffersVariationUid;
 
-interface CategoryOffersFormInterface
+final class CategoryVariationFormDTO
 {
-	public function get(ProductCategoryUid $category) : ?CategoryOffersFormDTO;
+	public ProductCategoryOffersVariationUid $id;
+	
+	public string $name;
+	public ?string $reference;
+	public bool $image;
+	public bool $price;
+	public bool $quantitative;
+	public bool $article;
+	
+	public function __construct(
+		ProductCategoryOffersVariationUid $id,
+		?string $reference,
+		bool $image,
+		bool $price,
+		bool $quantitative,
+		bool $article,
+		string $name,
+	)
+	{
+		$this->id = $id;
+		$this->name = $name;
+		$this->reference = $reference;
+		$this->image = $image;
+		$this->price = $price;
+		$this->article = $article;
+		$this->quantitative = $quantitative;
+	}
+	
 }

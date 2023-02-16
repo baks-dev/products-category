@@ -23,7 +23,10 @@
 
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers;
 
+use BaksDev\Core\Services\Reference\ReferenceChoice;
+use BaksDev\Core\Services\Reference\ReferenceChoiceInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -33,9 +36,22 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class ProductCategoryOffersForm extends AbstractType
 {
+	
+	private ReferenceChoice $reference;
+	
+	private TranslatorInterface $translator;
+	
+	
+	public function __construct(ReferenceChoice $reference, TranslatorInterface $translator)
+	{
+		$this->reference = $reference;
+		$this->translator = $translator;
+	}
+	
 	
 	public function buildForm(FormBuilderInterface $builder, array $options) : void
 	{
@@ -43,12 +59,11 @@ final class ProductCategoryOffersForm extends AbstractType
 		/** Множественный выбор справочника */
 		//$builder->add('multiple', CheckboxType::class, ['required' => false,]);
 		
-		
 		/** Торговое предложение - Справочник */
 		$builder->add('isReference', CheckboxType::class, ['mapped' => false, 'required' => false,]);
 		
 		/** Если ранее выбран справочник - выделяем чекбокс  */
-		$builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
+		$builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
 			$product = $event->getData();
 			$form = $event->getForm();
 			
@@ -59,7 +74,6 @@ final class ProductCategoryOffersForm extends AbstractType
 			}
 		});
 		
-		
 		/** Справочники */
 		$builder->add
 		(
@@ -67,17 +81,28 @@ final class ProductCategoryOffersForm extends AbstractType
 			ChoiceType::class,
 			[
 				'required' => false,
-				'choices' => [
-					'reference.color' => 'color', /* Цвет */
-					'reference.clothing.size' => 'size_clothing', /* Размер одежды */
-					'reference.clothing.child' => 'child_size_clothing', /* Детский Размер одежды */
-					'reference.pants' => 'pants', /* Размер брюк (джинс) */
-					
-					//'reference.shoe.size' => 'size_shoe', /* Размер обуви */
-				],
-				'translation_domain' => 'reference',
+				'choices' => $this->reference->getReference(),
+				'choice_value' => function($choice) {
+					return $choice instanceof ReferenceChoiceInterface ? $choice?->type() : $choice;
+				},
+				'choice_label' => function($choice) {
+					return $this->translator->trans('label', domain: $choice->domain());
+				},
 			]
 		);
+		
+		$builder->get('reference')->addModelTransformer(
+			new CallbackTransformer(
+				function($reference) {
+					return $reference;
+				},
+				function($reference) {
+					return $reference instanceof ReferenceChoiceInterface ? $reference->type() : $reference;
+				}
+			)
+		);
+		
+		$builder->add('article', CheckboxType::class, ['required' => false]);
 		
 		$builder->add('image', CheckboxType::class, ['required' => false]);
 		
@@ -85,7 +110,6 @@ final class ProductCategoryOffersForm extends AbstractType
 		
 		$builder->add('quantitative', CheckboxType::class, ['required' => false]);
 		
-		$builder->add('article', CheckboxType::class, ['required' => false]);
 		
 		/* Offers Trans */
 		$builder->add('translate', CollectionType::class, [
@@ -97,7 +121,6 @@ final class ProductCategoryOffersForm extends AbstractType
 			'allow_add' => true,
 			'prototype_name' => '__offer_translate__',
 		]);
-		
 		
 		/** Флаг, что товары в категории с торговым предложением
 		 * !!! Должен распологаться ниже свойства translate
@@ -117,6 +140,7 @@ final class ProductCategoryOffersForm extends AbstractType
 					  ['class' => 'btn btn-sm  btn-light-danger del-item-offers'],
 				  ]);*/
 	}
+	
 	
 	public function configureOptions(OptionsResolver $resolver) : void
 	{

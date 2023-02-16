@@ -67,7 +67,8 @@ final class EditController extends AbstractController
 				$this->addFlash('danger', 'admin.danger.update', 'admin.products.category', $ProductCategory);
 			}
 			
-			return $this->redirectToRoute('ProductCategory:admin.index');
+			//return $this->redirectToRoute('ProductCategory:admin.index');
+			return $this->redirectToReferer();
 			
 		}
 		

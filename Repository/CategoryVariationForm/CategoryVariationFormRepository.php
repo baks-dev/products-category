@@ -21,17 +21,9 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Products\Category\Repository\CategoryOffersForm;
+namespace BaksDev\Products\Category\Repository\CategoryVariationForm;
 
-//use App\Module\Delivery\Entity\Delivery;
-//use App\Module\Product\Entity\Category;
-//use App\Module\Product\Entity\Category\Offers;
-//use App\Module\Product\Type\Category\Id\CategoryUid;
-//use BaksDev\UsersLevel\Type\Level\Event\LevelEvent;
-//use BaksDev\UsersProfile\Entity\Profile;
-//use BaksDev\UsersProfile\Type\Profile\Id\ProfileUid;
-//use BaksDev\UsersProfile\Type\Profile\Id\ProfileUidType;
-//use BaksDev\Core\Type\Locale\Locales;
+
 
 use BaksDev\Products\Category\Entity;
 use BaksDev\Products\Category\Type\Id\CategoryUid;
@@ -41,6 +33,7 @@ use BaksDev\Core\Type\Locale\Locale;
 
 //use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersUid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -49,20 +42,9 @@ use Doctrine\ORM\EntityManagerInterface;
 //use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class CategoryOffersFormRepository implements CategoryOffersFormInterface
+final class CategoryVariationFormRepository implements CategoryVariationFormInterface
 {
-	//    private ArrayCollection $delivery;
-	//    private ArrayCollection $trans;
-	//    private ArrayCollection $price;
-	//    private ArrayCollection $currency;
-	//
-	//    private TokenStorageInterface $token;
-	//    private ArrayCollection $type;
-	
-	//private ArrayCollection $offers;
-	//private ArrayCollection $trans;
-	
-	// private TranslatorInterface $translator;
+
 	private EntityManagerInterface $entityManager;
 	private Locale $local;
 	
@@ -75,68 +57,46 @@ final class CategoryOffersFormRepository implements CategoryOffersFormInterface
 		$this->entityManager = $entityManager;
 	}
 	
-	public function get(ProductCategoryUid $category) : ?CategoryOffersFormDTO
+	public function get(ProductCategoryOffersUid $offer) : ?CategoryVariationFormDTO
 	{
 		//$locale = new Locale($this->translator->getLocale());
 		
 		$qb = $this->entityManager->createQueryBuilder();
 		$select = sprintf(
 			'new %s(
-            offers.id,
-            offers.reference,
-            offers.image,
-            offers.price,
-            offers.quantitative,
-            offers.article,
-            offers_trans.name
+            variation.id,
+            variation.reference,
+            variation.image,
+            variation.price,
+            variation.quantitative,
+            variation.article,
+            variation_trans.name
         )',
-			CategoryOffersFormDTO::class
+			CategoryVariationFormDTO::class
 		);
 		
 		$qb->select($select);
-		//$qb->select('offers');
+	
+		$qb->from(Entity\Offers\Variation\ProductCategoryOffersVariation::class, 'variation');
 		
-		$qb->from(Entity\Offers\ProductCategoryOffers::class, 'offers');
-		$qb->join(Entity\ProductCategory::class, 'category', 'WITH', 'category.event = offers.event');
+		$qb->join(Entity\Offers\ProductCategoryOffers::class, 'offer', 'WITH', 'offer.id = variation.offer');
 		
-		//$qb->from(Entity\Category::class, 'category');
+		$qb->join(Entity\ProductCategory::class, 'category', 'WITH', 'category.event = offer.event');
 		
-		//$qb->join(Entity\Offers\Offers::class, 'offers', 'WITH', '  offers.event = category.event');
-		
+
 		$qb->join(
-			Entity\Offers\Trans\ProductCategoryOffersTrans::class,
-			'offers_trans',
+			Entity\Offers\Variation\Trans\ProductCategoryOffersVariationTrans::class,
+			'variation_trans',
 			'WITH',
-			'offers_trans.offer = offers.id AND offers_trans.local = :locale'
+			'variation_trans.variation = variation.id AND variation_trans.local = :locale'
 		);
 		
 		$qb->setParameter('locale', $this->local, Locale::TYPE);
 		
-		$qb->where('category.id = :category');
-		$qb->setParameter('category', $category, ProductCategoryUid::TYPE);
-		
-		//dd($result);
+		$qb->where('offer.id = :category');
+		$qb->setParameter('category', $offer, ProductCategoryOffersUid::TYPE);
 		
 		return $qb->getQuery()->getOneOrNullResult();
 		
 	}
-	
-	/**
-	 * @return ArrayCollection
-	 */
-	public function getOffer() : ArrayCollection
-	{
-		return $this->offers;
-	}
-	
-	/**
-	 * @param string $key
-	 *
-	 * @return string|null
-	 */
-	public function getTrans(string $key) : ?string
-	{
-		return $this->trans->get($key);
-	}
-	
 }
