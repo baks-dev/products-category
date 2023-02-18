@@ -46,11 +46,5 @@
     "allow-plugins": {
       "symfony/flex": true
     }
-  },
-
-  "packages": {},
-  "warning": "Warning message",
-  "warning-versions": ">=0.0.1",
-  "info": "Info message",
-  "info-versions": ">=0.0.0"
+  }
 }
