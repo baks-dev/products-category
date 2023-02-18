@@ -12,6 +12,19 @@ $ composer require baks-dev/products-category
 
 ## Дополнительно
 
+Добавить диреткорию и установить права для загрзуки обложек категорий:
+
+``` bash
+$ sudo mkdir <path_to_project>/public/upload/product_category_cover
+$ sudo sudo chmod 773 <path_to_project>/public/upload/product_category_cover
+``` 
+
+Для сжатия и загрузки файлов на ["Модуль CDN файловых ресурсов"](https://github.com/baks-dev/files-cdn), необходимо запустить очередь из сообщений `async_files_resources`
+
+``` bash
+$ php bin/console messenger:consume async_files_resources --time-limit=3600
+``` 
+
 Установка файловых ресурсов в публичную директорию (javascript, css, image ...):
 
 ``` bash
