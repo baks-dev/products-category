@@ -46,5 +46,12 @@
     "allow-plugins": {
       "symfony/flex": true
     }
+  },
+
+  "suggest": {
+    "Assets": "Установка файловых ресурсов в публичную директорию:  php bin/console baks:assets:install",
+    "Fixtures": "Роли администартора: php bin/console doctrine:fixtures:load --append",
+    "Migrations:diff": "Роли администартора: php bin/console doctrine:migrations:diff",
+    "Migrations:migrate": "Роли администартора: php bin/console doctrine:migrations:migrate"
   }
 }
