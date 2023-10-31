@@ -1,0 +1,25 @@
+
+# Роль
+ROLE_PRODUCT_CATEGORY:
+  name: 'Категории продуктов'
+  desc: 'Категории продуктов'
+
+# Правила
+
+ROLE_PRODUCT_CATEGORY_INDEX:
+  name: 'Просмотр'
+  desc: ''
+
+ROLE_PRODUCT_CATEGORY_NEW:
+  name: 'Добавить'
+  desc: ''
+
+ROLE_PRODUCT_CATEGORY_EDIT:
+  name: 'Редактировать'
+  desc: ''
+
+ROLE_PRODUCT_CATEGORY_DELETE:
+  name: 'Удалить'
+  desc: ''
+
+

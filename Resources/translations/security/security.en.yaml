@@ -1,0 +1,20 @@
+
+ROLE_PRODUCT_CATEGORY:
+  name: 'Product Categories'
+  desc: 'Product Categories'
+
+ROLE_PRODUCT_CATEGORY_INDEX:
+  name: 'View'
+  desc: ''
+
+ROLE_PRODUCT_CATEGORY_NEW:
+  name: 'Add'
+  desc: ''
+
+ROLE_PRODUCT_CATEGORY_EDIT:
+  name: 'Edit'
+  desc: ''
+
+ROLE_PRODUCT_CATEGORY_DELETE:
+  name: 'Delete'
+  desc: ''

@@ -1,0 +1,45 @@
+{
+  "name": "baks-dev/products-category",
+  "description": "Модуль категорий продукции",
+  "homepage": "https://github.com/baks-dev/products-category",
+  "keywords": [
+    "symfony",
+    "bundle",
+    "library",
+    "module",
+    "plugin",
+    "product",
+    "category",
+    "baksdev"
+  ],
+  "license": "MIT",
+  "type": "symfony-bundle",
+  "authors": [
+    {
+      "name": "Baks Development",
+      "email": "admin@baks.dev"
+    }
+  ],
+  "require": {
+    "php": ">=8.1",
+    "symfony/uid": "^6.2",
+    "symfony/security-bundle": "^6.2",
+    "doctrine/doctrine-bundle": "^2.8",
+    "baks-dev/core": "^6.2"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest",
+    "symfony/test-pack": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "BaksDev\\Products\\Category\\": ""
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "symfony/flex": true
+    }
+  }
+}
