@@ -24,15 +24,17 @@
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Landing;
 
 use BaksDev\Core\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity\Event\ProductCategoryEvent;
 use BaksDev\Products\Category\Entity\Landing\ProductCategoryLandingInterface;
 use BaksDev\Products\Category\Type\Event\ProductCategoryEventUid;
 use ReflectionProperty;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/** @see ProductCategoryLanding */
 final class LandingCollectionDTO implements ProductCategoryLandingInterface
 {
-//	#[Assert\Uuid]
-//	private readonly ?ProductCategoryEventUid $event;
+	#[Assert\Uuid]
+	private ?ProductCategoryEventUid $event = null;
 	
 	/** Локаль */
 	#[Assert\NotBlank]
@@ -43,16 +45,20 @@ final class LandingCollectionDTO implements ProductCategoryLandingInterface
 	
 	/** Нижний посадочный блок */
 	private ?string $bottom = null;
-	
-	
+
+
+    public function setEvent(ProductCategoryEvent|ProductCategoryEventUid $event): void
+    {
+        $this->event = $event instanceof ProductCategoryEvent ? $event->getId() : $event;
+    }
+
+
 	/** Локаль */
 	
 	public function getLocal() : Locale
 	{
 		return $this->local;
 	}
-
-
 
 	
 	/** Локаль */

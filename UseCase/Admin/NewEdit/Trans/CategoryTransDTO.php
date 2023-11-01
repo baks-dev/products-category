@@ -34,7 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class CategoryTransDTO implements ProductCategoryTransInterface
 {
     #[Assert\Uuid]
-    private readonly ?ProductCategoryEventUid $event;
+    private ?ProductCategoryEventUid $event = null;
 
     /** Локаль */
     #[Assert\NotBlank]
@@ -49,12 +49,10 @@ final class CategoryTransDTO implements ProductCategoryTransInterface
     #[Assert\Regex(pattern: '/^[\w \,\'\.\_\-\(\)\%]+$/iu')]
     private ?string $description = null;
 
-
     public function setEvent(ProductCategoryEvent|ProductCategoryEventUid $event): void
     {
         $this->event = $event instanceof ProductCategoryEvent ? $event->getId() : $event;
     }
-
 
     /** Локаль */
 

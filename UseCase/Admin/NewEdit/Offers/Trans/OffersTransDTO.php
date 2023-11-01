@@ -51,6 +51,13 @@ final class OffersTransDTO implements ProductCategoryOffersTransInterface
     #[Assert\Regex(pattern: '/^[\w \.\_\-\(\)\%]+$/iu')]
     private ?string $postfix = null;
 
+
+    public function setOffer(ProductCategoryOffers|ProductCategoryOffersUid $offer): self
+    {
+        $this->offer = $offer instanceof ProductCategoryOffers ? $offer->getId() : $offer;
+        return $this;
+    }
+
     /** Локаль */
 
     public function getLocal(): ?Locale
@@ -91,11 +98,7 @@ final class OffersTransDTO implements ProductCategoryOffersTransInterface
         $this->postfix = $postfix;
     }
 
-    public function setOffer(ProductCategoryOffers|ProductCategoryOffersUid $offer): self
-    {
-        $this->offer = $offer instanceof ProductCategoryOffers ? $offer->getId() : $offer;
-        return $this;
-    }
+
 
 
 }

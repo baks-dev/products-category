@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit;
 
+use BaksDev\Core\Entity\AbstractHandler;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Files\Resources\Upload\Image\ImageUploadInterface;
 use BaksDev\Products\Category\Entity\Event\ProductCategoryEvent;
@@ -32,42 +33,79 @@ use BaksDev\Products\Category\Entity\ProductCategory;
 use BaksDev\Products\Category\Messenger\ProductCategoryMessage;
 use BaksDev\Products\Category\Repository\UniqCategoryUrl\UniqCategoryUrl;
 use Doctrine\ORM\EntityManagerInterface;
+use DomainException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-final class ProductCategoryHandler
+final class ProductCategoryHandler extends AbstractHandler
 {
-    private EntityManagerInterface $entityManager;
+//    private EntityManagerInterface $entityManager;
+//
+//    private ValidatorInterface $validator;
+//
+//    private LoggerInterface $logger;
+//
+//    private ImageUploadInterface $imageUpload;
+//
+//    private UniqCategoryUrl $uniqCategoryUrl;
+//
+//    private MessageDispatchInterface $messageDispatch;
+//
+//    public function __construct(
+//        EntityManagerInterface $entityManager,
+//        ValidatorInterface $validator,
+//        LoggerInterface $logger,
+//        ImageUploadInterface $imageUpload,
+//        UniqCategoryUrl $uniqCategoryUrl,
+//        MessageDispatchInterface $messageDispatch
+//    )
+//    {
+//        $this->entityManager = $entityManager;
+//        $this->validator = $validator;
+//        $this->logger = $logger;
+//        $this->imageUpload = $imageUpload;
+//        $this->uniqCategoryUrl = $uniqCategoryUrl;
+//
+//        $this->messageDispatch = $messageDispatch;
+//    }
 
-    private ValidatorInterface $validator;
-
-    private LoggerInterface $logger;
-
-    private ImageUploadInterface $imageUpload;
-
-    private UniqCategoryUrl $uniqCategoryUrl;
-
-    private MessageDispatchInterface $messageDispatch;
-
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        ValidatorInterface $validator,
-        LoggerInterface $logger,
-        ImageUploadInterface $imageUpload,
-        UniqCategoryUrl $uniqCategoryUrl,
-        MessageDispatchInterface $messageDispatch
-    )
-    {
-        $this->entityManager = $entityManager;
-        $this->validator = $validator;
-        $this->logger = $logger;
-        $this->imageUpload = $imageUpload;
-        $this->uniqCategoryUrl = $uniqCategoryUrl;
-
-        $this->messageDispatch = $messageDispatch;
-    }
 
     public function handle(ProductCategoryDTO $command,): string|ProductCategory
+    {
+        /** Валидация DTO  */
+        $this->validatorCollection->add($command);
+
+        $this->main = new ProductCategory();
+        $this->event = new ProductCategoryEvent();
+
+        try
+        {
+            $command->getEvent() ? $this->preUpdate($command, false) : $this->prePersist($command);
+        }
+        catch(DomainException $errorUniqid)
+        {
+            return $errorUniqid;
+        }
+
+        /** Валидация всех объектов */
+        if($this->validatorCollection->isInvalid())
+        {
+            return $this->validatorCollection->getErrorUniqid();
+        }
+
+        $this->entityManager->flush();
+
+        /* Отправляем событие в шину  */
+        $this->messageDispatch->dispatch(
+            message: new ProductCategoryMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
+            transport: 'products-category'
+        );
+
+        return $this->main;
+    }
+
+
+    public function OLDhandle(ProductCategoryDTO $command,): string|ProductCategory
     {
         /* Валидация DTO */
         $errors = $this->validator->validate($command);
@@ -135,7 +173,7 @@ final class ProductCategoryHandler
             $Main = new ProductCategory();
             $this->entityManager->persist($Main);
 
-            $Event->setCategory($Main);
+            $Event->setMain($Main);
             $Main->setEvent($Event);
         }
 

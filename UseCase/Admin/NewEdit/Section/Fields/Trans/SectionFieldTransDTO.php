@@ -47,9 +47,16 @@ final class SectionFieldTransDTO implements ProductCategorySectionFieldTransInte
 	/** Краткое описание (строка с точкой, нижнее подчеркивание тире процент скобки) */
 	#[Assert\Regex(pattern: '/^[\w \.\,\_\-\(\)\%]+$/iu')]
 	private ?string $description = null;
-	
-	
-	/** Локаль */
+
+
+    public function setField(ProductCategorySectionField|ProductCategorySectionFieldUid $field): self
+    {
+        $this->field = $field instanceof ProductCategorySectionField ? $field->getId() : $field;
+        return $this;
+    }
+
+
+    /** Локаль */
 	
 	public function getLocal() : ?Locale
 	{
@@ -92,11 +99,6 @@ final class SectionFieldTransDTO implements ProductCategorySectionFieldTransInte
 		$this->description = $description;
 	}
 
-    public function setField(ProductCategorySectionField|ProductCategorySectionFieldUid $field): self
-    {
-        $this->field = $field instanceof ProductCategorySectionField ? $field->getId() : $field;
-        return $this;
-    }
 
 
 

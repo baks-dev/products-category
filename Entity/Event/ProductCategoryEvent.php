@@ -146,10 +146,9 @@ class ProductCategoryEvent extends EntityState
 	{
 		return $this->category;
 	}
-	
-	
-	
-	public function setCategory(ProductCategory|ProductCategoryUid $category) : void
+
+
+	public function setMain(ProductCategory|ProductCategoryUid $category) : void
 	{
 		$this->category = $category instanceof ProductCategory ? $category->getId() : $category;
 	}

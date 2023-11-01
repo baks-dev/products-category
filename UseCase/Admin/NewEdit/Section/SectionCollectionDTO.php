@@ -36,7 +36,8 @@ final class SectionCollectionDTO implements ProductCategorySectionInterface
 {
 	#[Assert\Uuid]
 	private ?ProductCategorySectionUid $id = null;
-	
+
+
 	/** Сортировка секции свойств продукта категории */
 	#[Assert\NotBlank]
 	#[Assert\Range(min: 0, max: 999)]

@@ -89,12 +89,18 @@ class ProductCategoryModification extends EntityState
 		$this->variation = $variation;
 		
 	}
-	
-	
+
 	public function __toString(): string
 	{
 		return (string) $this->id;
 	}
+
+
+    public function getId(): ProductCategoryModificationUid
+    {
+        return $this->id;
+    }
+
 	
 	public function getDto($dto): mixed
 	{

@@ -50,6 +50,11 @@ final class ProductCategoryVariationTransDTO implements ProductCategoryVariation
     #[Assert\Regex(pattern: '/^[\w \.\_\-\(\)\%]+$/iu')]
     private ?string $postfix = null;
 
+    public function setVariation(ProductCategoryVariation|ProductCategoryVariationUid $variation): self
+    {
+        $this->variation = $variation instanceof ProductCategoryVariation ? $variation->getId() : $variation;
+        return $this;
+    }
 
     /** Локаль */
 
@@ -92,12 +97,6 @@ final class ProductCategoryVariationTransDTO implements ProductCategoryVariation
         $this->postfix = $postfix;
     }
 
-    public function setVariation(ProductCategoryVariation|ProductCategoryVariationUid $variation): self
-    {
 
-
-        $this->variation = $variation instanceof ProductCategoryVariation ? $variation->getId() : $variation;
-        return $this;
-    }
 
 }

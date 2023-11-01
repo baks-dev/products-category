@@ -31,7 +31,7 @@ use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\Fields\Trans\Section
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/** Поля свойств продукта в секции */
+/** @see ProductCategorySectionField */
 final class SectionFieldCollectionDTO implements ProductCategorySectionFieldInterface
 {
 	#[Assert\Uuid]

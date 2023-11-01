@@ -26,15 +26,17 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\Variation\Modification\Trans;
 
 use BaksDev\Core\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity\Offers\Variation\Modification\ProductCategoryModification;
 use BaksDev\Products\Category\Entity\Offers\Variation\Modification\Trans\ProductCategoryModificationTransInterface;
 use BaksDev\Products\Category\Type\Offers\Modification\ProductCategoryModificationUid;
 use ReflectionProperty;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/** @see ProductCategoryModificationTrans */
 final class ProductCategoryModificationTransDTO implements ProductCategoryModificationTransInterface
 {
-//	#[Assert\Uuid]
-//	private readonly ?ProductCategoryModificationUid $modification;
+	#[Assert\Uuid]
+	private ?ProductCategoryModificationUid $modification;
 	
 	/** Локаль */
 	#[Assert\NotBlank]
@@ -48,6 +50,13 @@ final class ProductCategoryModificationTransDTO implements ProductCategoryModifi
     /** Название постфикса (строка с точкой, нижнее подчеркивание тире процент скобки) */
     #[Assert\Regex(pattern: '/^[\w \.\_\-\(\)\%]+$/iu')]
     private ?string $postfix = null;
+
+    public function setModification(ProductCategoryModificationUid|ProductCategoryModification $modification): self
+    {
+        $this->modification = $modification instanceof ProductCategoryModification ? $modification->getId() : $modification;
+        return $this;
+    }
+
 
 	
 	/** Локаль */

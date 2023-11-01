@@ -24,6 +24,7 @@
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Seo;
 
 use BaksDev\Core\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity\Event\ProductCategoryEvent;
 use BaksDev\Products\Category\Entity\Seo\ProductCategorySeoInterface;
 use BaksDev\Products\Category\Type\Event\ProductCategoryEventUid;
 use ReflectionProperty;
@@ -31,8 +32,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class SeoCollectionDTO implements ProductCategorySeoInterface
 {
-//	#[Assert\Uuid]
-//	private readonly ProductCategoryEventUid $event;
+	#[Assert\Uuid]
+	private ?ProductCategoryEventUid $event = null;
 	
 	/** Локаль */
 	#[Assert\NotBlank]
@@ -49,7 +50,13 @@ final class SeoCollectionDTO implements ProductCategorySeoInterface
 	/** Шаблон META KEYWORDS (строка с точкой, запятой, нижнее подчеркивание тире процент скобки) */
 	#[Assert\Regex(pattern: '/^[\w \.\,\_\-\(\)\%]+$/iu')]
 	private ?string $keywords = null;
-	
+
+
+    public function setEvent(ProductCategoryEvent|ProductCategoryEventUid $event): void
+    {
+        $this->event = $event instanceof ProductCategoryEvent ? $event->getId() : $event;
+    }
+
 	
 	/** Локаль */
 	

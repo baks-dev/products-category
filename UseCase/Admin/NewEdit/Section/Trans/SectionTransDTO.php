@@ -30,6 +30,7 @@ use BaksDev\Products\Category\Type\Section\Id\ProductCategorySectionUid;
 use ReflectionProperty;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/** @see ProductCategorySectionTrans */
 final class SectionTransDTO implements ProductCategorySectionTransInterface
 {
 	#[Assert\Uuid]
@@ -47,6 +48,14 @@ final class SectionTransDTO implements ProductCategorySectionTransInterface
 	/** Краткое описание (строка с точкой, нижнее подчеркивание тире процент скобки) */
 	#[Assert\Regex(pattern: '/^[\w \.\,\_\-\(\)\%]+$/iu')]
 	private ?string $description = null;
+
+
+    public function setSection(ProductCategorySection|ProductCategorySectionUid $section): void
+    {
+        $this->section = $section instanceof ProductCategorySection ? $section->getId() : $section;
+    }
+
+
 	
 	/** Локаль */
 	
@@ -90,11 +99,7 @@ final class SectionTransDTO implements ProductCategorySectionTransInterface
 		$this->description = $description;
 	}
 
-    public function setSection(ProductCategorySection|ProductCategorySectionUid $section): self
-    {
-        $this->section = $section instanceof ProductCategorySection ? $section->getId() : $section;
-        return $this;
-    }
+
 	
 	
 

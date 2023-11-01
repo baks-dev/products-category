@@ -28,6 +28,7 @@ namespace BaksDev\Products\Category\Entity\Offers\Variation\Modification\Trans;
 use BaksDev\Core\Entity\EntityState;
 use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Entity\Offers\Variation\Modification\ProductCategoryModification;
+use BaksDev\Products\Category\Type\Offers\Modification\ProductCategoryModificationUid;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
@@ -70,6 +71,16 @@ class ProductCategoryModificationTrans extends EntityState
     {
         return (string) $this->modification;
     }
+
+    /**
+     * Modification
+     */
+    public function getModification(): ProductCategoryModificationUid
+    {
+        return $this->modification->getId();
+    }
+
+
 
 	public function getDto($dto): mixed
 	{
