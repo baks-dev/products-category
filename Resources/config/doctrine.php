@@ -66,6 +66,15 @@ return static function(ContainerConfigurator $container, DoctrineConfig $doctrin
 	$doctrine->dbal()->type(ProductCategoryModificationTypeUid::TYPE)->class(ProductCategoryModificationTypeType::class);
 
 
+    /** Резолверы */
+    $services = $container->services()
+        ->defaults()
+        ->autowire()
+        ->autoconfigure()
+    ;
+
+    $services->set(ProductCategoryUid::class)->class(ProductCategoryUid::class);
+
 
     $emDefault = $doctrine->orm()->entityManager('default')->autoMapping(true);
 

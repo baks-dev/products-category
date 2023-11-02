@@ -38,7 +38,9 @@ final class AllCategoryByMenu implements AllCategoryByMenuInterface
         $this->DBALQueryBuilder = $DBALQueryBuilder;
     }
 
-    /** Метод возвращает все категории и их вложенные для двухуровнего меню */
+    /**
+     * Метод возвращает все категории и их вложенные для двухуровнего меню
+     */
     public function fetchAllCatalogMenuAssociative(): array
     {
         $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class);
