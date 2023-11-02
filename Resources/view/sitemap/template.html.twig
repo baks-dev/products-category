@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+    <sitemap>
+        <loc>{{ absolute_url(path('products-category:sitemap.urls')) }}</loc>
+    </sitemap>
+
+    {% for key, cat in category %}
+        <sitemap>
+            <loc>{{ absolute_url(path('products-product:sitemap', { category : key })) }}</loc>
+        </sitemap>
+    {% endfor %}
+
+</urlset>
+
+
