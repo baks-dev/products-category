@@ -25,5 +25,5 @@ namespace BaksDev\Products\Category\Repository\CategoryByUrl;
 
 interface CategoryByUrlInterface
 {
-	public function fetchCategoryAssociative(string $url) : array|bool;
+	public function fetchCategoryAssociative(string $url) : ?array;
 }

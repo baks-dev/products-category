@@ -47,7 +47,7 @@ final class CategoryByUrl implements CategoryByUrlInterface
     }
 
 
-    public function fetchCategoryAssociative(string $url): array|bool
+    public function fetchCategoryAssociative(string $url): ?array
     {
         $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
@@ -56,7 +56,6 @@ final class CategoryByUrl implements CategoryByUrlInterface
         $qb->select('info.event  AS category_event')->addGroupBy('info.event');
         $qb->addSelect('info.url AS category_url')->addGroupBy('info.url');
         $qb->addSelect('info.counter AS category_counter')->addGroupBy('info.counter');
-
 
         $qb->from(ProductCategoryEntity\Info\ProductCategoryInfo::TABLE, 'info');
 
