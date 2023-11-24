@@ -38,7 +38,6 @@ final class ProductCategoryUid extends Uid
 	public function __construct(AbstractUid|string|null $value = null, mixed $options = null)
 	{
         parent::__construct($value);
-
 		$this->options = $options;
 	}
 	

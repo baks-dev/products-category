@@ -33,9 +33,5 @@ final class ProductCategoryEventUid extends Uid
 
 	public const TYPE = 'product_category_event';
 
-    public function __construct(AbstractUid|string|null $value = null)
-    {
-        parent::__construct($value);
-    }
 
 }

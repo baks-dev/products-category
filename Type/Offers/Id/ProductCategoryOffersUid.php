@@ -36,13 +36,13 @@ final class ProductCategoryOffersUid extends Uid
 
 	private mixed $option;
 	
-	private ?InputField $field;
+	private mixed $field;
 	
 	
 	public function __construct(
 		AbstractUid|string|null $value = null,
 		mixed $option = null,
-		InputField $field = null,
+        mixed $field = null,
 	)
 	{
         parent::__construct($value);
@@ -58,7 +58,7 @@ final class ProductCategoryOffersUid extends Uid
 		return $this->option;
 	}
 	
-	public function getField() : ?InputField
+	public function getField() : mixed
 	{
 		return $this->field;
 	}
