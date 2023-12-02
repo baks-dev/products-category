@@ -41,7 +41,7 @@ final class ProductCategoryVariationUid extends Uid
     private mixed $field;
 
     public function __construct(
-        AbstractUid|string|null $value = null,
+        AbstractUid|self|string|null $value = null,
         mixed $option = null,
         mixed $field = null,
     )

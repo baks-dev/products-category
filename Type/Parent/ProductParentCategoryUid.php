@@ -37,7 +37,10 @@ class ProductParentCategoryUid extends Uid
 	
 	private bool $parent;
 	
-	public function __construct(AbstractUid|string|null $value = null, string $option = null, mixed $parent = false)
+	public function __construct(
+        AbstractUid|self|string|null $value = null,
+        mixed $option = null,
+        mixed $parent = false)
 	{
         parent::__construct($value);
 

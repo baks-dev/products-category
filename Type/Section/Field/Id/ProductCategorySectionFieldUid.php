@@ -39,7 +39,10 @@ final class ProductCategorySectionFieldUid extends Uid
     private mixed $attr;
 
 
-    public function __construct(AbstractUid|string|null $value = null, mixed $attr = null)
+    public function __construct(
+        AbstractUid|self|string|null $value = null,
+        mixed $attr = null
+    )
     {
         parent::__construct($value);
 
