@@ -35,7 +35,7 @@ return static function (ContainerConfigurator $configurator, FrameworkConfig $fr
         ->dsn('%env(MESSENGER_TRANSPORT_DSN)%')
         ->options(['queue_name' => 'products-category'])
         ->retryStrategy()
-        ->maxRetries(5)
+        ->maxRetries(3)
         ->delay(1000)
         ->maxDelay(0)
         ->multiplier(3) // увеличиваем задержку перед каждой повторной попыткой
