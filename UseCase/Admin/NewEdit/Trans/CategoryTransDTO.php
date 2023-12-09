@@ -49,10 +49,12 @@ final class CategoryTransDTO implements ProductCategoryTransInterface
     #[Assert\Regex(pattern: '/^[\w \,\'\.\_\-\(\)\%]+$/iu')]
     private ?string $description = null;
 
-    public function setEvent(ProductCategoryEvent|ProductCategoryEventUid $event): void
+
+    public function withEvent(ProductCategoryEvent|ProductCategoryEventUid $event): void
     {
         $this->event = $event instanceof ProductCategoryEvent ? $event->getId() : $event;
     }
+
 
     /** Локаль */
 

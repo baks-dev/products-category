@@ -28,10 +28,12 @@ namespace BaksDev\Products\Category\UseCase\Admin\NewEdit;
 use BaksDev\Core\Entity\AbstractHandler;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Files\Resources\Upload\Image\ImageUploadInterface;
+use BaksDev\Products\Category\Entity\Cover\ProductCategoryCover;
 use BaksDev\Products\Category\Entity\Event\ProductCategoryEvent;
 use BaksDev\Products\Category\Entity\ProductCategory;
 use BaksDev\Products\Category\Messenger\ProductCategoryMessage;
 use BaksDev\Products\Category\Repository\UniqCategoryUrl\UniqCategoryUrl;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Cover\ProductCategoryCoverDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use DomainException;
 use Psr\Log\LoggerInterface;
@@ -87,11 +89,27 @@ final class ProductCategoryHandler extends AbstractHandler
             return $errorUniqid->getMessage();
         }
 
+
+
+        /** Загружаем файл обложки раздела */
+
+        /** @var ProductCategoryCover $ProductCategoryCover */
+        $ProductCategoryCover = $this->event->getCover();
+        /** @var ProductCategoryCoverDTO $CoverDTO */
+        $CoverDTO = $ProductCategoryCover?->getEntityDto();
+
+        if($ProductCategoryCover && $CoverDTO?->file !== null)
+        {
+            $this->imageUpload->upload($CoverDTO->file, $ProductCategoryCover);
+        }
+
+
         /** Валидация всех объектов */
         if($this->validatorCollection->isInvalid())
         {
             return $this->validatorCollection->getErrorUniqid();
         }
+
 
         $this->entityManager->flush();
 

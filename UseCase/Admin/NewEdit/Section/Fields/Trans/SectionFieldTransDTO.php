@@ -49,7 +49,7 @@ final class SectionFieldTransDTO implements ProductCategorySectionFieldTransInte
 	private ?string $description = null;
 
 
-    public function setField(ProductCategorySectionField|ProductCategorySectionFieldUid $field): self
+    public function withField(ProductCategorySectionField|ProductCategorySectionFieldUid $field): self
     {
         $this->field = $field instanceof ProductCategorySectionField ? $field->getId() : $field;
         return $this;

@@ -35,7 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class ProductCategoryVariationTransDTO implements ProductCategoryVariationTransInterface
 {
     #[Assert\Uuid]
-    private readonly ?ProductCategoryVariationUid $variation;
+    private ?ProductCategoryVariationUid $variation = null;
 
     /** Локаль */
     #[Assert\NotBlank]
@@ -50,7 +50,7 @@ final class ProductCategoryVariationTransDTO implements ProductCategoryVariation
     #[Assert\Regex(pattern: '/^[\w \.\_\-\(\)\%]+$/iu')]
     private ?string $postfix = null;
 
-    public function setVariation(ProductCategoryVariation|ProductCategoryVariationUid $variation): self
+    public function withVariation(ProductCategoryVariation|ProductCategoryVariationUid $variation): self
     {
         $this->variation = $variation instanceof ProductCategoryVariation ? $variation->getId() : $variation;
         return $this;

@@ -38,107 +38,107 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'product_category_cover')]
 class ProductCategoryCover extends EntityState implements UploadEntityInterface
 {
-	public const TABLE = 'product_category_cover';
+    public const TABLE = 'product_category_cover';
 
     /** Связь на событие */
     #[Assert\NotBlank]
     #[Assert\Uuid]
-	#[ORM\Id]
-	#[ORM\OneToOne(inversedBy: 'cover', targetEntity: ProductCategoryEvent::class)]
-	#[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
-	private ProductCategoryEvent $event;
+    #[ORM\Id]
+    #[ORM\OneToOne(inversedBy: 'cover', targetEntity: ProductCategoryEvent::class)]
+    #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
+    private ProductCategoryEvent $event;
 
     /** Название файла */
     #[Assert\NotBlank]
     #[Assert\Length(max: 100)]
-	#[ORM\Column(type: Types::STRING)]
-	private string $name;
+    #[ORM\Column(type: Types::STRING)]
+    private string $name;
 
     /** Расширение файла */
     #[Assert\NotBlank]
     #[Assert\Choice(['png', 'gif', 'jpg', 'jpeg', 'webp'])]
-	#[ORM\Column(type: Types::STRING)]
-	private string $ext;
-	
-	/** Размер файла */
+    #[ORM\Column(type: Types::STRING)]
+    private string $ext;
+
+    /** Размер файла */
     #[Assert\NotBlank]
     #[Assert\Range(max: 1048576)] // 1024 * 1024
-	#[ORM\Column(type: Types::INTEGER)]
-	private int $size = 0;
-	
-	/** Файл загружен на CDN */
-	#[ORM\Column(type: Types::BOOLEAN)]
-	private bool $cdn = false;
-	
-	
-	public function __construct(ProductCategoryEvent $event)
-	{
-		$this->event = $event;
-	}
+    #[ORM\Column(type: Types::INTEGER)]
+    private int $size = 0;
+
+    /** Файл загружен на CDN */
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private bool $cdn = false;
+
+
+    public function __construct(ProductCategoryEvent $event)
+    {
+        $this->event = $event;
+    }
 
     public function __toString(): string
     {
         return (string) $this->event;
     }
-	
-	public function getId() : ProductCategoryEvent
-	{
-		return $this->event;
-	}
-	
-	
-	public function getDto($dto): mixed
-	{
+
+    public function getId(): ProductCategoryEventUid
+    {
+        return $this->event->getId();
+    }
+
+
+    public function getDto($dto): mixed
+    {
         $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
 
-		if($dto instanceof ProductCategoryCoverInterface)
-		{
-			return parent::getDto($dto);
-		}
-		
-		throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
-	}
-	
+        if($dto instanceof ProductCategoryCoverInterface)
+        {
+            return parent::getDto($dto);
+        }
 
-	public function setEntity($dto): mixed
-	{
-		
-		/* Если размер файла нулевой - не заполняем сущность */
-		if(
-			(empty($dto->file) && empty($dto->getName())) ||
-			(!empty($dto->file) && empty($dto->getName()))
-		)
-		{
-			return false;
-		}
-		
-		if($dto instanceof ProductCategoryCoverInterface || $dto instanceof self)
-		{
-			return parent::setEntity($dto);
-		}
-		
-		throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
-	}
-	
-	
-	public function updFile(string $name, string $ext, int $size) : void
-	{
-		$this->cdn = false;
-		$this->name = $name;
-		$this->ext = $ext;
-		$this->size = $size;
-		//$this->dir = $this->event->getId();
-	}
-	
-	public function updCdn(?string $ext = null) : void
-	{
+        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+    }
+
+
+    public function setEntity($dto): mixed
+    {
+
+        /* Если размер файла нулевой - не заполняем сущность */
+        if(
+            (empty($dto->file) && empty($dto->getName())) ||
+            (!empty($dto->file) && empty($dto->getName()))
+        )
+        {
+            return false;
+        }
+
+        if($dto instanceof ProductCategoryCoverInterface || $dto instanceof self)
+        {
+            return parent::setEntity($dto);
+        }
+
+        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+    }
+
+
+    public function updFile(string $name, string $ext, int $size): void
+    {
+        $this->cdn = false;
+        $this->name = $name;
+        $this->ext = $ext;
+        $this->size = $size;
+        //$this->dir = $this->event->getId();
+    }
+
+    public function updCdn(?string $ext = null): void
+    {
         if($ext)
         {
             $this->ext = $ext;
         }
 
         $this->cdn = true;
-	}
+    }
 
     /**
      * Ext
@@ -149,20 +149,20 @@ class ProductCategoryCover extends EntityState implements UploadEntityInterface
     }
 
 
-	
-//	public function getUploadDir() : object
-//	{
-//		return $this->event->getId();
-//	}
-//
-//    public function getDir(): ProductCategoryEventUid
-//    {
-//        return $this->dir;
-//    }
-//
-//    public static function getDirName(): string
-//    {
-//        return  ProductCategoryEventUid::class;
-//    }
-	
+
+    //	public function getUploadDir() : object
+    //	{
+    //		return $this->event->getId();
+    //	}
+    //
+    //    public function getDir(): ProductCategoryEventUid
+    //    {
+    //        return $this->dir;
+    //    }
+    //
+    //    public static function getDirName(): string
+    //    {
+    //        return  ProductCategoryEventUid::class;
+    //    }
+
 }

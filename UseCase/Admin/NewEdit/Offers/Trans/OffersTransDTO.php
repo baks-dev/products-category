@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class OffersTransDTO implements ProductCategoryOffersTransInterface
 {
     #[Assert\Uuid]
-    private readonly ?ProductCategoryOffersUid $offer;
+    private ?ProductCategoryOffersUid $offer = null;
 
     //private ?Field $field = null;
 
@@ -52,7 +52,7 @@ final class OffersTransDTO implements ProductCategoryOffersTransInterface
     private ?string $postfix = null;
 
 
-    public function setOffer(ProductCategoryOffers|ProductCategoryOffersUid $offer): self
+    public function withOffer(ProductCategoryOffers|ProductCategoryOffersUid $offer): self
     {
         $this->offer = $offer instanceof ProductCategoryOffers ? $offer->getId() : $offer;
         return $this;

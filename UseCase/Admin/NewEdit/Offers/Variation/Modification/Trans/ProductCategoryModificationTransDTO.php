@@ -36,7 +36,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class ProductCategoryModificationTransDTO implements ProductCategoryModificationTransInterface
 {
 	#[Assert\Uuid]
-	private ?ProductCategoryModificationUid $modification;
+	private ?ProductCategoryModificationUid $modification = null;
 	
 	/** Локаль */
 	#[Assert\NotBlank]
@@ -51,7 +51,8 @@ final class ProductCategoryModificationTransDTO implements ProductCategoryModifi
     #[Assert\Regex(pattern: '/^[\w \.\_\-\(\)\%]+$/iu')]
     private ?string $postfix = null;
 
-    public function setModification(ProductCategoryModificationUid|ProductCategoryModification $modification): self
+
+    public function withModification(ProductCategoryModificationUid|ProductCategoryModification $modification): self
     {
         $this->modification = $modification instanceof ProductCategoryModification ? $modification->getId() : $modification;
         return $this;

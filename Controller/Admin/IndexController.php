@@ -47,7 +47,8 @@ final class IndexController extends AbstractController
         AllCategoryInterface $allCategory,
         #[MapEntity] ?ProductCategory $cat = null,
         int $page = 0,
-    ): Response {
+    ): Response
+    {
         // Поиск
         $search = new SearchDTO();
         $searchForm = $this->createForm(SearchForm::class, $search);

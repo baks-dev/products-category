@@ -50,7 +50,7 @@ final class SectionTransDTO implements ProductCategorySectionTransInterface
 	private ?string $description = null;
 
 
-    public function setSection(ProductCategorySection|ProductCategorySectionUid $section): void
+    public function withSection(ProductCategorySection|ProductCategorySectionUid $section): void
     {
         $this->section = $section instanceof ProductCategorySection ? $section->getId() : $section;
     }

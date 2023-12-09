@@ -48,8 +48,7 @@ final class EditController extends AbstractController
     ): Response
     {
 
-        $ProductCategoryDTO = new ProductCategoryDTO();
-        $Event->getDto($ProductCategoryDTO);
+        $ProductCategoryDTO = $Event->getDto(ProductCategoryDTO::class);
 
         // Форма добавления
         $form = $this->createForm(ProductCategoryForm::class, $ProductCategoryDTO);
