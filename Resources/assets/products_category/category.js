@@ -217,7 +217,7 @@ function createSectionField(section) {
                     вместо этого будет число, основанное на том, сколько коллекций */
         newForm = newForm.replace(/__category_section__/g, section_id);
         newForm = newForm.replace(/__section_field__/g, index);
-        newForm = newForm.replace(/__FIELD_SORT__/g, index * 100 + 100);
+        newForm = newForm.replace(/__FIELD_SORT__/g, index * 10 + 100);
 
 
         /* Вставляем новую коллекцию */
@@ -290,14 +290,21 @@ let $name = document.querySelector("input[data-lang='product_category_form_trans
 
 if ($name) {
 
-    setTimeout(function initBootstrap() {
+    let retry = 100;
+
+    setTimeout(function RLTnSEEzgM() {
+
+        if (retry >= 1000) { return; }
 
         if (typeof catUrl.debounce === 'function') {
 
             $name.addEventListener('input', catUrl.debounce(500));
             return;
         }
-        setTimeout(initBootstrap, 100);
+
+        retry = retry * 2;
+
+        setTimeout(RLTnSEEzgM, retry);
 
     }, 100);
 
