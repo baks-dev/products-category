@@ -90,17 +90,18 @@ final class ProductCategoryHandler extends AbstractHandler
         }
 
 
-
         /** Загружаем файл обложки раздела */
 
-        /** @var ProductCategoryCover $ProductCategoryCover */
-        $ProductCategoryCover = $this->event->getCover();
-        /** @var ProductCategoryCoverDTO $CoverDTO */
-        $CoverDTO = $ProductCategoryCover?->getEntityDto();
-
-        if($ProductCategoryCover && $CoverDTO?->file !== null)
+        if(method_exists($command, 'getCover'))
         {
-            $this->imageUpload->upload($CoverDTO->file, $ProductCategoryCover);
+            $Cover = $command->getCover();
+
+            if($Cover && $Cover->file !== null)
+            {
+                /** @var ProductCategoryCoverDTO $CoverDTO */
+                $ProductCategoryCover = $this->event->getUploadAvatar();
+                $this->imageUpload->upload($Cover->file, $ProductCategoryCover);
+            }
         }
 
 
@@ -109,7 +110,6 @@ final class ProductCategoryHandler extends AbstractHandler
         {
             return $this->validatorCollection->getErrorUniqid();
         }
-
 
         $this->entityManager->flush();
 

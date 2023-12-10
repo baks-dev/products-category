@@ -53,6 +53,7 @@ final class ProductCategoryVariationTransDTO implements ProductCategoryVariation
     public function withVariation(ProductCategoryVariation|ProductCategoryVariationUid $variation): self
     {
         $this->variation = $variation instanceof ProductCategoryVariation ? $variation->getId() : $variation;
+
         return $this;
     }
 

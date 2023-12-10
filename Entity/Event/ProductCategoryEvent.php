@@ -176,7 +176,7 @@ class ProductCategoryEvent extends EntityState
 		throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
 	}
 	
-	public function getCover() : ProductCategoryCover
+	public function getUploadAvatar() : ProductCategoryCover
 	{
 		return $this->cover ?: $this->cover = new ProductCategoryCover($this);
 	}

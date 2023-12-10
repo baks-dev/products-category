@@ -166,7 +166,7 @@ final class ProductCategoryDTO implements ProductCategoryEventInterface
 			$CategoryTransDTO->setLocal($locale);
 			$this->addTranslate($CategoryTransDTO);
 		}
-		
+
 		return $this->translate;
 	}
 	
@@ -187,7 +187,9 @@ final class ProductCategoryDTO implements ProductCategoryEventInterface
 	{
 		$this->translate->removeElement($trans);
 	}
-	
+
+
+
 	
 	/** Посадочные блоки */
 	
