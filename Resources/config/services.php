@@ -23,17 +23,21 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-return static function (ContainerConfigurator $configurator) {
+return static function(ContainerConfigurator $configurator) {
     $services = $configurator->services()
         ->defaults()
         ->autowire()
-        ->autoconfigure()
-    ;
+        ->autoconfigure();
 
     $NAMESPACE = 'BaksDev\Products\Category\\';
 
     $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
 
+
     $services->load($NAMESPACE, $MODULE)
-        ->exclude($MODULE.'{Entity,Resources,Type,*DTO.php,*Message.php}');
+        ->exclude([
+            $MODULE.'{Entity,Resources,Type}',
+            $MODULE.'**/*Message.php',
+            $MODULE.'**/*DTO.php',
+        ]);
 };
