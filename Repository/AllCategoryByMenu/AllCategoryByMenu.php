@@ -160,6 +160,7 @@ final class AllCategoryByMenu implements AllCategoryByMenuInterface
         /* Группировка  */
         $qb->allGroupByExclude();
 
+
         /* Кешируем результат DBAL */
         return $qb
             ->enableCache('products-category', 86400)

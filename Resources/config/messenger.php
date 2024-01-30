@@ -34,12 +34,17 @@ return static function (ContainerConfigurator $configurator, FrameworkConfig $fr
         ->transport('products-category')
         ->dsn('%env(MESSENGER_TRANSPORT_DSN)%')
         ->options(['queue_name' => 'products-category'])
+        ->failureTransport('failed-products-category')
         ->retryStrategy()
         ->maxRetries(3)
         ->delay(1000)
         ->maxDelay(0)
         ->multiplier(3) // увеличиваем задержку перед каждой повторной попыткой
         ->service(null)
+
     ;
+
+    $messenger->transport('failed-products-category')
+        ->dsn('%env(MESSENGER_TRANSPORT_DSN)%');
 
 };
