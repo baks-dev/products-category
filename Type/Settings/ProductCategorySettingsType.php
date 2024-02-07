@@ -25,18 +25,19 @@ namespace BaksDev\Products\Category\Type\Settings;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\StringType;
+use Doctrine\DBAL\Types\Type;
 
-final class ProductCategorySettingsType extends StringType
+final class ProductCategorySettingsType extends Type
 {
 	
-	public function convertToDatabaseValue($value, AbstractPlatform $platform): mixed
+	public function convertToDatabaseValue($value, AbstractPlatform $platform): string
 	{
 		return $value instanceof ProductCategorySettingsIdentifier ? $value->getValue() : $value;
 	}
 	
-	public function convertToPHPValue($value, AbstractPlatform $platform): mixed
+	public function convertToPHPValue($value, AbstractPlatform $platform): ?ProductCategorySettingsIdentifier
 	{
-		return !empty($value) ? new ProductCategorySettingsIdentifier() : $value;
+		return !empty($value) ? new ProductCategorySettingsIdentifier() : null;
 	}
 	
 	public function getName(): string
@@ -48,4 +49,9 @@ final class ProductCategorySettingsType extends StringType
 	{
 		return true;
 	}
+
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
+    {
+        return $platform->getStringTypeDeclarationSQL($column);
+    }
 }
