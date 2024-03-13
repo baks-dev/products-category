@@ -47,6 +47,7 @@ final class EditControllerTest extends WebTestCase
 
 
 
+
     /** Доступ по роли */
     public function testRoleSuccessful(): void
     {
