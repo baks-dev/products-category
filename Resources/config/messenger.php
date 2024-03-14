@@ -45,6 +45,8 @@ return static function (ContainerConfigurator $configurator, FrameworkConfig $fr
     ;
 
     $messenger->transport('failed-products-category')
-        ->dsn('%env(MESSENGER_TRANSPORT_DSN)%');
+        ->dsn('%env(MESSENGER_TRANSPORT_DSN)%')
+        ->options(['queue_name' => 'failed-products-category'])
+    ;
 
 };
