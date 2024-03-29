@@ -25,11 +25,13 @@ namespace BaksDev\Products\Category\Listeners\Entity;
 
 use BaksDev\Core\Type\Ip\IpAddress;
 use BaksDev\Products\Category\Entity\Modify\ProductCategoryModify;
+use BaksDev\Users\User\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 
 #[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: ProductCategoryModify::class)]
 final class ProductCategoryModifyListener
@@ -49,11 +51,18 @@ final class ProductCategoryModifyListener
 	public function prePersist(ProductCategoryModify $data, LifecycleEventArgs $event) : void
 	{
 		$token = $this->token->getToken();
-		
-		if($token)
-		{
-			$data->setUsr($token->getUser());
-		}
+
+        if ($token) {
+
+            $data->setUsr($token->getUser());
+
+            if($token instanceof SwitchUserToken)
+            {
+                /** @var User $originalUser */
+                $originalUser = $token->getOriginalToken()->getUser();
+                $data->setUsr($originalUser);
+            }
+        }
 		
 		/* Если пользователь не из консоли */
 		if($this->request->getCurrentRequest())
@@ -68,11 +77,18 @@ final class ProductCategoryModifyListener
 	public function preUpdate(ProductCategoryModify $data, LifecycleEventArgs $event) : void
 	{
 		$token = $this->token->getToken();
-		
-		if($token)
-		{
-			$data->setUsr($token->getUser());
-		}
+
+        if ($token) {
+
+            $data->setUsr($token->getUser());
+
+            if($token instanceof SwitchUserToken)
+            {
+                /** @var User $originalUser */
+                $originalUser = $token->getOriginalToken()->getUser();
+                $data->setUsr($originalUser);
+            }
+        }
 		
 		/* Если пользователь не из консоли */
 		if($this->request->getCurrentRequest())
