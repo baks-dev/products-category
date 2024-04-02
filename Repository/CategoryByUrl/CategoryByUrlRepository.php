@@ -30,7 +30,7 @@ use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Entity as ProductCategoryEntity;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class CategoryByUrl implements CategoryByUrlInterface
+final class CategoryByUrlRepository implements CategoryByUrlInterface
 {
 
     private TranslatorInterface $translator;

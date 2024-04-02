@@ -21,12 +21,36 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Products\Category\Repository\ParentCategoryChoiceForm;
+declare(strict_types=1);
 
+namespace BaksDev\Products\Category\Repository\UniqCategoryUrl;
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Entity\Info\ProductCategoryInfo;
+use BaksDev\Products\Category\Type\Event\ProductCategoryEventUid;
+use Doctrine\DBAL\Connection;
 
-interface ParentCategoryChoiceFormInterface
+final class UniqCategoryUrlRepository implements UniqCategoryUrlInterface
 {
-	public function get(?ProductCategoryUid $categoryUid = null) : array;
+	private Connection $connection;
+	
+	public function __construct(Connection $connection)
+	{
+		$this->connection = $connection;
+	}
+	
+	public function exist(string $url, ProductCategoryEventUid $event) : bool
+	{
+		$qbSub = $this->connection->createQueryBuilder();
+		$qbSub->select('1');
+		$qbSub->from(ProductCategoryInfo::TABLE, 'info');
+		$qbSub->where('info.url = :url');
+		$qbSub->andWhere('info.event != :event');
+		
+		$qb = $this->connection->createQueryBuilder();
+		$qb->select('EXISTS('.$qbSub->getSQL().')');
+		$qb->setParameter('url', $url);
+		$qb->setParameter('event', $event);
+		
+		return (bool) $qb->executeQuery()->fetchOne();
+	}
 }

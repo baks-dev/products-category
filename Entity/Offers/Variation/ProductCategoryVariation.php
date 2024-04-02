@@ -50,12 +50,12 @@ class ProductCategoryVariation extends EntityState
 	private readonly ProductCategoryVariationUid $id;
 	
 	/** ID торгового предложения */
-	#[ORM\OneToOne(inversedBy: 'variation', targetEntity: ProductCategoryOffers::class)]
+	#[ORM\OneToOne(targetEntity: ProductCategoryOffers::class, inversedBy: 'variation')]
 	#[ORM\JoinColumn(name: 'offer', referencedColumnName: 'id')]
 	private ProductCategoryOffers $offer;
 	
 	/** Перевод */
-	#[ORM\OneToMany(mappedBy: 'variation', targetEntity: Trans\ProductCategoryVariationTrans::class, cascade: ['all'])]
+	#[ORM\OneToMany(targetEntity: Trans\ProductCategoryVariationTrans::class, mappedBy: 'variation', cascade: ['all'])]
 	private Collection $translate;
 	
 	/** Справочник */
@@ -85,7 +85,7 @@ class ProductCategoryVariation extends EntityState
     private bool $postfix = false;
 	
 	/** Модификации в множественном варианте */
-	#[ORM\OneToOne(mappedBy: 'variation', targetEntity: ProductCategoryModification::class, cascade: ['all'])]
+	#[ORM\OneToOne(targetEntity: ProductCategoryModification::class, mappedBy: 'variation', cascade: ['all'])]
 	private ?ProductCategoryModification $modification;
 	
 	

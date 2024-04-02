@@ -49,12 +49,12 @@ class ProductCategoryOffers extends EntityState
     private readonly ProductCategoryOffersUid $id;
 
     /** Связь на событие */
-    #[ORM\OneToOne(inversedBy: 'offer', targetEntity: ProductCategoryEvent::class)]
+    #[ORM\OneToOne(targetEntity: ProductCategoryEvent::class, inversedBy: 'offer')]
     #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id', nullable: true)]
     private ?ProductCategoryEvent $event;
 
     /** Перевод */
-    #[ORM\OneToMany(mappedBy: 'offer', targetEntity: Trans\ProductCategoryOffersTrans::class, cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: Trans\ProductCategoryOffersTrans::class, mappedBy: 'offer', cascade: ['all'])]
     private Collection $translate;
 
     /** Справочник */
@@ -82,7 +82,7 @@ class ProductCategoryOffers extends EntityState
     private bool $postfix = false;
 
     /** Множественные варианты в торговом предложении */
-    #[ORM\OneToOne(mappedBy: 'offer', targetEntity: ProductCategoryVariation::class, cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: ProductCategoryVariation::class, mappedBy: 'offer', cascade: ['all'])]
     private ?ProductCategoryVariation $variation;
 
     public function __construct(ProductCategoryEvent $event)

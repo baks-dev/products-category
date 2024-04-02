@@ -31,7 +31,7 @@ use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
 use Doctrine\DBAL\Connection;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class AllFilterFieldsByCategory implements AllFilterFieldsByCategoryInterface
+final class AllFilterFieldsByCategoryRepository implements AllFilterFieldsByCategoryInterface
 {
 	
 	private Connection $connection;

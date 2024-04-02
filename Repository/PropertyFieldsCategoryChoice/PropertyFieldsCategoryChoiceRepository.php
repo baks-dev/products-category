@@ -31,7 +31,7 @@ use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldU
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class PropertyFieldsCategoryChoice implements PropertyFieldsCategoryChoiceInterface
+final class PropertyFieldsCategoryChoiceRepository implements PropertyFieldsCategoryChoiceInterface
 {
 
     private EntityManagerInterface $entityManager;

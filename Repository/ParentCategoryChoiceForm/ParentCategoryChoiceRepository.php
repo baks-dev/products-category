@@ -31,7 +31,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /** Клас получает массив категорий для формы и перобразует названия (path) согласно вложенности */
-final class ParentCategoryChoiceFormRepository implements ParentCategoryChoiceFormInterface
+final class ParentCategoryChoiceRepository implements ParentCategoryChoiceInterface
 {
 	
 	private EntityManagerInterface $entityManager;

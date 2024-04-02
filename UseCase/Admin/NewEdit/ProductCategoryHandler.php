@@ -32,7 +32,7 @@ use BaksDev\Products\Category\Entity\Cover\ProductCategoryCover;
 use BaksDev\Products\Category\Entity\Event\ProductCategoryEvent;
 use BaksDev\Products\Category\Entity\ProductCategory;
 use BaksDev\Products\Category\Messenger\ProductCategoryMessage;
-use BaksDev\Products\Category\Repository\UniqCategoryUrl\UniqCategoryUrl;
+use BaksDev\Products\Category\Repository\UniqCategoryUrl\UniqCategoryUrlRepository;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Cover\ProductCategoryCoverDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use DomainException;

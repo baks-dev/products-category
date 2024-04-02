@@ -72,36 +72,36 @@ class ProductCategoryEvent extends EntityState
 	private int $sort = 500;
 	
 	/** Перевод */
-	#[ORM\OneToMany(mappedBy: 'event', targetEntity: ProductCategoryTrans::class, cascade: ['all'])]
+	#[ORM\OneToMany(targetEntity: ProductCategoryTrans::class, mappedBy: 'event', cascade: ['all'])]
 	private Collection $translate;
 	
 	/** Модификатор */
-	#[ORM\OneToOne(mappedBy: 'event', targetEntity: ProductCategoryModify::class, cascade: ['all'])]
+	#[ORM\OneToOne(targetEntity: ProductCategoryModify::class, mappedBy: 'event', cascade: ['all'])]
 	private ProductCategoryModify $modify;
 	
 	/** Info */
-	#[ORM\OneToOne(mappedBy: 'event', targetEntity: ProductCategoryInfo::class, cascade: ['all'])]
+	#[ORM\OneToOne(targetEntity: ProductCategoryInfo::class, mappedBy: 'event', cascade: ['all'])]
 	private ?ProductCategoryInfo $info;
 	
 	/** Cover */
-	#[ORM\OneToOne(mappedBy: 'event', targetEntity: ProductCategoryCover::class, cascade: ['all'])]
+	#[ORM\OneToOne(targetEntity: ProductCategoryCover::class, mappedBy: 'event', cascade: ['all'])]
 	private ?ProductCategoryCover $cover = null;
 	
 	/**  Настройки SEO информации  */
-	#[ORM\OneToMany(mappedBy: 'event', targetEntity: ProductCategorySeo::class, cascade: ['all'])]
+	#[ORM\OneToMany(targetEntity: ProductCategorySeo::class, mappedBy: 'event', cascade: ['all'])]
 	private Collection $seo;
 	
 	/** Секции для свойств продукта */
-	#[ORM\OneToMany(mappedBy: 'event', targetEntity: ProductCategorySection::class, cascade: ['all'])]
+	#[ORM\OneToMany(targetEntity: ProductCategorySection::class, mappedBy: 'event', cascade: ['all'])]
 	#[ORM\OrderBy(['sort' => 'ASC'])]
 	private Collection $section;
 	
 	/** Посадочные блоки */
-	#[ORM\OneToMany(mappedBy: 'event', targetEntity: ProductCategoryLanding::class, cascade: ['all'])]
+	#[ORM\OneToMany(targetEntity: ProductCategoryLanding::class, mappedBy: 'event', cascade: ['all'])]
 	private Collection $landing;
 	
 	/** Торговые предложения */
-	#[ORM\OneToOne(mappedBy: 'event', targetEntity: ProductCategoryOffers::class, cascade: ['all'])]
+	#[ORM\OneToOne(targetEntity: ProductCategoryOffers::class, mappedBy: 'event', cascade: ['all'])]
 	private ?ProductCategoryOffers $offer;
 	
 	

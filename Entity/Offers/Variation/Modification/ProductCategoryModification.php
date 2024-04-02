@@ -48,12 +48,12 @@ class ProductCategoryModification extends EntityState
 	private readonly ProductCategoryModificationUid $id;
 	
 	/** ID множественного варианта */
-	#[ORM\OneToOne(inversedBy: 'modification', targetEntity: ProductCategoryVariation::class)]
+	#[ORM\OneToOne(targetEntity: ProductCategoryVariation::class, inversedBy: 'modification')]
 	#[ORM\JoinColumn(name: 'variation', referencedColumnName: 'id')]
 	private ProductCategoryVariation $variation;
 	
 	/** Перевод */
-	#[ORM\OneToMany(mappedBy: 'modification', targetEntity: Trans\ProductCategoryModificationTrans::class, cascade: ['all'])]
+	#[ORM\OneToMany(targetEntity: Trans\ProductCategoryModificationTrans::class, mappedBy: 'modification', cascade: ['all'])]
 	private Collection $translate;
 	
 	/** Справочник */

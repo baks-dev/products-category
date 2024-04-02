@@ -30,7 +30,7 @@ use BaksDev\Products\Category\Entity\ProductCategory;
 use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
 use Doctrine\ORM\EntityManagerInterface;
 
-final class OfferByCategory implements OfferByCategoryInterface
+final class OfferByCategoryRepository implements OfferByCategoryInterface
 {
 
     private EntityManagerInterface $entityManager;

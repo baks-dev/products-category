@@ -28,7 +28,7 @@ namespace BaksDev\Products\Category\Repository\AllCategoryByMenu;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Products\Category\Entity as EntityCategory;
 
-final class AllCategoryByMenu implements AllCategoryByMenuInterface
+final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
 {
     private DBALQueryBuilder $DBALQueryBuilder;
 

@@ -30,7 +30,7 @@ use BaksDev\Products\Category\Entity\Offers\Variation\ProductCategoryVariation;
 use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersUid;
 use Doctrine\ORM\EntityManagerInterface;
 
-final class VariationByOffer implements VariationByOfferInterface
+final class VariationByOfferRepository implements VariationByOfferInterface
 {
 
     private EntityManagerInterface $entityManager;

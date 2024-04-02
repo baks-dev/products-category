@@ -32,7 +32,7 @@ use BaksDev\Products\Category\Entity as EntityCategory;
 use BaksDev\Products\Category\Type\Parent\ProductParentCategoryUid;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class AllCategory implements AllCategoryInterface
+final class AllCategoryRepository implements AllCategoryInterface
 {
     private TranslatorInterface $translator;
     private SwitcherInterface $switcher;

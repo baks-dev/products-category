@@ -29,7 +29,7 @@ use BaksDev\Products\Category\Entity;
 use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class CategoryChoice implements CategoryChoiceInterface
+final class CategoryChoiceRepository implements CategoryChoiceInterface
 {
     private TranslatorInterface $translator;
     private ORMQueryBuilder $ORMQueryBuilder;

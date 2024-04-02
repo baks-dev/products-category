@@ -23,7 +23,7 @@
 
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit;
 
-use BaksDev\Products\Category\Repository\ParentCategoryChoiceForm\ParentCategoryChoiceFormInterface;
+use BaksDev\Products\Category\Repository\ParentCategoryChoiceForm\ParentCategoryChoiceInterface;
 use BaksDev\Products\Category\Type\Parent\ProductParentCategoryUid;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit;
 use Symfony\Component\Form\AbstractType;
@@ -36,9 +36,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class ProductCategoryForm extends AbstractType
 {
-	private ParentCategoryChoiceFormInterface $categoryParent;
+	private ParentCategoryChoiceInterface $categoryParent;
 	
-	public function __construct(ParentCategoryChoiceFormInterface $categoryParent)
+	public function __construct(ParentCategoryChoiceInterface $categoryParent)
 	{
 		$this->categoryParent = $categoryParent;
 	}

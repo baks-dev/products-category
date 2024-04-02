@@ -33,7 +33,7 @@ use BaksDev\Products\Category\Type\Offers\Variation\ProductCategoryVariationUid;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 
-final class VariationFieldsCategoryChoice implements VariationFieldsCategoryChoiceInterface
+final class VariationFieldsCategoryChoiceRepository implements VariationFieldsCategoryChoiceInterface
 {
 
     private TranslatorInterface $translator;
