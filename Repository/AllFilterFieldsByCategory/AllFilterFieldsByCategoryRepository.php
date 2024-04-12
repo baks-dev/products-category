@@ -25,77 +25,68 @@ declare(strict_types=1);
 
 namespace BaksDev\Products\Category\Repository\AllFilterFieldsByCategory;
 
-use BaksDev\Core\Type\Locale\Locale;
-use BaksDev\Products\Category\Entity as ProductCategoryEntity;
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
+use BaksDev\Products\Category\Entity\ProductCategory;
+use BaksDev\Products\Category\Entity\Section\Field\ProductCategorySectionField;
+use BaksDev\Products\Category\Entity\Section\Field\Trans\ProductCategorySectionFieldTrans;
+use BaksDev\Products\Category\Entity\Section\ProductCategorySection;
 use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
-use Doctrine\DBAL\Connection;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class AllFilterFieldsByCategoryRepository implements AllFilterFieldsByCategoryInterface
 {
-	
-	private Connection $connection;
-	
-	private Locale $local;
-	
-	private TranslatorInterface $translator;
-	
-	
-	public function __construct(
-		Connection $connection,
-		TranslatorInterface $translator
-	)
-	{
-	
-		$this->connection = $connection;
-		$this->translator = $translator;
-	}
-	
-	/** Метод возвращает все свойства, учавствующие в фильтре */
-	
-	public function fetchAllFilterCategoryFieldsAssociative(ProductCategoryUid $category) : array
-	{
-		$qb = $this->connection->createQueryBuilder();
-		
-		$qb->setParameter('local',  new Locale($this->translator->getLocale()), Locale::TYPE);
-		
-		$qb->from(ProductCategoryEntity\ProductCategory::TABLE, 'category');
-		
-		$qb->join('category',
-			ProductCategoryEntity\Event\ProductCategoryEvent::TABLE,
-			'category_event',
-			'category_event.id = category.event'
-		);
-		
-		$qb->leftJoin('category_event',
-			ProductCategoryEntity\Section\ProductCategorySection::TABLE,
-			'category_section',
-			'category_section.event = category_event.id'
-		);
-		
-		$qb->select('category_section_field.id');
-		$qb->addSelect('category_section_field.type');
-		$qb->leftJoin('category_section',
-			ProductCategoryEntity\Section\Field\ProductCategorySectionField::TABLE,
-			'category_section_field',
-			'category_section_field.section = category_section.id AND category_section_field.filter = TRUE'
-		);
-		
-		
-		$qb->addSelect('category_section_field_trans.name');
-		$qb->leftJoin('category_section_field',
-			ProductCategoryEntity\Section\Field\Trans\ProductCategorySectionFieldTrans::TABLE,
-			'category_section_field_trans',
-			'category_section_field_trans.field = category_section_field.id AND category_section_field_trans.local = :local'
-		);
-		
-		
-		$qb->where('category.id = :category');
-		$qb->setParameter('category', $category);
-		
-		$qb->orderBy('category_section.sort, category_section_field.sort');
-		
-		return $qb->fetchAllAssociative();
-	}
-	
+
+    private DBALQueryBuilder $DBALQueryBuilder;
+
+    public function __construct(DBALQueryBuilder $DBALQueryBuilder)
+    {
+        $this->DBALQueryBuilder = $DBALQueryBuilder;
+    }
+
+    /**
+     * Метод возвращает все свойства, учавствующие в фильтре
+     */
+
+    public function fetchAllFilterCategoryFieldsAssociative(ProductCategoryUid $category): array
+    {
+        $qb = $this->DBALQueryBuilder
+            ->createQueryBuilder(self::class)
+            ->bindLocal();
+
+        $qb
+            ->from(ProductCategory::TABLE, 'category')
+            ->where('category.id = :category')
+            ->setParameter('category', $category);
+
+        $qb
+            ->leftJoin('category',
+                ProductCategorySection::TABLE,
+                'category_section',
+                'category_section.event = category.event'
+            );
+
+        $qb
+            ->select('category_section_field.id')
+            ->addSelect('category_section_field.type')
+            ->leftJoin(
+                'category_section',
+                ProductCategorySectionField::TABLE,
+                'category_section_field',
+                'category_section_field.section = category_section.id AND category_section_field.filter = TRUE'
+            );
+
+
+        $qb
+            ->addSelect('category_section_field_trans.name')
+            ->leftJoin('category_section_field',
+                ProductCategorySectionFieldTrans::TABLE,
+                'category_section_field_trans',
+                'category_section_field_trans.field = category_section_field.id AND category_section_field_trans.local = :local'
+            );
+
+
+        $qb->orderBy('category_section.sort, category_section_field.sort');
+
+        return $qb->enableCache('products-category')->fetchAllAssociative();
+    }
+
 }
