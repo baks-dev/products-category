@@ -24,7 +24,7 @@
 namespace BaksDev\Products\Category\Listeners\Entity;
 
 use BaksDev\Core\Type\Ip\IpAddress;
-use BaksDev\Products\Category\Entity\Modify\ProductCategoryModify;
+use BaksDev\Products\Category\Entity\Modify\CategoryProductModify;
 use BaksDev\Users\User\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Events;
@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 
-#[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: ProductCategoryModify::class)]
+#[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: CategoryProductModify::class)]
 final class ProductCategoryModifyListener
 {
 	private RequestStack $request;
@@ -48,7 +48,7 @@ final class ProductCategoryModifyListener
 		$this->token = $token;
 	}
 	
-	public function prePersist(ProductCategoryModify $data, LifecycleEventArgs $event) : void
+	public function prePersist(CategoryProductModify $data, LifecycleEventArgs $event) : void
 	{
 		$token = $this->token->getToken();
 
@@ -74,7 +74,7 @@ final class ProductCategoryModifyListener
 		}
 	}
 	
-	public function preUpdate(ProductCategoryModify $data, LifecycleEventArgs $event) : void
+	public function preUpdate(CategoryProductModify $data, LifecycleEventArgs $event) : void
 	{
 		$token = $this->token->getToken();
 

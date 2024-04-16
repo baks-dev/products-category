@@ -26,26 +26,22 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\Repository\OfferFieldsCategoryChoice;
 
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
-use BaksDev\Core\Type\Locale\Locale;
-use BaksDev\Products\Category\Entity as ProductCategoryEntity;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
-use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersUid;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
+use BaksDev\Products\Category\Entity\Offers\Trans\CategoryProductOffersTrans;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
 
 final class OfferFieldsCategoryChoiceRepository implements OfferFieldsCategoryChoiceInterface
 {
 
-
-    private TranslatorInterface $translator;
     private ORMQueryBuilder $ORMQueryBuilder;
 
 
     public function __construct(
         ORMQueryBuilder $ORMQueryBuilder,
-        TranslatorInterface $translator,
     )
     {
-        $this->translator = $translator;
         $this->ORMQueryBuilder = $ORMQueryBuilder;
     }
 
@@ -53,39 +49,51 @@ final class OfferFieldsCategoryChoiceRepository implements OfferFieldsCategoryCh
     /**
      * Метод возвращает список свойств указанной категории (тип и название)
      */
-    public function getOfferFieldCollection(ProductCategoryUid $category): ?ProductCategoryOffersUid
+    public function findByCategory(
+        CategoryProduct|CategoryProductUid|string $category
+    ): ?CategoryProductOffersUid
     {
-        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class);
 
-        $qb->setParameter('local', new Locale($this->translator->getLocale()), Locale::TYPE);
+        if($category instanceof CategoryProduct)
+        {
+            $category = $category->getId();
+        }
 
-        $select = sprintf('new %s(offer.id, trans.name, offer.reference)', ProductCategoryOffersUid::class);
-        $qb->select($select);
+        if(is_string($category))
+        {
+            $category = new CategoryProductUid($category);
+        }
 
 
-        $qb->from(ProductCategoryEntity\ProductCategory::class, 'category');
+        $orm = $this->ORMQueryBuilder
+            ->createQueryBuilder(self::class)
+            ->bindLocal();
 
-        $qb->join(
-            ProductCategoryEntity\Offers\ProductCategoryOffers::class,
+        $select = sprintf('new %s(offer.id, trans.name, offer.reference)', CategoryProductOffersUid::class);
+        $orm->select($select);
+
+
+        $orm
+            ->from(CategoryProduct::class, 'category')
+            ->where('category.id = :category')
+            ->setParameter('category', $category, CategoryProductUid::TYPE);
+
+        $orm->join(
+            CategoryProductOffers::class,
             'offer',
             'WITH',
             'offer.event = category.event'
         );
 
-        $qb->leftJoin(
-            ProductCategoryEntity\Offers\Trans\ProductCategoryOffersTrans::class,
+        $orm->leftJoin(
+            CategoryProductOffersTrans::class,
             'trans',
             'WITH',
             'trans.offer = offer.id AND trans.local = :local'
         );
 
-        $qb->where('category.id = :category');
-        $qb->setParameter('category', $category, ProductCategoryUid::TYPE);
-
-
         /* Кешируем результат ORM */
-        return $qb->enableCache('products-product', 86400)->getOneOrNullResult();
+        return $orm->enableCache('products-category', 86400)->getOneOrNullResult();
 
     }
-
 }

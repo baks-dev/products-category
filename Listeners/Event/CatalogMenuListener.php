@@ -46,6 +46,6 @@ final class CatalogMenuListener
     /** Создает в меню раздел с категориями продукции */
     public function onKernelController(ControllerEvent $event)
     {
-        $this->twig->addGlobal('baks_user_menu', $this->category->fetchAllCatalogMenuAssociative());
+        $this->twig->addGlobal('baks_user_menu', $this->category->findAll());
     }
 }

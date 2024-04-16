@@ -26,7 +26,7 @@ namespace BaksDev\Products\Category\Controller\Admin;
 use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Products\Category\Entity;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\ProductCategoryDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\ProductCategoryForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\ProductCategoryHandler;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -43,12 +43,12 @@ final class EditController extends AbstractController
     #[Route('/admin/product/category/edit/{id}', name: 'admin.newedit.edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
-        #[MapEntity] Entity\Event\ProductCategoryEvent $Event,
+        #[MapEntity] Entity\Event\CategoryProductEvent $Event,
         ProductCategoryHandler $handler,
     ): Response
     {
 
-        $ProductCategoryDTO = $Event->getDto(ProductCategoryDTO::class);
+        $ProductCategoryDTO = $Event->getDto(CategoryProductDTO::class);
 
         // Форма добавления
         $form = $this->createForm(ProductCategoryForm::class, $ProductCategoryDTO);
@@ -58,7 +58,7 @@ final class EditController extends AbstractController
         {
             $ProductCategory = $handler->handle($ProductCategoryDTO);
 
-            if($ProductCategory instanceof Entity\ProductCategory)
+            if($ProductCategory instanceof Entity\CategoryProduct)
             {
                 $this->addFlash('success', 'admin.success.update', 'admin.products.category');
 

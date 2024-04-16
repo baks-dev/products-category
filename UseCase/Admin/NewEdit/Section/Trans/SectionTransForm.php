@@ -61,7 +61,7 @@ final class SectionTransForm extends AbstractType
 	public function configureOptions(OptionsResolver $resolver) : void
 	{
 		$resolver->setDefaults([
-			'data_class' => SectionTransDTO::class,
+			'data_class' => ProductSectionTransDTO::class,
 		]);
 	}
 }

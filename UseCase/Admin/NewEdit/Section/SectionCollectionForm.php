@@ -86,7 +86,7 @@ final class SectionCollectionForm extends AbstractType
 	public function configureOptions(OptionsResolver $resolver) : void
 	{
 		$resolver->setDefaults([
-			'data_class' => SectionCollectionDTO::class,
+			'data_class' => ProductSectionCollectionDTO::class,
 		]);
 	}
 	

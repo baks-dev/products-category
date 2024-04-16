@@ -26,7 +26,7 @@ namespace BaksDev\Products\Category\Controller\Admin;
 use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Products\Category\Entity;
-use BaksDev\Products\Category\UseCase\Admin\Delete\DeleteProductCategoryDTO;
+use BaksDev\Products\Category\UseCase\Admin\Delete\DeleteCategoryProductDTO;
 use BaksDev\Products\Category\UseCase\Admin\Delete\DeleteProductCategoryForm;
 use BaksDev\Products\Category\UseCase\Admin\Delete\DeleteProductCategoryHandler;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,18 +42,21 @@ final class DeleteController extends AbstractController
     public function delete(
         Request $request,
         DeleteProductCategoryHandler $handler,
-        Entity\Event\ProductCategoryEvent $Event,
-    ): Response {
-        $category = new DeleteProductCategoryDTO();
+        Entity\Event\CategoryProductEvent $Event,
+    ): Response
+    {
+        $category = new DeleteCategoryProductDTO();
         $Event->getDto($category);
         $form = $this->createForm(DeleteProductCategoryForm::class, $category, [
             'action' => $this->generateUrl('products-category:admin.delete', ['id' => $category->getEvent()]),
         ]);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() && $form->has('delete')) {
+        if($form->isSubmitted() && $form->isValid() && $form->has('delete'))
+        {
             $ProductCategory = $handler->handle($category);
-            if ($ProductCategory instanceof Entity\ProductCategory) {
+            if($ProductCategory instanceof Entity\CategoryProduct)
+            {
                 $this->addFlash('admin.form.header.delete', 'admin.success.delete', 'admin.products.category');
 
                 return $this->redirectToRoute('products-category:admin.index');

@@ -50,7 +50,7 @@ final class DeleteProductCategoryForm extends AbstractType
 		$resolver->setDefaults
 		(
 			[
-				'data_class' => DeleteProductCategoryDTO::class,
+				'data_class' => DeleteCategoryProductDTO::class,
 				'method' => 'POST',
 				'attr' => ['class' => 'w-100'],
 			]

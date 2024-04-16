@@ -26,186 +26,145 @@ namespace BaksDev\Products\Category\Repository\AllCategory;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
-use BaksDev\Core\Services\Switcher\SwitcherInterface;
-use BaksDev\Core\Type\Locale\Locale;
-use BaksDev\Products\Category\Entity as EntityCategory;
-use BaksDev\Products\Category\Type\Parent\ProductParentCategoryUid;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use BaksDev\Products\Category\Entity\Cover\CategoryProductCover;
+use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
+use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
 
 final class AllCategoryRepository implements AllCategoryInterface
 {
-    private TranslatorInterface $translator;
-    private SwitcherInterface $switcher;
     private PaginatorInterface $paginator;
     private DBALQueryBuilder $DBALQueryBuilder;
 
+    private ?SearchDTO $search = null;
+
     public function __construct(
         DBALQueryBuilder $DBALQueryBuilder,
-        TranslatorInterface $translator,
-        SwitcherInterface $switcher,
         PaginatorInterface $paginator
     )
     {
-
-        $this->translator = $translator;
-        $this->switcher = $switcher;
         $this->paginator = $paginator;
         $this->DBALQueryBuilder = $DBALQueryBuilder;
+    }
+
+    public function search(SearchDTO $search): self
+    {
+        $this->search = $search;
+        return $this;
     }
 
     /** Возвращает список категорий с ключами:.
      *
      * id - идентификатор <br>
      * event - идентификатор события <br>
-     * category_sort - сортирвка <br>
+     * category_sort - сортировка <br>
      * category_parent - идентификатор родителя категории <br>
      * category_cover_name - название файла обложки  <br>
      * category_cover_ext - расширение  файла обложки <br>
      * category_cover_cdn - флаг загрузки файла CDN <br>
      * category_cover_dir - директория  файла обложки <br>
-     * category_name - название катеогрии <br>
+     * category_name - название категории <br>
      * category_description - краткое описание обложки <br>
      * category_child_count - количество вложенных категорий <br>
      */
     public function fetchProductParentAllAssociative(
-        SearchDTO $search = null,
-        ?ProductParentCategoryUid $parent = null
+        ?ParentCategoryProductUid $parent = null
     ): PaginatorInterface
     {
-        $local = new Locale($this->translator->getLocale());
 
-        $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class);
+        $dbal = $this->DBALQueryBuilder
+            ->createQueryBuilder(self::class)
+            ->bindLocal();
 
         // Категория
-        $qb->select('category.id');
-        // $qb->addSelect('category.id');
-        $qb->addSelect('category.event'); // ID события
-        $qb->from(EntityCategory\ProductCategory::TABLE, 'category');
+        $dbal
+            ->select('category.id')
+            ->addSelect('category.event')
+            ->from(CategoryProduct::TABLE, 'category');
 
         // События категории
-        $qb->addSelect('category_event.sort AS category_sort');
-        $qb->addSelect('category_event.parent AS category_parent');
+        $dbal->addSelect('category_event.sort AS category_sort');
+        $dbal->addSelect('category_event.parent AS category_parent');
 
-        $qb->join(
+        $dbal->join(
             'category',
-            EntityCategory\Event\ProductCategoryEvent::TABLE,
+            CategoryProductEvent::TABLE,
             'category_event',
             'category_event.id = category.event AND '.
             ($parent ? 'category_event.parent = :parent_category' : 'category_event.parent IS NULL')
         );
 
         // Обложка
-        $qb->addSelect('category_cover.name AS category_cover_name');
-        $qb->addSelect('category_cover.ext AS category_cover_ext');
-        $qb->addSelect('category_cover.cdn AS category_cover_cdn');
+        $dbal->addSelect('category_cover.name AS category_cover_name');
+        $dbal->addSelect('category_cover.ext AS category_cover_ext');
+        $dbal->addSelect('category_cover.cdn AS category_cover_cdn');
 
-        $qb->leftJoin(
+        $dbal->leftJoin(
             'category_event',
-            EntityCategory\Cover\ProductCategoryCover::TABLE,
+            CategoryProductCover::TABLE,
             'category_cover',
             'category_cover.event = category_event.id'
         );
 
         if($parent)
         {
-            $qb->setParameter('parent_category', $parent, ProductParentCategoryUid::TYPE);
+            $dbal->setParameter('parent_category', $parent, ParentCategoryProductUid::TYPE);
         }
 
         // Перевод категории
-        $qb->addSelect('category_trans.name AS category_name');
-        $qb->addSelect('category_trans.description AS category_description');
+        $dbal->addSelect('category_trans.name AS category_name');
+        $dbal->addSelect('category_trans.description AS category_description');
 
-        $qb->leftJoin(
+        $dbal->leftJoin(
             'category_event',
-            EntityCategory\Trans\ProductCategoryTrans::TABLE,
+            CategoryProductTrans::TABLE,
             'category_trans',
             'category_trans.event = category_event.id AND category_trans.local = :local'
         );
 
-        $qb->setParameter('local', $local, Locale::TYPE);
-
         /** Количество вложенных категорий */
 
         // EXISTS Event IN Category
-        $qbCounterExist = $this->DBALQueryBuilder->builder();
-        $qbCounterExist->select('1');
-        $qbCounterExist->from(EntityCategory\ProductCategory::TABLE, 'count_cat');
-        $qbCounterExist->where('count_cat.id = category_event_count.category');
-        $qbCounterExist->andWhere('count_cat.event = category_event_count.id');
+        $dbalCounterExist = $this->DBALQueryBuilder->builder();
+
+        $dbalCounterExist
+            ->select('1')
+            ->from(CategoryProduct::TABLE, 'count_cat')
+            ->where('count_cat.id = category_event_count.category')
+            ->andWhere('count_cat.event = category_event_count.id');
 
         // COUNT Event
-        $qbCounter = $this->DBALQueryBuilder->builder();
-        $qbCounter->select('COUNT(category_event_count.id)');
-        $qbCounter->from(EntityCategory\Event\ProductCategoryEvent::TABLE, 'category_event_count');
+        $dbalCounter = $this->DBALQueryBuilder->builder();
+        $dbalCounter
+            ->select('COUNT(category_event_count.id)')
+            ->from(CategoryProductEvent::TABLE, 'category_event_count')
+            ->where('category_event_count.parent = category.id');
 
-        $qbCounter->join(
-            'category_event_count',
-            EntityCategory\ProductCategory::TABLE,
-            'count_cat',
-            'count_cat.id = category_event_count.category AND count_cat.event = category_event_count.id'
-        );
-
-        $qbCounter->where('category_event_count.parent = category.id');
-        $qbCounter->andWhere('EXISTS ('.$qbCounterExist->getSQL().')');
-
-        $qb->addSelect('('.$qbCounter->getSQL().') AS category_child_count');
-
-        // END Количество вложенных категорий
-
-        // Поиск
-        if($search?->query)
-        {
-            // $Switcher = new Switcher();
-
-            $qb->andWhere(
-                '
-                        LOWER(category_trans.name) LIKE :query OR
-                        LOWER(category_trans.name) LIKE :switcher OR
-                        
-                        /*LOWER(parent_category_trans.name) LIKE :query OR
-                        LOWER(parent_category_trans.name) LIKE :switcher OR*/
-
-                        LOWER(category_trans.description) LIKE :query OR
-                        LOWER(category_trans.description) LIKE :switcher
-
-                    '
+        $dbalCounter
+            ->join(
+                'category_event_count',
+                CategoryProduct::TABLE,
+                'count_cat',
+                'count_cat.id = category_event_count.category AND count_cat.event = category_event_count.id'
             );
 
-            $qb->setParameter('query', '%'.$this->switcher->toRus($search->query, true).'%');
-            $qb->setParameter('switcher', '%'.$this->switcher->toEng($search->query, true).'%');
-        }
-
-        $qb->orderBy('category_event.sort', 'ASC');
+        $dbal->addSelect('('.$dbalCounter->getSQL().') AS category_child_count');
+        $dbalCounter->andWhere('EXISTS ('.$dbalCounterExist->getSQL().')');
 
 
-        return $this->paginator->fetchAllAssociative($qb);
-
-    }
-
-    /** TODO рекурсивный запрос */
-
-    /**
-     * @param string[] $cteQueries
-     */
-    public function buildSql(string $mainSql, array $cteQueries, bool $recursive = false): string
-    {
-        if(empty($cteQueries))
+        /* Поиск */
+        if($this->search?->getQuery())
         {
-            return $mainSql;
+            $dbal
+                ->createSearchQueryBuilder($this->search)
+                ->addSearchLike('category_trans.name');
+
         }
 
-        $ctes = [];
+        $dbal->orderBy('category_event.sort', 'ASC');
 
-        foreach($cteQueries as $alias => $sqlQuery)
-        {
-            $ctes[] = sprintf('%s AS (%s)', $alias, $sqlQuery);
-        }
+        return $this->paginator->fetchAllAssociative($dbal);
 
-        if($recursive)
-        {
-            return sprintf("WITH RECURSIVE %s\n%s", implode(",\n", $ctes), $mainSql);
-        }
-
-        return sprintf("WITH %s\n%s", implode(",\n", $ctes), $mainSql);
     }
 }

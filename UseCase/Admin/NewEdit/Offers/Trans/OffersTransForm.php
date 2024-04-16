@@ -61,7 +61,7 @@ final class OffersTransForm extends AbstractType
 	public function configureOptions(OptionsResolver $resolver) : void
 	{
 		$resolver->setDefaults([
-			'data_class' => OffersTransDTO::class,
+			'data_class' => ProductOffersTransDTO::class,
 		]);
 	}
 	

@@ -28,12 +28,12 @@ namespace BaksDev\Products\Category\UseCase\Admin\NewEdit;
 use BaksDev\Core\Entity\AbstractHandler;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Files\Resources\Upload\Image\ImageUploadInterface;
-use BaksDev\Products\Category\Entity\Cover\ProductCategoryCover;
-use BaksDev\Products\Category\Entity\Event\ProductCategoryEvent;
-use BaksDev\Products\Category\Entity\ProductCategory;
+use BaksDev\Products\Category\Entity\Cover\CategoryProductCover;
+use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
+use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Messenger\ProductCategoryMessage;
 use BaksDev\Products\Category\Repository\UniqCategoryUrl\UniqCategoryUrlRepository;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Cover\ProductCategoryCoverDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Cover\CategoryProductCoverDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use DomainException;
 use Psr\Log\LoggerInterface;
@@ -72,13 +72,13 @@ final class ProductCategoryHandler extends AbstractHandler
 //    }
 
 
-    public function handle(ProductCategoryDTO $command,): string|ProductCategory
+    public function handle(CategoryProductDTO $command,): string|CategoryProduct
     {
         /** Валидация DTO  */
         $this->validatorCollection->add($command);
 
-        $this->main = new ProductCategory();
-        $this->event = new ProductCategoryEvent();
+        $this->main = new CategoryProduct();
+        $this->event = new CategoryProductEvent();
 
         try
         {

@@ -62,7 +62,7 @@ final class LandingCollectionForm extends AbstractType
 		$resolver->setDefaults
 		(
 			[
-				'data_class' => LandingCollectionDTO::class,
+				'data_class' => ProductLandingCollectionDTO::class,
 			]
 		);
 	}

@@ -65,7 +65,7 @@ final class SeoCollectionForm extends AbstractType
 	public function configureOptions(OptionsResolver $resolver) : void
 	{
 		$resolver->setDefaults([
-			'data_class' => SeoCollectionDTO::class,
+			'data_class' => ProductSeoCollectionDTO::class,
 		]);
 	}
 	

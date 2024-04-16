@@ -23,9 +23,10 @@
 
 namespace BaksDev\Products\Category\Repository\CategoryOffersForm;
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 
 interface CategoryOffersFormInterface
 {
-	public function get(ProductCategoryUid $category) : ?CategoryOffersFormDTO;
+	public function findByCategory(CategoryProductUid|string $category) : ?CategoryOffersFormDTO;
 }

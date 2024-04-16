@@ -23,59 +23,54 @@
 
 namespace BaksDev\Products\Category\Repository\ParentCategoryChoiceForm;
 
-use BaksDev\Products\Category\Entity as EntityCategory;
-use BaksDev\Core\Type\Locale\Locale;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
-use BaksDev\Products\Category\Type\Parent\ProductParentCategoryUid;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use BaksDev\Core\Doctrine\ORMQueryBuilder;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
+use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
+use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
 
-/** Клас получает массив категорий для формы и перобразует названия (path) согласно вложенности */
+
 final class ParentCategoryChoiceRepository implements ParentCategoryChoiceInterface
 {
-	
-	private EntityManagerInterface $entityManager;
-	
-	private TranslatorInterface $translator;
-	
-	
-	public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator)
-	{
-		$this->entityManager = $entityManager;
-		
-		$this->translator = $translator;
-	}
-	
-	public function get(?ProductCategoryUid $categoryUid = null) : array
-	{
-		
-		$qb = $this->entityManager->createQueryBuilder();
-		
-		$select = sprintf('new %s(category.id, trans.name, event.parent)', ProductParentCategoryUid::class);
-		
-		$qb->select($select);
-		
 
-		$qb->from(EntityCategory\ProductCategory::class, 'category', 'category.id');
-		
-		$qb->join(
-			EntityCategory\Event\ProductCategoryEvent::class,
-			'event',
-			'WITH',
-			'event.id = category.event AND event.category = category.id'
-		);
-		
-		$qb->leftJoin(
-			EntityCategory\Trans\ProductCategoryTrans::class,
-			'trans',
-			'WITH',
-			'trans.event = event.id AND trans.local = :locale'
-		);
-		
-		$qb->setParameter('locale', new Locale($this->translator->getLocale()), Locale::TYPE);
-		
-		$qb->orderBy(
-			'CASE
+    private ORMQueryBuilder $ORMQueryBuilder;
+
+    public function __construct(ORMQueryBuilder $ORMQueryBuilder)
+    {
+        $this->ORMQueryBuilder = $ORMQueryBuilder;
+    }
+
+    /**
+     * Метод получает массив категорий для формы и преобразует названия (path) согласно вложенности
+     */
+    public function findAll(): array
+    {
+        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class)
+            ->bindLocal();
+
+        $select = sprintf('new %s(category.id, trans.name, event.parent)', ParentCategoryProductUid::class);
+
+        $qb->select($select);
+
+        $qb->from(CategoryProduct::class, 'category', 'category.id');
+
+        $qb->join(
+            CategoryProductEvent::class,
+            'event',
+            'WITH',
+            'event.id = category.event AND event.category = category.id'
+        );
+
+        $qb->leftJoin(
+            CategoryProductTrans::class,
+            'trans',
+            'WITH',
+            'trans.event = event.id AND trans.local = :local'
+        );
+
+
+        $qb->orderBy(
+            'CASE
         WHEN
             event.parent IS NULL
         THEN
@@ -83,11 +78,11 @@ final class ParentCategoryChoiceRepository implements ParentCategoryChoiceInterf
         ELSE
             event.parent
         END',
-			'DESC'
-		);
-		
-		
-		return $qb->getQuery()->getResult();
-	}
-	
+            'DESC'
+        );
+
+
+        return $qb->getQuery()->getResult();
+    }
+
 }

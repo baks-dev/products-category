@@ -23,12 +23,16 @@
 
 namespace BaksDev\Products\Category\Repository\OfferFieldsCategoryChoice;
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
-use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersUid;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
 
 interface OfferFieldsCategoryChoiceInterface
 {
-	/** Метод возвращает троговое предложение указанной категории (тип и название) */
-	
-	public function getOfferFieldCollection(ProductCategoryUid $category) : ?ProductCategoryOffersUid;
+    /**
+     * Метод возвращает список свойств указанной категории (тип и название)
+     */
+	public function findByCategory(
+        CategoryProduct|CategoryProductUid|string $category
+    ) : ?CategoryProductOffersUid;
 }

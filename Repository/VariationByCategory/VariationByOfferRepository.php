@@ -25,37 +25,54 @@ declare(strict_types=1);
 
 namespace BaksDev\Products\Category\Repository\VariationByCategory;
 
-use BaksDev\Products\Category\Entity\Offers\ProductCategoryOffers;
-use BaksDev\Products\Category\Entity\Offers\Variation\ProductCategoryVariation;
-use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersUid;
+use BaksDev\Core\Doctrine\ORMQueryBuilder;
+use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
+use BaksDev\Products\Category\Entity\Offers\Variation\CategoryProductVariation;
+use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class VariationByOfferRepository implements VariationByOfferInterface
 {
 
-    private EntityManagerInterface $entityManager;
+    private ORMQueryBuilder $ORMQueryBuilder;
 
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ORMQueryBuilder $ORMQueryBuilder)
     {
-        $this->entityManager = $entityManager;
+        $this->ORMQueryBuilder = $ORMQueryBuilder;
     }
 
 
     /**
      * Метод получает идентификатор настройки торгового предложения продукта в категории
      */
-    public function findProductCategoryVariation(ProductCategoryOffersUid $offer): ?ProductCategoryVariation
+    public function findByOffer(
+        CategoryProductOffers|CategoryProductOffersUid|string $offer
+    ): ?CategoryProductVariation
     {
-        $qb = $this->entityManager->createQueryBuilder();
+        if($offer instanceof CategoryProductOffers)
+        {
+            $offer = $offer->getId();
+        }
+
+        if(is_string($offer))
+        {
+            $offer = new CategoryProductOffersUid($offer);
+        }
+
+        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class);
 
         $qb->select('variation');
-        $qb->from(ProductCategoryOffers::class, 'offer');
+        $qb
+            ->from(CategoryProductOffers::class, 'offer')
+            ->where('offer.id = :offer')
+            ->setParameter('offer', $offer, CategoryProductOffersUid::TYPE);
 
-        $qb->leftJoin(ProductCategoryVariation::class, 'variation', 'WITH', 'variation.offer = offer.id');
-        $qb->where('offer.id = :offer');
-        $qb->setParameter('offer', $offer, ProductCategoryOffersUid::TYPE);
+        $qb->leftJoin(CategoryProductVariation::class,
+            'variation',
+            'WITH',
+            'variation.offer = offer.id');
 
-        return $qb->getQuery()->getOneOrNullResult();
+
+        return $qb->enableCache('products-category')->getOneOrNullResult();
     }
 }

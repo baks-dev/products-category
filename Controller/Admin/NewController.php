@@ -27,9 +27,9 @@ use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Products\Category\Entity;
 use BaksDev\Products\Category\Entity as CategoryEntity;
-use BaksDev\Products\Category\Type\Event\ProductCategoryEventUid;
-use BaksDev\Products\Category\Type\Parent\ProductParentCategoryUid;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\ProductCategoryDTO;
+use BaksDev\Products\Category\Type\Event\CategoryProductEventUid;
+use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\ProductCategoryForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\ProductCategoryHandler;
 use Doctrine\ORM\EntityManagerInterface;
@@ -53,17 +53,19 @@ final class NewController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         ProductCategoryHandler $handler,
-        #[MapEntity] ?CategoryEntity\ProductCategory $cat = null,
-        ?ProductCategoryEventUid $id = null,
-    ): Response {
-        $parent = $cat ? new ProductParentCategoryUid($cat->getId()) : null;
-        $Event = $id ? $entityManager->getRepository(CategoryEntity\Event\ProductCategoryEvent::class)->find(
+        #[MapEntity] ?CategoryEntity\CategoryProduct $cat = null,
+        ?CategoryProductEventUid $id = null,
+    ): Response
+    {
+        $parent = $cat ? new ParentCategoryProductUid($cat->getId()) : null;
+        $Event = $id ? $entityManager->getRepository(CategoryEntity\Event\CategoryProductEvent::class)->find(
             $id
         ) : null;
 
-        $category = new ProductCategoryDTO($parent);
+        $category = new CategoryProductDTO($parent);
         // Копируем данные из события
-        if ($Event) {
+        if($Event)
+        {
             $Event->getDto($category);
             // $category->copy();
         }
@@ -72,10 +74,12 @@ final class NewController extends AbstractController
         $form = $this->createForm(ProductCategoryForm::class, $category);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() && $form->has('Save')) {
+        if($form->isSubmitted() && $form->isValid() && $form->has('Save'))
+        {
             $ProductCategory = $handler->handle($category);
 
-            if ($ProductCategory instanceof Entity\ProductCategory) {
+            if($ProductCategory instanceof Entity\CategoryProduct)
+            {
                 $this->addFlash('success', 'admin.success.new', 'admin.products.category');
 
                 return $this->redirectToRoute('products-category:admin.index');

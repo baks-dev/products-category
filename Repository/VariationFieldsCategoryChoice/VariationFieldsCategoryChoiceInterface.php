@@ -24,12 +24,12 @@
 namespace BaksDev\Products\Category\Repository\VariationFieldsCategoryChoice;
 
 
-use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersUid;
-use BaksDev\Products\Category\Type\Offers\Variation\ProductCategoryVariationUid;
+use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
+use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
 
 interface VariationFieldsCategoryChoiceInterface
 {
 	/** Метод возвращает троговое предложение указанной категории (тип и название) */
 	
-	public function getVariationFieldType(ProductCategoryOffersUid $offer) : ?ProductCategoryVariationUid;
+	public function getVariationFieldType(CategoryProductOffersUid $offer) : ?CategoryProductVariationUid;
 }

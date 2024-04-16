@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\UseCase\Admin\Delete;
 
 use BaksDev\Core\Messenger\MessageDispatchInterface;
-use BaksDev\Products\Category\Entity\Event\ProductCategoryEvent;
-use BaksDev\Products\Category\Entity\ProductCategory;
+use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
+use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Messenger\ProductCategoryMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -56,7 +56,7 @@ final class DeleteProductCategoryHandler
         $this->messageDispatch = $messageDispatch;
     }
 
-    public function handle(DeleteProductCategoryDTO $command,): string|ProductCategory
+    public function handle(DeleteCategoryProductDTO $command,): string|CategoryProduct
     {
         /* Валидация DTO */
         $errors = $this->validator->validate($command);
@@ -84,7 +84,7 @@ final class DeleteProductCategoryHandler
         }
 
         /* Получаем событие */
-        $Event = $this->entityManager->getRepository(ProductCategoryEvent::class)->find(
+        $Event = $this->entityManager->getRepository(CategoryProductEvent::class)->find(
             $command->getEvent()
         );
 
@@ -93,7 +93,7 @@ final class DeleteProductCategoryHandler
             $uniqid = uniqid('', false);
             $errorsString = sprintf(
                 'Not found %s by id: %s',
-                ProductCategoryEvent::class,
+                CategoryProductEvent::class,
                 $command->getEvent()
             );
             $this->logger->error($uniqid.': '.$errorsString);
@@ -102,7 +102,7 @@ final class DeleteProductCategoryHandler
         }
 
         /* Получаем корень агрегата */
-        $Main = $this->entityManager->getRepository(ProductCategory::class)
+        $Main = $this->entityManager->getRepository(CategoryProduct::class)
             ->findOneBy(['event' => $command->getEvent()]);
 
         if(empty($Main))
@@ -110,7 +110,7 @@ final class DeleteProductCategoryHandler
             $uniqid = uniqid('', false);
             $errorsString = sprintf(
                 'Not found %s by event: %s',
-                ProductCategory::class,
+                CategoryProduct::class,
                 $command->getEvent()
             );
             $this->logger->error($uniqid.': '.$errorsString);

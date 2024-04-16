@@ -23,57 +23,40 @@
 
 namespace BaksDev\Products\Category\Repository\CategoryOffersForm;
 
-//use App\Module\Delivery\Entity\Delivery;
-//use App\Module\Product\Entity\Category;
-//use App\Module\Product\Entity\Category\Offers;
-//use App\Module\Product\Type\Category\Id\CategoryUid;
-//use BaksDev\UsersLevel\Type\Level\Event\LevelEvent;
-//use BaksDev\UsersProfile\Entity\Profile;
-//use BaksDev\UsersProfile\Type\Profile\Id\ProfileUid;
-//use BaksDev\UsersProfile\Type\Profile\Id\ProfileUidType;
-//use BaksDev\Core\Type\Locale\Locales;
+use BaksDev\Core\Doctrine\ORMQueryBuilder;
+use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
+use BaksDev\Products\Category\Entity\Offers\Trans\CategoryProductOffersTrans;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 
-use BaksDev\Products\Category\Entity;
-use BaksDev\Products\Category\Type\Id\CategoryUid;
-
-//use BaksDev\Products\Category\Type\Offers\Id\OffersUid;
-use BaksDev\Core\Type\Locale\Locale;
-
-//use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
-
-//use Doctrine\ORM\Query\ResultSetMapping;
-//use Doctrine\Persistence\ManagerRegistry;
-//use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class CategoryOffersFormRepository implements CategoryOffersFormInterface
 {
+    private ORMQueryBuilder $ORMQueryBuilder;
 
-	private EntityManagerInterface $entityManager;
-	
-	private TranslatorInterface $translator;
-	
-	
-	public function __construct(
-		EntityManagerInterface $entityManager,
-		TranslatorInterface $translator,
-	)
-	{
-		
-		$this->entityManager = $entityManager;
-		$this->translator = $translator;
-	}
-	
-	public function get(ProductCategoryUid $category) : ?CategoryOffersFormDTO
-	{
-	
-		$qb = $this->entityManager->createQueryBuilder();
-		
-		$select = sprintf(
-			'new %s(
+    public function __construct(ORMQueryBuilder $ORMQueryBuilder)
+    {
+        $this->ORMQueryBuilder = $ORMQueryBuilder;
+    }
+
+    public function findByCategory(CategoryProduct|CategoryProductUid|string $category): ?CategoryOffersFormDTO
+    {
+        if($category instanceof CategoryProduct)
+        {
+            $category = $category->getId();
+        }
+
+        if(is_string($category))
+        {
+            $category = new CategoryProductUid($category);
+        }
+
+        $orm = $this->ORMQueryBuilder
+            ->createQueryBuilder(self::class)
+            ->bindLocal();
+
+        $select = sprintf(
+            'new %s(
             offers.id,
             offers.reference,
             offers.image,
@@ -85,35 +68,34 @@ final class CategoryOffersFormRepository implements CategoryOffersFormInterface
             offers.postfix,
             offers_trans.postfix
         )',
-			CategoryOffersFormDTO::class
-		);
-		
-		$qb->select($select);
-		//$qb->select('offers');
-		
-		$qb->from(Entity\Offers\ProductCategoryOffers::class, 'offers');
-		$qb->join(Entity\ProductCategory::class, 'category', 'WITH', 'category.event = offers.event');
-		
-		//$qb->from(Entity\Category::class, 'category');
-		
-		//$qb->join(Entity\Offers\Offers::class, 'offers', 'WITH', '  offers.event = category.event');
-		
-		$qb->leftJoin(
-			Entity\Offers\Trans\ProductCategoryOffersTrans::class,
-			'offers_trans',
-			'WITH',
-			'offers_trans.offer = offers.id AND offers_trans.local = :locale'
-		);
-		
-		$qb->setParameter('locale', new Locale($this->translator->getLocale()), Locale::TYPE);
-		
-		$qb->where('category.id = :category');
-		$qb->setParameter('category', $category, ProductCategoryUid::TYPE);
-		
-		//dd($result);
-		
-		return $qb->getQuery()->getOneOrNullResult();
-		
-	}
+            CategoryOffersFormDTO::class
+        );
+
+        $orm->select($select);
+
+        $orm->from(CategoryProductOffers::class, 'offers');
+
+        $orm
+            ->join(
+                CategoryProduct::class,
+                'category',
+                'WITH', 'category.event = offers.event'
+            )
+            ->where('category.id = :category')
+            ->setParameter('category', $category, CategoryProductUid::TYPE);
+
+
+        $orm
+            ->leftJoin(
+                CategoryProductOffersTrans::class,
+                'offers_trans',
+                'WITH',
+                'offers_trans.offer = offers.id AND offers_trans.local = :local'
+            );
+
+
+        return $orm->getQuery()->getOneOrNullResult();
+
+    }
 
 }

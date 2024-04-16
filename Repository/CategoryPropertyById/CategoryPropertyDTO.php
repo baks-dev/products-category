@@ -25,21 +25,21 @@ namespace BaksDev\Products\Category\Repository\CategoryPropertyById;
 
 
 use BaksDev\Core\Type\Field\InputField;
-use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
-use BaksDev\Products\Category\Type\Section\Id\ProductCategorySectionUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
+use BaksDev\Products\Category\Type\Section\Id\CategoryProductSectionUid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class CategoryPropertyDTO
 {
 	
 	/** Идентификатор Секции */
-	public ProductCategorySectionUid $sectionUid;
+	public CategoryProductSectionUid $sectionUid;
 	
 	/** Перевод секции */
 	public string $sectionTrans;
 	
 	/** Идентификатор поля */
-	public ProductCategorySectionFieldUid $fieldUid;
+	public CategoryProductSectionFieldUid $fieldUid;
 	
 	/** Перевод поля */
 	public string $fieldTrans;
@@ -55,9 +55,9 @@ final class CategoryPropertyDTO
 	
 	
 	public function __construct(
-		ProductCategorySectionUid $sectionUid,
+		CategoryProductSectionUid $sectionUid,
 		string $sectionTrans,
-		ProductCategorySectionFieldUid $fieldUid,
+		CategoryProductSectionFieldUid $fieldUid,
 		string $fieldTrans,
 		InputField $fieldType,
 		bool $fieldRequired,

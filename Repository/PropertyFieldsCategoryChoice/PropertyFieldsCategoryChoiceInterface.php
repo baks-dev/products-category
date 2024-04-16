@@ -18,9 +18,9 @@
 
 namespace BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice;
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 
 interface PropertyFieldsCategoryChoiceInterface
 {
-    public function getPropertyFieldsCollection(ProductCategoryUid $category) : ?array;
+    public function getPropertyFieldsCollection(CategoryProductUid $category) : ?array;
 }

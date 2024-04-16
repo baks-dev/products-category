@@ -23,13 +23,16 @@
 
 namespace BaksDev\Products\Category\Repository\VariationByCategory;
 
-use BaksDev\Products\Category\Entity\Offers\Variation\ProductCategoryVariation;
-use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersUid;
+use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
+use BaksDev\Products\Category\Entity\Offers\Variation\CategoryProductVariation;
+use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
 
 interface VariationByOfferInterface
 {
     /**
      * Метод получает идентификатор настройки торгового предложения продукта в категории
      */
-    public function findProductCategoryVariation(ProductCategoryOffersUid $offer): ?ProductCategoryVariation;
+    public function findByOffer(
+        CategoryProductOffers|CategoryProductOffersUid|string $offer
+    ): ?CategoryProductVariation;
 }

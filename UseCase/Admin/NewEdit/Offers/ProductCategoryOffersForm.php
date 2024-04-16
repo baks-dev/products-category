@@ -151,7 +151,7 @@ final class ProductCategoryOffersForm extends AbstractType
 		$resolver->setDefaults
 		(
 			[
-				'data_class' => ProductCategoryOffersDTO::class,
+				'data_class' => CategoryProductOffersDTO::class,
 			]
 		);
 	}

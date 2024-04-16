@@ -25,13 +25,13 @@ declare(strict_types=1);
 
 namespace BaksDev\Products\Category\Repository\CategoryModificationForm;
 
-use BaksDev\Products\Category\Type\Offers\Modification\ProductCategoryModificationUid;
+use BaksDev\Products\Category\Type\Offers\Modification\CategoryProductModificationUid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class CategoryModificationFormDTO
 {
 	#[Assert\Uuid]
-	public ProductCategoryModificationUid $id;
+	public CategoryProductModificationUid $id;
 	
 	public string $name;
 	public ?string $reference;
@@ -43,7 +43,7 @@ final class CategoryModificationFormDTO
     public ?string $postfixName;
 
     public function __construct(
-		ProductCategoryModificationUid $id,
+		CategoryProductModificationUid $id,
 		?string $reference,
 		bool $image,
 		bool $price,

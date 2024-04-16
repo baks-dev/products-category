@@ -24,96 +24,105 @@
 namespace BaksDev\Products\Category\Repository\CategoryChoice;
 
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
-use BaksDev\Core\Type\Locale\Locale;
-use BaksDev\Products\Category\Entity;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
+use BaksDev\Products\Category\Entity\Info\CategoryProductInfo;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 
 final class CategoryChoiceRepository implements CategoryChoiceInterface
 {
-    private TranslatorInterface $translator;
+
     private ORMQueryBuilder $ORMQueryBuilder;
 
-
-    public function __construct(
-        ORMQueryBuilder $ORMQueryBuilder,
-        TranslatorInterface $translator,
-    )
+    public function __construct(ORMQueryBuilder $ORMQueryBuilder,)
     {
-        $this->translator = $translator;
         $this->ORMQueryBuilder = $ORMQueryBuilder;
     }
 
     /** Метод возвращает коллекцию категорий продукции */
-    public function getCategoryCollection(?ProductCategoryUid $category = null)
+    public function getCategoryCollection(?CategoryProductUid $category = null): ?array
     {
-        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class)->bindLocal();
+        $orm = $this
+            ->ORMQueryBuilder->createQueryBuilder(self::class)
+            ->bindLocal();
 
-        $select = sprintf('new %s(category.id, trans.name)', ProductCategoryUid::class);
+        $select = sprintf('new %s(category.id, trans.name)', CategoryProductUid::class);
 
-        $qb->select($select);
+        $orm->select($select);
 
-        $qb->from(Entity\ProductCategory::class, 'category', 'category.id');
+        $orm->from(CategoryProduct::class, 'category', 'category.id');
 
         /* Выбираем только активные */
-        $qb->join(
-            Entity\Info\ProductCategoryInfo::class,
+        $orm->join(
+            CategoryProductInfo::class,
             'info',
             'WITH',
             'info.event = category.event AND info.active = true',
         );
 
-        $qb->join(
-            Entity\Event\ProductCategoryEvent::class,
+        $orm->join(
+            CategoryProductEvent::class,
             'event',
             'WITH',
             'event.id = category.event AND event.category = category.id',
         );
-        $qb->leftJoin(
-            Entity\Trans\ProductCategoryTrans::class,
+        $orm->leftJoin(
+            CategoryProductTrans::class,
             'trans',
             'WITH',
             'trans.event = event.id AND trans.local = :local',
         );
 
         /* Кешируем результат ORM */
-        return $qb->enableCache('products-category', 86400)->getResult();
+        return $orm->enableCache('products-category', 86400)->getResult();
     }
 
 
     /**
      * Метод возвращает идентификатор категории с названием в аттрибуте
      */
-    public function getProductCategory(ProductCategoryUid $category) : ?ProductCategoryUid
+    public function getProductCategory(CategoryProduct|CategoryProductUid|string $category): ?CategoryProductUid
     {
-        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class)->bindLocal();
+        if($category instanceof CategoryProduct)
+        {
+            $category = $category->getId();
+        }
 
-        $select = sprintf('new %s(category.id, trans.name)', ProductCategoryUid::class);
+        if(is_string($category))
+        {
+            $category = new CategoryProductUid($category);
+        }
 
-        $qb->select($select);
+        $orm = $this->ORMQueryBuilder
+            ->createQueryBuilder(self::class)
+            ->bindLocal();
 
-        $qb
-            ->from(Entity\ProductCategory::class, 'category', 'category.id')
+        $select = sprintf('new %s(category.id, trans.name)', CategoryProductUid::class);
+
+        $orm->select($select);
+
+        $orm
+            ->from(CategoryProduct::class, 'category', 'category.id')
             ->where('category.id = :category')
-            ->setParameter('category', $category, ProductCategoryUid::TYPE)
-        ;
+            ->setParameter('category', $category, CategoryProductUid::TYPE);
 
         /* Выбираем только активные */
-        $qb->join(
-            Entity\Info\ProductCategoryInfo::class,
+        $orm->join(
+            CategoryProductInfo::class,
             'info',
             'WITH',
             'info.event = category.event AND info.active = true',
         );
 
-        $qb->join(
-            Entity\Event\ProductCategoryEvent::class,
+        $orm->join(
+            CategoryProductEvent::class,
             'event',
             'WITH',
             'event.id = category.event AND event.category = category.id',
         );
-        $qb->leftJoin(
-            Entity\Trans\ProductCategoryTrans::class,
+        $orm->leftJoin(
+            CategoryProductTrans::class,
             'trans',
             'WITH',
             'trans.event = event.id AND trans.local = :local',
@@ -121,6 +130,6 @@ final class CategoryChoiceRepository implements CategoryChoiceInterface
 
 
         /* Кешируем результат ORM */
-        return $qb->enableCache('products-category', 86400)->getOneOrNullResult();
+        return $orm->enableCache('products-category', 86400)->getOneOrNullResult();
     }
 }

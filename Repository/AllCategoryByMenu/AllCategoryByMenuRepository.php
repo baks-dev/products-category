@@ -26,7 +26,11 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\Repository\AllCategoryByMenu;
 
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
-use BaksDev\Products\Category\Entity as EntityCategory;
+use BaksDev\Products\Category\Entity\Cover\CategoryProductCover;
+use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
+use BaksDev\Products\Category\Entity\Info\CategoryProductInfo;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 
 final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
 {
@@ -34,102 +38,107 @@ final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
 
     public function __construct(
         DBALQueryBuilder $DBALQueryBuilder,
-    ) {
+    )
+    {
         $this->DBALQueryBuilder = $DBALQueryBuilder;
     }
 
     /**
-     * Метод возвращает все категории и их вложенные для двухуровнего меню
+     * Метод возвращает все категории и их вложенные для двухуровневого меню
      */
-    public function fetchAllCatalogMenuAssociative(): array
+    public function findAll(): array
     {
-        $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class);
-        $qb->bindLocal();
+        $dbal = $this->DBALQueryBuilder
+            ->createQueryBuilder(self::class)
+            ->bindLocal();
 
         /* Категория */
-        $qb->select('category.id');
-        $qb->addSelect('category.event AS event');
-        $qb->from(EntityCategory\ProductCategory::TABLE, 'category');
+        $dbal
+            ->select('category.id')
+            ->addSelect('category.event AS event')
+            ->from(CategoryProduct::class, 'category');
 
         /* События категории */
-        $qb->addSelect('category_event.sort AS category_sort');
-        $qb->addSelect('category_event.parent AS category_parent');
+        $dbal
+            ->addSelect('category_event.sort AS category_sort')
+            ->addSelect('category_event.parent AS category_parent')
+            ->join(
+                'category',
+                CategoryProductEvent::class,
+                'category_event',
+                'category_event.id = category.event AND category_event.parent IS NULL'
+            );
 
-        $qb->join(
-            'category',
-            EntityCategory\Event\ProductCategoryEvent::TABLE,
-            'category_event',
-            'category_event.id = category.event AND category_event.parent IS NULL'
-        );
-
-        $qb->addSelect('category_info.url AS category_url');
-        $qb->join(
-            'category_event',
-            EntityCategory\Info\ProductCategoryInfo::TABLE,
-            'category_info',
-            'category_info.event = category.event AND category_info.active = true'
-        );
+        $dbal
+            ->addSelect('category_info.url AS category_url')
+            ->join(
+                'category_event',
+                CategoryProductInfo::class,
+                'category_info',
+                'category_info.event = category.event AND category_info.active = true'
+            );
 
         /* Обложка */
-        $qb->addSelect('category_cover.ext AS category_cover_ext');
-        $qb->addSelect('category_cover.cdn AS category_cover_cdn');
-
-        $qb->addSelect("
+        $dbal
+            ->addSelect('category_cover.ext AS category_cover_ext')
+            ->addSelect('category_cover.cdn AS category_cover_cdn')
+            ->addSelect("
 			CASE
 			 WHEN category_cover.name IS NOT NULL THEN
-					CONCAT ( '/upload/".EntityCategory\Cover\ProductCategoryCover::TABLE."' , '/', category_cover.name)
+					CONCAT ( '/upload/".$dbal->table(CategoryProductCover::class)."' , '/', category_cover.name)
 			   		ELSE NULL
 			END AS category_cover_dir
 		"
-        );
-        
-        $qb->leftJoin(
-            'category_event',
-            EntityCategory\Cover\ProductCategoryCover::TABLE,
-            'category_cover',
-            'category_cover.event = category_event.id'
-        );
+            );
+
+        $dbal
+            ->leftJoin(
+                'category_event',
+                CategoryProductCover::class,
+                'category_cover',
+                'category_cover.event = category_event.id'
+            );
 
         /* Перевод категории */
-        $qb->addSelect('category_trans.name AS category_name');
-        $qb->addSelect('category_trans.description AS category_description');
-
-        $qb->leftJoin(
-            'category_event',
-            EntityCategory\Trans\ProductCategoryTrans::TABLE,
-            'category_trans',
-            'category_trans.event = category_event.id AND category_trans.local = :local'
-        );
+        $dbal
+            ->addSelect('category_trans.name AS category_name')
+            ->addSelect('category_trans.description AS category_description')
+            ->leftJoin(
+                'category_event',
+                CategoryProductTrans::class,
+                'category_trans',
+                'category_trans.event = category_event.id AND category_trans.local = :local'
+            );
 
         /* ВЛОЖЕННЫЕ РАЗДЕЛЫ */
 
-        // $qb->addSelect('parent_category_event.id AS parent_event');
-        $qb->leftJoin('category',
-            EntityCategory\Event\ProductCategoryEvent::TABLE,
+        // $dbal->addSelect('parent_category_event.id AS parent_event');
+        $dbal->leftJoin('category',
+            CategoryProductEvent::class,
             'parent_category_event',
             'parent_category_event.parent = category.id'
         );
 
-        $qb->leftJoin('parent_category_event',
-            EntityCategory\Info\ProductCategoryInfo::TABLE,
+        $dbal->leftJoin('parent_category_event',
+            CategoryProductInfo::class,
             'parent_category_info',
             'parent_category_info.event = parent_category_event.id'
         );
 
-        $qb->leftJoin('parent_category_event',
-            EntityCategory\Cover\ProductCategoryCover::TABLE,
+        $dbal->leftJoin('parent_category_event',
+            CategoryProductCover::class,
             'parent_category_cover',
             'parent_category_cover.event = parent_category_event.id'
         );
 
-        // $qb->addSelect('parent_category_trans.name AS parent_category_name');
-        $qb->leftJoin('parent_category_event',
-            EntityCategory\Trans\ProductCategoryTrans::TABLE,
+        // $dbal->addSelect('parent_category_trans.name AS parent_category_name');
+        $dbal->leftJoin('parent_category_event',
+            CategoryProductTrans::class,
             'parent_category_trans',
             'parent_category_trans.event = parent_category_event.id  AND parent_category_trans.local = :local'
         );
 
-        $qb->addSelect("JSON_AGG
+        $dbal->addSelect("JSON_AGG
 		( DISTINCT
 			
 				JSONB_BUILD_OBJECT
@@ -139,11 +148,12 @@ final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
 					'parent_category_url', parent_category_info.url,
 					'parent_category_counter', parent_category_info.counter,
 					
-					'parent_category_cover_name', CASE
-												 WHEN parent_category_cover.name IS NOT NULL THEN
-														CONCAT ( '/upload/".EntityCategory\Cover\ProductCategoryCover::TABLE."' , '/', parent_category_cover.name)
-														ELSE NULL
-												END,
+					'parent_category_cover_name', 
+					CASE 
+					    WHEN parent_category_cover.name IS NOT NULL 
+					    THEN CONCAT ( '/upload/".$dbal->table(CategoryProductCover::class)."' , '/', parent_category_cover.name)
+					    ELSE NULL
+					END,
 					
 					'parent_category_cover_ext', parent_category_cover.ext,
 					'parent_category_cover_cdn', parent_category_cover.cdn,
@@ -155,14 +165,14 @@ final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
 			AS parent_category"
         );
 
-        $qb->orderBy('category_event.sort', 'ASC');
+        $dbal->orderBy('category_event.sort', 'ASC');
 
         /* Группировка  */
-        $qb->allGroupByExclude();
+        $dbal->allGroupByExclude();
 
 
         /* Кешируем результат DBAL */
-        return $qb
+        return $dbal
             ->enableCache('products-category', 86400)
             ->fetchAllAssociativeIndexed();
 

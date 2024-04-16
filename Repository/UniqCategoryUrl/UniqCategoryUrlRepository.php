@@ -25,32 +25,29 @@ declare(strict_types=1);
 
 namespace BaksDev\Products\Category\Repository\UniqCategoryUrl;
 
-use BaksDev\Products\Category\Entity\Info\ProductCategoryInfo;
-use BaksDev\Products\Category\Type\Event\ProductCategoryEventUid;
-use Doctrine\DBAL\Connection;
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
+use BaksDev\Products\Category\Entity\Info\CategoryProductInfo;
+use BaksDev\Products\Category\Type\Event\CategoryProductEventUid;
 
 final class UniqCategoryUrlRepository implements UniqCategoryUrlInterface
 {
-	private Connection $connection;
-	
-	public function __construct(Connection $connection)
+    private DBALQueryBuilder $DBALQueryBuilder;
+
+    public function __construct(DBALQueryBuilder $DBALQueryBuilder) {
+        $this->DBALQueryBuilder = $DBALQueryBuilder;
+    }
+
+    public function exist(string $url, CategoryProductEventUid $event) : bool
 	{
-		$this->connection = $connection;
-	}
-	
-	public function exist(string $url, ProductCategoryEventUid $event) : bool
-	{
-		$qbSub = $this->connection->createQueryBuilder();
-		$qbSub->select('1');
-		$qbSub->from(ProductCategoryInfo::TABLE, 'info');
-		$qbSub->where('info.url = :url');
-		$qbSub->andWhere('info.event != :event');
-		
-		$qb = $this->connection->createQueryBuilder();
-		$qb->select('EXISTS('.$qbSub->getSQL().')');
-		$qb->setParameter('url', $url);
-		$qb->setParameter('event', $event);
-		
-		return (bool) $qb->executeQuery()->fetchOne();
+		$dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class);
+
+		$dbal->from(CategoryProductInfo::class, 'info');
+		$dbal->where('info.url = :url');
+		$dbal->andWhere('info.event != :event');
+
+        $dbal->setParameter('url', $url);
+        $dbal->setParameter('event', $event);
+
+        return  $dbal->fetchExist();
 	}
 }

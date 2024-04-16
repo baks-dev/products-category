@@ -24,47 +24,39 @@
 namespace BaksDev\Products\Category\Repository\CategoryVariationForm;
 
 
-
-use BaksDev\Core\Type\Locale\Locale;
-use BaksDev\Products\Category\Entity;
-use BaksDev\Products\Category\Type\Id\CategoryUid;
-use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersUid;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-
-//use BaksDev\Products\Category\Type\Offers\Id\OffersUid;
-
-//use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-
-//use Doctrine\ORM\Query\ResultSetMapping;
-//use Doctrine\Persistence\ManagerRegistry;
-//use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use BaksDev\Core\Doctrine\ORMQueryBuilder;
+use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
+use BaksDev\Products\Category\Entity\Offers\Variation\CategoryProductVariation;
+use BaksDev\Products\Category\Entity\Offers\Variation\Trans\CategoryProductVariationTrans;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
 
 final class CategoryVariationFormRepository implements CategoryVariationFormInterface
 {
 
-	private EntityManagerInterface $entityManager;
-	
-	private TranslatorInterface $translator;
-	
-	
-	public function __construct(
-		EntityManagerInterface $entityManager,
-		TranslatorInterface $translator,
-	)
-	{
-		
-		$this->entityManager = $entityManager;
-		$this->translator = $translator;
-	}
-	
-	public function get(ProductCategoryOffersUid $offer) : ?CategoryVariationFormDTO
-	{
-		//$locale = new Locale($this->translator->getLocale());
-		
-		$qb = $this->entityManager->createQueryBuilder();
-		$select = sprintf(
-			'new %s(
+    private ORMQueryBuilder $ORMQueryBuilder;
+
+    public function __construct(ORMQueryBuilder $ORMQueryBuilder)
+    {
+        $this->ORMQueryBuilder = $ORMQueryBuilder;
+    }
+
+    public function findByOffer(CategoryProductOffers|CategoryProductOffersUid|string $offer): ?CategoryVariationFormDTO
+    {
+        if($offer instanceof CategoryProductOffers)
+        {
+            $offer = $offer->getId();
+        }
+
+        if(is_string($offer))
+        {
+            $offer = new CategoryProductOffersUid($offer);
+        }
+
+        $orm = $this->ORMQueryBuilder->createQueryBuilder(self::class)->bindLocal();
+
+        $select = sprintf(
+            'new %s(
             variation.id,
             variation.reference,
             variation.image,
@@ -76,31 +68,40 @@ final class CategoryVariationFormRepository implements CategoryVariationFormInte
             variation.postfix,
             variation_trans.postfix
         )',
-			CategoryVariationFormDTO::class
-		);
-		
-		$qb->select($select);
-	
-		$qb->from(Entity\Offers\Variation\ProductCategoryVariation::class, 'variation');
-		
-		$qb->join(Entity\Offers\ProductCategoryOffers::class, 'offer', 'WITH', 'offer.id = variation.offer');
-		
-		$qb->join(Entity\ProductCategory::class, 'category', 'WITH', 'category.event = offer.event');
-		
+            CategoryVariationFormDTO::class
+        );
 
-		$qb->leftJoin(
-			Entity\Offers\Variation\Trans\ProductCategoryVariationTrans::class,
-			'variation_trans',
-			'WITH',
-			'variation_trans.variation = variation.id AND variation_trans.local = :locale'
-		);
-		
-		$qb->setParameter('locale', new Locale($this->translator->getLocale()), Locale::TYPE);
-		
-		$qb->where('offer.id = :offer');
-		$qb->setParameter('offer', $offer, ProductCategoryOffersUid::TYPE);
-		
-		return $qb->getQuery()->getOneOrNullResult();
-		
-	}
+        $orm->select($select);
+
+        $orm
+            ->from(CategoryProductVariation::class, 'variation')
+            ->where('variation.offer = :offer')
+            ->setParameter('offer', $offer, CategoryProductOffersUid::TYPE);
+
+        $orm->join(
+            CategoryProductOffers::class,
+            'offer',
+            'WITH',
+            'offer.id = variation.offer'
+        );
+
+        $orm->join(
+            CategoryProduct::class,
+            'category',
+            'WITH',
+            'category.event = offer.event'
+        );
+
+
+        $orm->leftJoin(
+            CategoryProductVariationTrans::class,
+            'variation_trans',
+            'WITH',
+            'variation_trans.variation = variation.id AND variation_trans.local = :local'
+        );
+
+
+        return $orm->getQuery()->getOneOrNullResult();
+
+    }
 }

@@ -23,11 +23,14 @@
 
 namespace BaksDev\Products\Category\Repository\ModificationFieldsCategoryChoice;
 
-use BaksDev\Products\Category\Type\Offers\Modification\ProductCategoryModificationUid;
-use BaksDev\Products\Category\Type\Offers\Variation\ProductCategoryVariationUid;
+use BaksDev\Products\Category\Entity\Offers\Variation\CategoryProductVariation;
+use BaksDev\Products\Category\Type\Offers\Modification\CategoryProductModificationUid;
+use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
 
 interface ModificationFieldsCategoryChoiceInterface
 {
-	public function getModificationFieldType(ProductCategoryVariationUid $variation) : ?ProductCategoryModificationUid;
-	
+    public function findByVariation(
+        CategoryProductVariation|CategoryProductVariationUid|string $variation
+    ): ?CategoryProductModificationUid;
+
 }

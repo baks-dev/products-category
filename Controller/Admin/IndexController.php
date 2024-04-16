@@ -27,9 +27,9 @@ use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Form\Search\SearchForm;
 use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
-use BaksDev\Products\Category\Entity\ProductCategory;
+use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Repository\AllCategory\AllCategoryInterface;
-use BaksDev\Products\Category\Type\Parent\ProductParentCategoryUid;
+use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,7 +45,7 @@ final class IndexController extends AbstractController
     public function index(
         Request $request,
         AllCategoryInterface $allCategory,
-        #[MapEntity] ?ProductCategory $cat = null,
+        #[MapEntity] ?CategoryProduct $cat = null,
         int $page = 0,
     ): Response
     {
@@ -55,8 +55,10 @@ final class IndexController extends AbstractController
         $searchForm->handleRequest($request);
 
         // Получаем список
-        $parent = $cat ? new ProductParentCategoryUid($cat->getId()) : null;
-        $query = $allCategory->fetchProductParentAllAssociative($search, $parent);
+        $parent = $cat ? new ParentCategoryProductUid($cat->getId()) : null;
+        $query = $allCategory
+            ->search($search)
+            ->fetchProductParentAllAssociative($parent);
 
         return $this->render(
             [

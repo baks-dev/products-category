@@ -64,7 +64,7 @@ final class CategoryTransForm extends AbstractType
 		$resolver->setDefaults
 		(
 			[
-				'data_class' => CategoryTransDTO::class,
+				'data_class' => CategoryProductTransDTO::class,
 			]
 		);
 	}

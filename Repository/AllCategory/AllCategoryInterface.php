@@ -26,10 +26,13 @@ namespace BaksDev\Products\Category\Repository\AllCategory;
 
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
-use BaksDev\Products\Category\Type\Parent\ProductParentCategoryUid;
+use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
 
 interface AllCategoryInterface
 {
+
+    public function search(SearchDTO $search): self;
+
 	/** Возвращает список категорий с ключами:
 	 *
 	 * id - идентификатор <br>
@@ -46,9 +49,6 @@ interface AllCategoryInterface
 	 *
 	 */
 	
-	public function fetchProductParentAllAssociative(
-		SearchDTO $search,
-		?ProductParentCategoryUid $parent
-	) : PaginatorInterface;
+	public function fetchProductParentAllAssociative(?ParentCategoryProductUid $parent = null) : PaginatorInterface;
 	
 }

@@ -24,11 +24,11 @@
 namespace BaksDev\Products\Category\Repository\CategoryOffersForm;
 
 use BaksDev\Products\Category\Type\Offers\Id\OffersUid;
-use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersUid;
+use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
 
 final class CategoryOffersFormDTO
 {
-	public ProductCategoryOffersUid $id;
+	public CategoryProductOffersUid $id;
 	
 	public string $name;
 	public ?string $reference;
@@ -42,7 +42,7 @@ final class CategoryOffersFormDTO
 
 
     public function __construct(
-		ProductCategoryOffersUid $id,
+		CategoryProductOffersUid $id,
 		?string $reference,
 		bool $image,
 		bool $price,

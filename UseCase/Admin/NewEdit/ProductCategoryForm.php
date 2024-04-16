@@ -24,7 +24,7 @@
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit;
 
 use BaksDev\Products\Category\Repository\ParentCategoryChoiceForm\ParentCategoryChoiceInterface;
-use BaksDev\Products\Category\Type\Parent\ProductParentCategoryUid;
+use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -62,11 +62,11 @@ final class ProductCategoryForm extends AbstractType
 			[
 				'label' => false,
 				'required' => false,
-				'choices' => $this->categoryParent->get(),
-				'choice_value' => function(?ProductParentCategoryUid $type){
+				'choices' => $this->categoryParent->findAll(),
+				'choice_value' => function(?ParentCategoryProductUid $type){
 					return $type?->getValue();
 				},
-				'choice_label' => function(ProductParentCategoryUid $type){
+				'choice_label' => function(ParentCategoryProductUid $type){
 					return  ($type->isParent() ? ' - ' : '') . $type->getOption();
 				},
 			]
@@ -148,7 +148,7 @@ final class ProductCategoryForm extends AbstractType
 		$resolver->setDefaults
 		(
 			[
-				'data_class' => ProductCategoryDTO::class,
+				'data_class' => CategoryProductDTO::class,
 				'method' => 'POST',
 				'attr' => ['class' => 'w-100'],
 			]

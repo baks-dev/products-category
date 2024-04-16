@@ -25,36 +25,58 @@ declare(strict_types=1);
 
 namespace BaksDev\Products\Category\Repository\OfferByCategory;
 
-use BaksDev\Products\Category\Entity\Offers\ProductCategoryOffers;
-use BaksDev\Products\Category\Entity\ProductCategory;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Core\Doctrine\ORMQueryBuilder;
+use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class OfferByCategoryRepository implements OfferByCategoryInterface
 {
 
-    private EntityManagerInterface $entityManager;
+    private ORMQueryBuilder $ORMQueryBuilder;
 
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ORMQueryBuilder $ORMQueryBuilder)
     {
-        $this->entityManager = $entityManager;
+        $this->ORMQueryBuilder = $ORMQueryBuilder;
     }
-
 
     /**
      * Метод получает идентификатор настройки торгового предложения продукта в категории
      */
-    public function findProductCategoryOffer(ProductCategoryUid $category): ?ProductCategoryOffers
+    public function findProductCategoryOffer(
+        CategoryProduct|CategoryProductUid|string $category
+    ): ?CategoryProductOffers
     {
-        $qb = $this->entityManager->createQueryBuilder();
 
-        $qb->select('offer');
-        $qb->from(ProductCategory::class, 'category');
-        $qb->leftJoin(ProductCategoryOffers::class, 'offer', 'WITH', 'offer.event = category.event');
-        $qb->where('category.id = :category');
-        $qb->setParameter('category', $category, ProductCategoryUid::TYPE);
+        if($category instanceof CategoryProduct)
+        {
+            $category = $category->getId();
+        }
 
-        return $qb->getQuery()->getOneOrNullResult();
+        if(is_string($category))
+        {
+            $category = new CategoryProductUid($category);
+        }
+
+        $orm = $this->ORMQueryBuilder->createQueryBuilder(self::class);
+
+        $orm->select('offer');
+
+        $orm
+            ->from(CategoryProduct::class, 'category')
+            ->where('category.id = :category')
+            ->setParameter('category', $category, CategoryProductUid::TYPE);
+
+
+        $orm->leftJoin(
+            CategoryProductOffers::class,
+            'offer',
+            'WITH',
+            'offer.event = category.event'
+        );
+
+
+        return $orm->getQuery()->getOneOrNullResult();
     }
 }

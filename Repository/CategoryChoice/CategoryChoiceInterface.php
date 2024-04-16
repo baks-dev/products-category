@@ -23,7 +23,7 @@
 
 namespace BaksDev\Products\Category\Repository\CategoryChoice;
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 
 interface CategoryChoiceInterface
 {
@@ -32,5 +32,5 @@ interface CategoryChoiceInterface
     /**
      * Метод возвращает идентификатор категории с названием в аттрибуте
      */
-    public function getProductCategory(ProductCategoryUid $category) : ?ProductCategoryUid;
+    public function getProductCategory(CategoryProductUid $category) : ?CategoryProductUid;
 }

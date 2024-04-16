@@ -18,8 +18,8 @@
 
 namespace BaksDev\Products\Category\Controller\Admin\Tests;
 
-use BaksDev\Products\Category\Entity\ProductCategory;
-use BaksDev\Products\Category\Type\Event\ProductCategoryEventUid;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Type\Event\CategoryProductEventUid;
 use BaksDev\Users\User\Tests\TestUserAccount;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -33,12 +33,12 @@ final class DeleteControllerTest extends WebTestCase
 
     private const ROLE = 'ROLE_PRODUCT_CATEGORY_DELETE';
 
-    private static ?ProductCategoryEventUid $identifier = null;
+    private static ?CategoryProductEventUid $identifier = null;
 
     public static function setUpBeforeClass(): void
     {
         $em = self::getContainer()->get(EntityManagerInterface::class);
-        self::$identifier = $em->getRepository(ProductCategory::class)->findOneBy([], ['id' => 'DESC'])?->getEvent();
+        self::$identifier = $em->getRepository(CategoryProduct::class)->findOneBy([], ['id' => 'DESC'])?->getEvent();
 
         $em->clear();
         //$em->close();

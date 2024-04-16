@@ -25,21 +25,21 @@ declare(strict_types=1);
 
 namespace BaksDev\Products\Category\Messenger;
 
-use BaksDev\Products\Category\Type\Event\ProductCategoryEventUid;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Event\CategoryProductEventUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 
 final class ProductCategoryMessage
 {
 	/** Идентификатор */
-	private ProductCategoryUid $id;
+	private CategoryProductUid $id;
 	
 	/** Идентификатор события */
-	private ProductCategoryEventUid $event;
+	private CategoryProductEventUid $event;
 	
 	/** Идентификатор предыдущего события */
-	private ?ProductCategoryEventUid $last;
+	private ?CategoryProductEventUid $last;
 	
-	public function __construct(ProductCategoryUid $id, ProductCategoryEventUid $event, ?ProductCategoryEventUid $last = null)
+	public function __construct(CategoryProductUid $id, CategoryProductEventUid $event, ?CategoryProductEventUid $last = null)
 	{
 		$this->last = $last;
 		$this->id = $id;
@@ -49,7 +49,7 @@ final class ProductCategoryMessage
 	
 	/** Идентификатор */
 	
-	public function getId() : ProductCategoryUid
+	public function getId() : CategoryProductUid
 	{
 		return $this->id;
 	}
@@ -57,7 +57,7 @@ final class ProductCategoryMessage
 	
 	/** Идентификатор события */
 	
-	public function getEvent() : ProductCategoryEventUid
+	public function getEvent() : CategoryProductEventUid
 	{
 		return $this->event;
 	}
@@ -65,7 +65,7 @@ final class ProductCategoryMessage
 	
 	/** Идентификатор предыдущего события */
 	
-	public function getLast() : ?ProductCategoryEventUid
+	public function getLast() : ?CategoryProductEventUid
 	{
 		return $this->last;
 	}

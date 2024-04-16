@@ -23,9 +23,10 @@
 
 namespace BaksDev\Products\Category\Repository\CategoryPropertyById;
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Products\Product\Entity\Category\ProductCategory;
 
 interface CategoryPropertyByIdInterface
 {
-	public function get(ProductCategoryUid $categoryUid) : ?array;
+	public function findByCategory(CategoryProductUid|string $category) : ?array;
 }

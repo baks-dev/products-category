@@ -166,7 +166,7 @@ final class SectionFieldCollectionForm extends AbstractType
 		$resolver->setDefaults
 		(
 			[
-				'data_class' => SectionFieldCollectionDTO::class,
+				'data_class' => ProductSectionFieldCollectionDTO::class,
 			]
 		);
 	}

@@ -23,11 +23,16 @@
 
 namespace BaksDev\Products\Category\Repository\OfferByCategory;
 
-use BaksDev\Products\Category\Entity\Offers\ProductCategoryOffers;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 
 interface OfferByCategoryInterface
 {
-
-    public function findProductCategoryOffer(ProductCategoryUid $category): ?ProductCategoryOffers;
+    /**
+     * Метод получает идентификатор настройки торгового предложения продукта в категории
+     */
+    public function findProductCategoryOffer(
+        CategoryProduct|CategoryProductUid|string $category
+    ): ?CategoryProductOffers;
 }

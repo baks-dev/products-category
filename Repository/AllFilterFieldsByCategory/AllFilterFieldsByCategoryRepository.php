@@ -26,11 +26,11 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\Repository\AllFilterFieldsByCategory;
 
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
-use BaksDev\Products\Category\Entity\ProductCategory;
-use BaksDev\Products\Category\Entity\Section\Field\ProductCategorySectionField;
-use BaksDev\Products\Category\Entity\Section\Field\Trans\ProductCategorySectionFieldTrans;
-use BaksDev\Products\Category\Entity\Section\ProductCategorySection;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Entity\Section\Field\CategoryProductSectionField;
+use BaksDev\Products\Category\Entity\Section\Field\Trans\CategoryProductSectionFieldTrans;
+use BaksDev\Products\Category\Entity\Section\CategoryProductSection;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 
 final class AllFilterFieldsByCategoryRepository implements AllFilterFieldsByCategoryInterface
 {
@@ -43,23 +43,31 @@ final class AllFilterFieldsByCategoryRepository implements AllFilterFieldsByCate
     }
 
     /**
-     * Метод возвращает все свойства, учавствующие в фильтре
+     * Метод возвращает все свойства, участвующие в фильтре
      */
 
-    public function fetchAllFilterCategoryFieldsAssociative(ProductCategoryUid $category): array
+    public function findAllByCategory(CategoryProduct|CategoryProductUid|string $category): array
     {
+        if ($category instanceof CategoryProduct) {
+            $category = $category->getId();
+        }
+
+        if (is_string($category)) {
+            $category = new CategoryProductUid($category);
+        }
+
         $qb = $this->DBALQueryBuilder
             ->createQueryBuilder(self::class)
             ->bindLocal();
 
         $qb
-            ->from(ProductCategory::TABLE, 'category')
+            ->from(CategoryProduct::TABLE, 'category')
             ->where('category.id = :category')
             ->setParameter('category', $category);
 
         $qb
             ->leftJoin('category',
-                ProductCategorySection::TABLE,
+                CategoryProductSection::TABLE,
                 'category_section',
                 'category_section.event = category.event'
             );
@@ -69,7 +77,7 @@ final class AllFilterFieldsByCategoryRepository implements AllFilterFieldsByCate
             ->addSelect('category_section_field.type')
             ->leftJoin(
                 'category_section',
-                ProductCategorySectionField::TABLE,
+                CategoryProductSectionField::TABLE,
                 'category_section_field',
                 'category_section_field.section = category_section.id AND category_section_field.filter = TRUE'
             );
@@ -78,7 +86,7 @@ final class AllFilterFieldsByCategoryRepository implements AllFilterFieldsByCate
         $qb
             ->addSelect('category_section_field_trans.name')
             ->leftJoin('category_section_field',
-                ProductCategorySectionFieldTrans::TABLE,
+                CategoryProductSectionFieldTrans::TABLE,
                 'category_section_field_trans',
                 'category_section_field_trans.field = category_section_field.id AND category_section_field_trans.local = :local'
             );

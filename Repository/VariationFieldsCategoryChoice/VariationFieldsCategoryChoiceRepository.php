@@ -27,62 +27,59 @@ namespace BaksDev\Products\Category\Repository\VariationFieldsCategoryChoice;
 
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
 use BaksDev\Core\Type\Locale\Locale;
-use BaksDev\Products\Category\Entity as ProductCategoryEntity;
-use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersUid;
-use BaksDev\Products\Category\Type\Offers\Variation\ProductCategoryVariationUid;
+use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
+use BaksDev\Products\Category\Entity\Offers\Variation\CategoryProductVariation;
+use BaksDev\Products\Category\Entity\Offers\Variation\Trans\CategoryProductVariationTrans;
+use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
+use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 
 final class VariationFieldsCategoryChoiceRepository implements VariationFieldsCategoryChoiceInterface
 {
-
-    private TranslatorInterface $translator;
     private ORMQueryBuilder $ORMQueryBuilder;
 
-
     public function __construct(
-        ORMQueryBuilder $ORMQueryBuilder,
-        TranslatorInterface $translator,
+        ORMQueryBuilder $ORMQueryBuilder
     )
     {
-
-        $this->translator = $translator;
         $this->ORMQueryBuilder = $ORMQueryBuilder;
     }
 
-
-    public function getVariationFieldType(ProductCategoryOffersUid $offer): ?ProductCategoryVariationUid
+    public function getVariationFieldType(CategoryProductOffersUid $offer): ?CategoryProductVariationUid
     {
-        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class);
+        $qb = $this->ORMQueryBuilder
+            ->createQueryBuilder(self::class)
+            ->bindLocal();
 
-        $qb->setParameter('local', new Locale($this->translator->getLocale()), Locale::TYPE);
+        $select = sprintf(
+            'new %s(variation.id, trans.name, variation.reference)',
+            CategoryProductVariationUid::class
+        );
 
-        $select = sprintf('new %s(variation.id, trans.name, variation.reference)', ProductCategoryVariationUid::class);
         $qb->select($select);
 
-        $qb->from(ProductCategoryEntity\Offers\ProductCategoryOffers::class, 'offer');
+        $qb
+            ->from(CategoryProductOffers::class, 'offer')
+            ->where('offer.id = :offer')
+            ->setParameter('offer', $offer, CategoryProductOffersUid::TYPE);
 
         $qb->join(
-            ProductCategoryEntity\Offers\Variation\ProductCategoryVariation::class,
+            CategoryProductVariation::class,
             'variation',
             'WITH',
             'variation.offer = offer.id'
         );
 
         $qb->leftJoin(
-            ProductCategoryEntity\Offers\Variation\Trans\ProductCategoryVariationTrans::class,
+            CategoryProductVariationTrans::class,
             'trans',
             'WITH',
             'trans.variation = variation.id AND trans.local = :local'
         );
 
-        $qb->where('offer.id = :offer');
-        $qb->setParameter('offer', $offer, ProductCategoryOffersUid::TYPE);
-
-
         /* Кешируем результат ORM */
-        return $qb->enableCache('products-product', 86400)->getOneOrNullResult();
+        return $qb->enableCache('products-category', 86400)->getOneOrNullResult();
 
     }
-
 }

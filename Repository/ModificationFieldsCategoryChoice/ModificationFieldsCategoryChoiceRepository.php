@@ -26,63 +26,71 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\Repository\ModificationFieldsCategoryChoice;
 
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
-use BaksDev\Core\Type\Locale\Locale;
-use BaksDev\Products\Category\Entity as ProductCategoryEntity;
-use BaksDev\Products\Category\Type\Offers\Modification\ProductCategoryModificationUid;
-use BaksDev\Products\Category\Type\Offers\Variation\ProductCategoryVariationUid;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use BaksDev\Products\Category\Entity\Offers\Variation\Modification\CategoryProductModification;
+use BaksDev\Products\Category\Entity\Offers\Variation\Modification\Trans\CategoryProductModificationTrans;
+use BaksDev\Products\Category\Entity\Offers\Variation\CategoryProductVariation;
+use BaksDev\Products\Category\Type\Offers\Modification\CategoryProductModificationUid;
+use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
 
 final class ModificationFieldsCategoryChoiceRepository implements ModificationFieldsCategoryChoiceInterface
 {
 
-    private TranslatorInterface $translator;
     private ORMQueryBuilder $ORMQueryBuilder;
 
-
     public function __construct(
-        ORMQueryBuilder $ORMQueryBuilder,
-        TranslatorInterface $translator,
+        ORMQueryBuilder $ORMQueryBuilder
     )
     {
-
-        $this->translator = $translator;
         $this->ORMQueryBuilder = $ORMQueryBuilder;
     }
 
 
-    public function getModificationFieldType(ProductCategoryVariationUid $variation): ?ProductCategoryModificationUid
+    public function findByVariation(
+        CategoryProductVariation|CategoryProductVariationUid|string $variation
+    ): ?CategoryProductModificationUid
     {
-        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class);
+        if($variation instanceof CategoryProductVariation)
+        {
+            $variation = $variation->getId();
+        }
 
-        $qb->setParameter('local', new Locale($this->translator->getLocale()), Locale::TYPE);
+        if(is_string($variation))
+        {
+            $variation = new CategoryProductVariationUid($variation);
+        }
+
+        $orm = $this->ORMQueryBuilder
+            ->createQueryBuilder(self::class)
+            ->bindLocal();
 
         $select = sprintf('new %s(modification.id, trans.name, modification.reference)',
-            ProductCategoryModificationUid::class
+            CategoryProductModificationUid::class
         );
-        $qb->select($select);
+        $orm->select($select);
 
-        $qb->from(ProductCategoryEntity\Offers\Variation\ProductCategoryVariation::class, 'variation');
+        $orm
+            ->from(CategoryProductVariation::class, 'variation')
+            ->where('variation.id = :variation')
+            ->setParameter('variation', $variation, CategoryProductVariationUid::TYPE);
 
-        $qb->join(
-            ProductCategoryEntity\Offers\Variation\Modification\ProductCategoryModification::class,
+
+        $orm->join(
+            CategoryProductModification::class,
             'modification',
             'WITH',
             'modification.variation = variation.id'
         );
 
-        $qb->leftJoin(
-            ProductCategoryEntity\Offers\Variation\Modification\Trans\ProductCategoryModificationTrans::class,
+        $orm->leftJoin(
+            CategoryProductModificationTrans::class,
             'trans',
             'WITH',
             'trans.modification = modification.id AND trans.local = :local'
         );
 
-        $qb->where('variation.id = :variation');
-        $qb->setParameter('variation', $variation, ProductCategoryVariationUid::TYPE);
-
 
         /* Кешируем результат ORM */
-        return $qb->enableCache('products-product', 86400)->getOneOrNullResult();
+        return $orm->enableCache('products-category', 86400)->getOneOrNullResult();
 
     }
 

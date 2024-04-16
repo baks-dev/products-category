@@ -65,7 +65,7 @@ final class ProductCategoryOffersVariationModificationTransForm extends Abstract
 	public function configureOptions(OptionsResolver $resolver) : void
 	{
 		$resolver->setDefaults([
-			'data_class' => ProductCategoryModificationTransDTO::class,
+			'data_class' => CategoryProductModificationTransDTO::class,
 		]);
 	}
 }

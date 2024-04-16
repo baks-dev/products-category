@@ -51,7 +51,7 @@ final class ProductCategoryCoverForm extends AbstractType
 		$resolver->setDefaults
 		(
 			[
-				'data_class' => ProductCategoryCoverDTO::class,
+				'data_class' => CategoryProductCoverDTO::class,
 			]
 		);
 	}

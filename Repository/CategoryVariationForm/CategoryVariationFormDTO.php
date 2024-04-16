@@ -24,11 +24,11 @@
 namespace BaksDev\Products\Category\Repository\CategoryVariationForm;
 
 use BaksDev\Products\Category\Type\Offers\Id\OffersUid;
-use BaksDev\Products\Category\Type\Offers\Variation\ProductCategoryVariationUid;
+use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
 
 final class CategoryVariationFormDTO
 {
-	public ProductCategoryVariationUid $id;
+	public CategoryProductVariationUid $id;
 	
 	public string $name;
 	public ?string $reference;
@@ -40,7 +40,7 @@ final class CategoryVariationFormDTO
     public ?string $postfixName;
 
     public function __construct(
-		ProductCategoryVariationUid $id,
+		CategoryProductVariationUid $id,
 		?string $reference,
 		bool $image,
 		bool $price,

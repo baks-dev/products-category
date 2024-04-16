@@ -24,9 +24,9 @@
 namespace BaksDev\Products\Category\Repository\ParentCategoryChoiceForm;
 
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 
 interface ParentCategoryChoiceInterface
 {
-	public function get(?ProductCategoryUid $categoryUid = null) : array;
+	public function findAll() : array;
 }

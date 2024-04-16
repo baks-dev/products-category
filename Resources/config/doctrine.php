@@ -23,47 +23,47 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use BaksDev\Products\Category\Type\Event\ProductCategoryEventType;
-use BaksDev\Products\Category\Type\Event\ProductCategoryEventUid;
-use BaksDev\Products\Category\Type\Id\ProductCategoryType;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
-use BaksDev\Products\Category\Type\Landing\Id\ProductCategoryLandingType;
-use BaksDev\Products\Category\Type\Landing\Id\ProductCategoryLandingUid;
-use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersType;
-use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersUid;
-use BaksDev\Products\Category\Type\Offers\Modification\ProductCategoryModificationType;
-use BaksDev\Products\Category\Type\Offers\Modification\ProductCategoryModificationUid;
-use BaksDev\Products\Category\Type\Offers\Type\ProductCategoryModificationTypeType;
-use BaksDev\Products\Category\Type\Offers\Type\ProductCategoryModificationTypeUid;
-use BaksDev\Products\Category\Type\Offers\Variation\ProductCategoryVariationType;
-use BaksDev\Products\Category\Type\Offers\Variation\ProductCategoryVariationUid;
-use BaksDev\Products\Category\Type\Parent\ProductParentCategoryType;
-use BaksDev\Products\Category\Type\Parent\ProductParentCategoryUid;
-use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldType;
-use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
-use BaksDev\Products\Category\Type\Section\Id\ProductCategorySectionType;
-use BaksDev\Products\Category\Type\Section\Id\ProductCategorySectionUid;
-use BaksDev\Products\Category\Type\Settings\ProductCategorySettingsIdentifier;
-use BaksDev\Products\Category\Type\Settings\ProductCategorySettingsType;
+use BaksDev\Products\Category\Type\Event\CategoryProductEventType;
+use BaksDev\Products\Category\Type\Event\CategoryProductEventUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductType;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Products\Category\Type\Landing\Id\CategoryProductLandingType;
+use BaksDev\Products\Category\Type\Landing\Id\CategoryProductLandingUid;
+use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersType;
+use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
+use BaksDev\Products\Category\Type\Offers\Modification\CategoryProductModificationType;
+use BaksDev\Products\Category\Type\Offers\Modification\CategoryProductModificationUid;
+use BaksDev\Products\Category\Type\Offers\Type\CategoryProductModificationTypeType;
+use BaksDev\Products\Category\Type\Offers\Type\CategoryProductModificationTypeUid;
+use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationType;
+use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
+use BaksDev\Products\Category\Type\Parent\ParentCategoryProductType;
+use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldType;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
+use BaksDev\Products\Category\Type\Section\Id\CategoryProductSectionType;
+use BaksDev\Products\Category\Type\Section\Id\CategoryProductSectionUid;
+use BaksDev\Products\Category\Type\Settings\CategoryProductSettingsIdentifier;
+use BaksDev\Products\Category\Type\Settings\CategoryProductSettingsType;
 use Symfony\Config\DoctrineConfig;
 
 return static function(ContainerConfigurator $container, DoctrineConfig $doctrine) {
 	
-	$doctrine->dbal()->type(ProductCategorySettingsIdentifier::TYPE)->class(ProductCategorySettingsType::class);
-	$doctrine->dbal()->type(ProductCategorySectionFieldUid::TYPE)->class(ProductCategorySectionFieldType::class);
+	$doctrine->dbal()->type(CategoryProductSettingsIdentifier::TYPE)->class(CategoryProductSettingsType::class);
+	$doctrine->dbal()->type(CategoryProductSectionFieldUid::TYPE)->class(CategoryProductSectionFieldType::class);
 	
-	$doctrine->dbal()->type(ProductCategoryOffersUid::TYPE)->class(ProductCategoryOffersType::class);
-	$container->services()->set(ProductCategoryOffersUid::class)
+	$doctrine->dbal()->type(CategoryProductOffersUid::TYPE)->class(CategoryProductOffersType::class);
+	$container->services()->set(CategoryProductOffersUid::class)
 		->tag('controller.argument_value_resolver');
 	
-	$doctrine->dbal()->type(ProductCategoryLandingUid::TYPE)->class(ProductCategoryLandingType::class);
-	$doctrine->dbal()->type(ProductCategoryUid::TYPE)->class(ProductCategoryType::class);
-	$doctrine->dbal()->type(ProductCategorySectionUid::TYPE)->class(ProductCategorySectionType::class);
-	$doctrine->dbal()->type(ProductParentCategoryUid::TYPE)->class(ProductParentCategoryType::class);
-	$doctrine->dbal()->type(ProductCategoryEventUid::TYPE)->class(ProductCategoryEventType::class);
-	$doctrine->dbal()->type(ProductCategoryVariationUid::TYPE)->class(ProductCategoryVariationType::class);
-	$doctrine->dbal()->type(ProductCategoryModificationUid::TYPE)->class(ProductCategoryModificationType::class);
-	$doctrine->dbal()->type(ProductCategoryModificationTypeUid::TYPE)->class(ProductCategoryModificationTypeType::class);
+	$doctrine->dbal()->type(CategoryProductLandingUid::TYPE)->class(CategoryProductLandingType::class);
+	$doctrine->dbal()->type(CategoryProductUid::TYPE)->class(CategoryProductType::class);
+	$doctrine->dbal()->type(CategoryProductSectionUid::TYPE)->class(CategoryProductSectionType::class);
+	$doctrine->dbal()->type(ParentCategoryProductUid::TYPE)->class(ParentCategoryProductType::class);
+	$doctrine->dbal()->type(CategoryProductEventUid::TYPE)->class(CategoryProductEventType::class);
+	$doctrine->dbal()->type(CategoryProductVariationUid::TYPE)->class(CategoryProductVariationType::class);
+	$doctrine->dbal()->type(CategoryProductModificationUid::TYPE)->class(CategoryProductModificationType::class);
+	$doctrine->dbal()->type(CategoryProductModificationTypeUid::TYPE)->class(CategoryProductModificationTypeType::class);
 
 
     /** Резолверы */
@@ -73,7 +73,7 @@ return static function(ContainerConfigurator $container, DoctrineConfig $doctrin
         ->autoconfigure()
     ;
 
-    $services->set(ProductCategoryUid::class)->class(ProductCategoryUid::class);
+    $services->set(CategoryProductUid::class)->class(CategoryProductUid::class);
 
 
     $emDefault = $doctrine->orm()->entityManager('default')->autoMapping(true);

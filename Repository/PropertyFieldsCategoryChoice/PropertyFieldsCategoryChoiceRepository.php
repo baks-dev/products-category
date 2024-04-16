@@ -19,56 +19,52 @@
 namespace BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice;
 
 
+use BaksDev\Core\Doctrine\ORMQueryBuilder;
 use BaksDev\Core\Type\Locale\Locale;
-use BaksDev\Products\Category\Entity\Event\ProductCategoryEvent;
-use BaksDev\Products\Category\Entity\ProductCategory;
-use BaksDev\Products\Category\Entity\Section\Field\ProductCategorySectionField;
-use BaksDev\Products\Category\Entity\Section\Field\Trans\ProductCategorySectionFieldTrans;
-use BaksDev\Products\Category\Entity\Section\ProductCategorySection;
-use BaksDev\Products\Category\Entity\Section\Trans\ProductCategorySectionTrans;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
-use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
+use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Entity\Section\Field\CategoryProductSectionField;
+use BaksDev\Products\Category\Entity\Section\Field\Trans\CategoryProductSectionFieldTrans;
+use BaksDev\Products\Category\Entity\Section\CategoryProductSection;
+use BaksDev\Products\Category\Entity\Section\Trans\CategoryProductSectionTrans;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class PropertyFieldsCategoryChoiceRepository implements PropertyFieldsCategoryChoiceInterface
 {
+    private ORMQueryBuilder $ORMQueryBuilder;
 
-    private EntityManagerInterface $entityManager;
-
-    private TranslatorInterface $translator;
-
-
-    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator)
+    public function __construct(ORMQueryBuilder $ORMQueryBuilder)
     {
-
-        $this->entityManager = $entityManager;
-        $this->translator = $translator;
+        $this->ORMQueryBuilder = $ORMQueryBuilder;
     }
-
 
     /** Метод возвращает список всех свойств
      */
-    public function getPropertyFieldsCollection(ProductCategoryUid $category) : ?array
+    public function getPropertyFieldsCollection(CategoryProductUid $category): ?array
     {
-        $qb = $this->entityManager->createQueryBuilder();
-        $local = new Locale($this->translator->getLocale());
+        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class)->bindLocal();
 
         $select = sprintf(
-            '
-          NEW %s(
+            'NEW %s(
               field.id,
               field_trans.name
           )',
-            ProductCategorySectionFieldUid::class,
+            CategoryProductSectionFieldUid::class,
         );
 
         $qb->select($select);
 
-        $qb->from(ProductCategory::class, 'category');
+        $qb
+            ->from(CategoryProduct::class, 'category')
+            ->where('category.id = :category')
+            ->setParameter('category', $category, CategoryProductUid::TYPE);
+
 
         $qb->join(
-            ProductCategoryEvent::class,
+            CategoryProductEvent::class,
             'category_event',
             'WITH',
             'category_event.id = category.event',
@@ -76,7 +72,7 @@ final class PropertyFieldsCategoryChoiceRepository implements PropertyFieldsCate
 
         /* Секции свойств */
         $qb->join(
-            ProductCategorySection::class,
+            CategoryProductSection::class,
             'section',
             'WITH',
             '  section.event = category_event.id',
@@ -84,32 +80,27 @@ final class PropertyFieldsCategoryChoiceRepository implements PropertyFieldsCate
 
         /* Перевод секции */
         $qb->join(
-            ProductCategorySectionTrans::class,
+            CategoryProductSectionTrans::class,
             'section_trans',
             'WITH',
-            'section_trans.section = section.id AND section_trans.local = :locale',
+            'section_trans.section = section.id AND section_trans.local = :local',
         );
 
         /* Перевод полей */
         //$qb->addSelect('field.id');
         $qb->join(
-            ProductCategorySectionField::class,
+            CategoryProductSectionField::class,
             'field',
             'WITH',
             'field.section = section.id',
         );
 
         $qb->join(
-            ProductCategorySectionFieldTrans::class,
+            CategoryProductSectionFieldTrans::class,
             'field_trans',
             'WITH',
-            'field_trans.field = field.id AND field_trans.local = :locale',
+            'field_trans.field = field.id AND field_trans.local = :local',
         );
-
-        $qb->setParameter('locale', $local, Locale::TYPE);
-
-        $qb->where('category.id = :category');
-        $qb->setParameter('category', $category, ProductCategoryUid::TYPE);
 
         $qb->orderBy('section.sort', 'ASC');
         $qb->addOrderBy('field.sort', 'ASC');

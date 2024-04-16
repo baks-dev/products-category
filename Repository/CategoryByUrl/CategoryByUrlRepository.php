@@ -26,130 +26,137 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\Repository\CategoryByUrl;
 
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
-use BaksDev\Core\Type\Locale\Locale;
-use BaksDev\Products\Category\Entity as ProductCategoryEntity;
+use BaksDev\Products\Category\Entity\Cover\CategoryProductCover;
+use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
+use BaksDev\Products\Category\Entity\Info\CategoryProductInfo;
+use BaksDev\Products\Category\Entity\Landing\CategoryProductLanding;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class CategoryByUrlRepository implements CategoryByUrlInterface
 {
-
-    private TranslatorInterface $translator;
     private DBALQueryBuilder $DBALQueryBuilder;
 
-
-    public function __construct(
-        DBALQueryBuilder $DBALQueryBuilder,
-        TranslatorInterface $translator
-    )
+    public function __construct(DBALQueryBuilder $DBALQueryBuilder)
     {
-        $this->translator = $translator;
         $this->DBALQueryBuilder = $DBALQueryBuilder;
     }
 
 
-    public function fetchCategoryAssociative(string $url): ?array
+    /**
+     *  Категория по части URI
+     */
+    public function findByUrl(string $urn): bool|array
     {
-        $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class);
+        $dbal = $this
+            ->DBALQueryBuilder->createQueryBuilder(self::class)
+            ->bindLocal();
 
-        $qb->setParameter('local', new Locale($this->translator->getLocale()), Locale::TYPE);
-
-        $qb->select('info.event  AS category_event')->addGroupBy('info.event');
-        $qb->addSelect('info.url AS category_url')->addGroupBy('info.url');
-        $qb->addSelect('info.counter AS category_counter')->addGroupBy('info.counter');
-
-        $qb->from(ProductCategoryEntity\Info\ProductCategoryInfo::TABLE, 'info');
-
-        $qb->addSelect('product_category.id AS category_id')->addGroupBy('product_category.id');
-        $qb->join('info',
-            ProductCategoryEntity\ProductCategory::TABLE,
-            'product_category',
-            'product_category.event = info.event'
-        );
+        $dbal
+            ->select('info.event AS category_event')
+            ->addSelect('info.url AS category_url')
+            ->addSelect('info.counter AS category_counter')
+            ->from(CategoryProductInfo::class, 'info')
+            ->where('info.url = :url')
+            ->andWhere('info.active = true')
+            ->setParameter('url', $urn);
 
 
-        $qb->addSelect('product_category_event.parent AS category_parent')->addGroupBy('product_category_event.parent');
-        $qb->join('product_category',
-            ProductCategoryEntity\Event\ProductCategoryEvent::TABLE,
-            'product_category_event',
-            'product_category_event.id = product_category.event'
-        );
-
-        $qb->addSelect('product_category_trans.name AS category_name')->addGroupBy('product_category_trans.name');
-
-        $qb->leftJoin('product_category',
-            ProductCategoryEntity\Trans\ProductCategoryTrans::TABLE,
-            'product_category_trans',
-            'product_category_trans.event = product_category_event.id  AND product_category_trans.local = :local'
-        );
+        $dbal
+            ->addSelect('product_category.id AS category_id')
+            ->join('info',
+                CategoryProduct::class,
+                'product_category',
+                'product_category.event = info.event'
+            );
 
 
-        $qb->addSelect('product_category_landing.header AS category_header')->addGroupBy('product_category_landing.header');
-        $qb->addSelect('product_category_landing.bottom AS category_bottom')->addGroupBy('product_category_landing.bottom');
+        $dbal
+            ->addSelect('product_category_event.parent AS category_parent')
+            ->join('product_category',
+                CategoryProductEvent::class,
+                'product_category_event',
+                'product_category_event.id = product_category.event'
+            );
 
-        $qb->leftJoin('product_category',
-            ProductCategoryEntity\Landing\ProductCategoryLanding::TABLE,
-            'product_category_landing',
-            'product_category_landing.event = product_category_event.id  AND product_category_landing.local = :local'
-        );
+        $dbal
+            ->addSelect('product_category_trans.name AS category_name')
+            ->leftJoin('product_category',
+                CategoryProductTrans::class,
+                'product_category_trans',
+                'product_category_trans.event = product_category_event.id  AND product_category_trans.local = :local'
+            );
 
+
+        $dbal
+            ->addSelect('product_category_landing.header AS category_header')
+            ->addSelect('product_category_landing.bottom AS category_bottom')
+            ->leftJoin('product_category',
+                CategoryProductLanding::class,
+                'product_category_landing',
+                'product_category_landing.event = product_category_event.id  AND product_category_landing.local = :local'
+            );
 
 
         /* КОРНЕВОЙ РАЗДЕЛ */
 
-        $qb->leftJoin('product_category_event',
-            ProductCategoryEntity\ProductCategory::TABLE,
-            'parent_product_category',
-            'parent_product_category.id = product_category_event.parent'
-        );
+        $dbal
+            ->leftJoin('product_category_event',
+                CategoryProduct::class,
+                'parent_product_category',
+                'parent_product_category.id = product_category_event.parent'
+            );
 
-        $qb->addSelect('parent_product_category_trans.name AS parent_category_name')->addGroupBy('parent_product_category_trans.name');
-        $qb->leftJoin('parent_product_category',
-            ProductCategoryEntity\Trans\ProductCategoryTrans::TABLE,
-            'parent_product_category_trans',
-            'parent_product_category_trans.event = parent_product_category.event AND parent_product_category_trans.local = :local'
-        );
+        $dbal
+            ->addSelect('parent_product_category_trans.name AS parent_category_name')
+            ->leftJoin('parent_product_category',
+                CategoryProductTrans::class,
+                'parent_product_category_trans',
+                'parent_product_category_trans.event = parent_product_category.event AND parent_product_category_trans.local = :local'
+            );
 
-        $qb->addSelect('parent_product_category_info.url AS parent_category_url')->addGroupBy('parent_product_category_info.url');
-        $qb->addSelect('parent_product_category_info.counter AS parent_category_counter')->addGroupBy('parent_product_category_info.counter');
-        $qb->leftJoin('parent_product_category',
-            ProductCategoryEntity\Info\ProductCategoryInfo::TABLE,
-            'parent_product_category_info',
-            'parent_product_category_info.event = parent_product_category.event '
-        );
+        $dbal
+            ->addSelect('parent_product_category_info.url AS parent_category_url')
+            ->addSelect('parent_product_category_info.counter AS parent_category_counter')
+            ->leftJoin('parent_product_category',
+                CategoryProductInfo::class,
+                'parent_product_category_info',
+                'parent_product_category_info.event = parent_product_category.event '
+            );
 
 
         /* ВЛОЖЕННЫЕ РАЗДЕЛЫ */
 
 
-        //$qb->addSelect('parent_category_event.id AS parent_event');
-        $qb->leftJoin('product_category',
-            ProductCategoryEntity\Event\ProductCategoryEvent::TABLE,
+        $dbal->leftJoin('product_category',
+            CategoryProductEvent::class,
             'parent_category_event',
             'parent_category_event.parent = product_category.id'
         );
 
-        $qb->leftJoin('parent_category_event',
-            ProductCategoryEntity\Info\ProductCategoryInfo::TABLE,
+        $dbal->leftJoin('parent_category_event',
+            CategoryProductInfo::class,
             'parent_category_info',
             'parent_category_info.event = parent_category_event.id'
         );
 
-        $qb->leftJoin('parent_category_event',
-            ProductCategoryEntity\Cover\ProductCategoryCover::TABLE,
+        $dbal->leftJoin('parent_category_event',
+            CategoryProductCover::class,
             'parent_category_cover',
             'parent_category_cover.event = parent_category_event.id'
         );
 
 
-        //$qb->addSelect('parent_category_trans.name AS parent_category_name');
-        $qb->leftJoin('parent_category_event',
-            ProductCategoryEntity\Trans\ProductCategoryTrans::TABLE,
+        //$dbal->addSelect('parent_category_trans.name AS parent_category_name');
+        $dbal->leftJoin('parent_category_event',
+            CategoryProductTrans::class,
             'parent_category_trans',
             'parent_category_trans.event = parent_category_event.id  AND parent_category_trans.local = :local'
         );
 
 
-        $qb->addSelect("JSON_AGG
+        $dbal->addSelect("JSON_AGG
 		( DISTINCT
 			
 				JSONB_BUILD_OBJECT
@@ -159,11 +166,12 @@ final class CategoryByUrlRepository implements CategoryByUrlInterface
 					'parent_category_url', parent_category_info.url,
 					'parent_category_counter', parent_category_info.counter,
 					
-					'parent_category_cover_name', CASE
-												 WHEN parent_category_cover.name IS NOT NULL THEN
-														CONCAT ( '/upload/".ProductCategoryEntity\Cover\ProductCategoryCover::TABLE."' , '/', parent_category_cover.name)
-														ELSE NULL
-												END,
+					'parent_category_cover_name', 
+					CASE
+					    WHEN parent_category_cover.name IS NOT NULL 
+					    THEN CONCAT ( '/upload/".$dbal->table(CategoryProductCover::class)."' , '/', parent_category_cover.name)
+					    ELSE NULL
+                    END,
 					
 					'parent_category_cover_ext', parent_category_cover.ext,
 					'parent_category_cover_cdn', parent_category_cover.cdn,
@@ -175,17 +183,12 @@ final class CategoryByUrlRepository implements CategoryByUrlInterface
 			AS parent_category"
         );
 
-
-        $qb->andWhere('info.url = :url');
-        $qb->andWhere('info.active = true');
-        $qb->setParameter('url', $url);
-
+        $dbal->allGroupByExclude();
 
         /* Кешируем результат DBAL */
-        return $qb
+        return $dbal
             ->enableCache('products-category', 86400)
             ->fetchAssociative();
 
     }
-
 }
