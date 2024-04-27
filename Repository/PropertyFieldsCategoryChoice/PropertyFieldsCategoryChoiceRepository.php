@@ -23,11 +23,19 @@ use BaksDev\Core\Doctrine\ORMQueryBuilder;
 use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
+use BaksDev\Products\Category\Entity\Offers\Trans\CategoryProductOffersTrans;
+use BaksDev\Products\Category\Entity\Offers\Variation\CategoryProductVariation;
+use BaksDev\Products\Category\Entity\Offers\Variation\Modification\CategoryProductModification;
+use BaksDev\Products\Category\Entity\Offers\Variation\Modification\Trans\CategoryProductModificationTrans;
+use BaksDev\Products\Category\Entity\Offers\Variation\Trans\CategoryProductVariationTrans;
 use BaksDev\Products\Category\Entity\Section\Field\CategoryProductSectionField;
 use BaksDev\Products\Category\Entity\Section\Field\Trans\CategoryProductSectionFieldTrans;
 use BaksDev\Products\Category\Entity\Section\CategoryProductSection;
 use BaksDev\Products\Category\Entity\Section\Trans\CategoryProductSectionTrans;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
+use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
 use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -108,4 +116,113 @@ final class PropertyFieldsCategoryChoiceRepository implements PropertyFieldsCate
         return $qb->getQuery()->getResult();
     }
 
+
+    public function getOffersFields(CategoryProductUid $category): ?CategoryProductSectionFieldUid
+    {
+        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class)->bindLocal();
+
+        $select = sprintf(
+            'NEW %s(
+              category_offers.id,
+              category_offers_tarns.name
+          )',
+            CategoryProductSectionFieldUid::class,
+        );
+
+        $qb->select($select);
+
+        $qb
+            ->from(CategoryProduct::class, 'category')
+            ->where('category.id = :category')
+            ->setParameter('category', $category, CategoryProductUid::TYPE);
+
+
+        $qb->leftJoin(
+            CategoryProductOffers::class,
+            'category_offers',
+            'WITH',
+            'category_offers.event = category.event',
+        );
+
+        $qb->leftJoin(
+            CategoryProductOffersTrans::class,
+            'category_offers_tarns',
+            'WITH',
+            'category_offers_tarns.offer = category_offers.id AND category_offers_tarns.local = :local',
+        );
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    public function getVariationFields(CategoryProductOffersUid|string $offer): ?CategoryProductSectionFieldUid
+    {
+        if(is_string($offer))
+        {
+            $offer = new CategoryProductOffersUid($offer);
+        }
+
+        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class)->bindLocal();
+
+        $select = sprintf(
+            'NEW %s(
+              category_variation.id,
+              category_variation_tarns.name
+          )',
+            CategoryProductSectionFieldUid::class,
+        );
+
+        $qb->select($select);
+
+        $qb
+            ->from(CategoryProductVariation::class, 'category_variation')
+            ->where('category_variation.offer = :offer')
+            ->setParameter('offer', $offer, CategoryProductOffersUid::TYPE);
+
+
+        $qb->leftJoin(
+            CategoryProductVariationTrans::class,
+            'category_variation_tarns',
+            'WITH',
+            'category_variation_tarns.variation = category_variation.id AND category_variation_tarns.local = :local',
+        );
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+
+
+    public function getModificationFields(CategoryProductVariationUid|string $variation): ?CategoryProductSectionFieldUid
+    {
+        if(is_string($variation))
+        {
+            $variation = new CategoryProductVariationUid($variation);
+        }
+
+        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class)->bindLocal();
+
+        $select = sprintf(
+            'NEW %s(
+              category_modification.id,
+              category_modification_tarns.name
+          )',
+            CategoryProductSectionFieldUid::class,
+        );
+
+        $qb->select($select);
+
+        $qb
+            ->from(CategoryProductModification::class, 'category_modification')
+            ->where('category_modification.variation = :variation')
+            ->setParameter('variation', $variation, CategoryProductVariationUid::TYPE);
+
+
+        $qb->leftJoin(
+            CategoryProductModificationTrans::class,
+            'category_modification_tarns',
+            'WITH',
+            'category_modification_tarns.modification = category_modification.id AND category_modification_tarns.local = :local',
+        );
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
 }
