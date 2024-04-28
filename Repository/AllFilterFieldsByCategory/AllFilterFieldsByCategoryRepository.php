@@ -74,10 +74,11 @@ final class AllFilterFieldsByCategoryRepository implements AllFilterFieldsByCate
 
         $qb
             ->select('category_section_field.id')
+            ->addSelect('category_section_field.const')
             ->addSelect('category_section_field.type')
             ->leftJoin(
                 'category_section',
-                CategoryProductSectionField::TABLE,
+                CategoryProductSectionField::class,
                 'category_section_field',
                 'category_section_field.section = category_section.id AND category_section_field.filter = TRUE'
             );

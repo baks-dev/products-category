@@ -21,54 +21,20 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Products\Category\Type\Section\Field\Id;
+namespace BaksDev\Products\Category\Type\Section\Field\Const;
 
-use App\Kernel;
-use BaksDev\Core\Type\UidType\Uid;
-use Symfony\Component\Uid\AbstractUid;
+use BaksDev\Core\Type\UidType\UidType;
 
-final class CategoryProductSectionFieldUid extends Uid
+final class CategoryProductSectionFieldConstType extends UidType
 {
-    public const TEST = '0188a99e-2c08-79a9-a48e-51731c9f0790';
-
-	public const TYPE = 'product_category_section_field';
-
-    /**
-     * @var mixed|null
-     */
-    private mixed $attr;
-    /**
-     * @var mixed|null
-     */
-    private mixed $const;
-
-
-    public function __construct(
-        AbstractUid|self|string|null $value = null,
-        mixed $const = null,
-        mixed $attr = null
-    )
-    {
-        parent::__construct($value);
-
-        $this->attr = $attr;
-        $this->const = $const;
-    }
-
-    /**
-     * Const
-     */
-    public function getConst(): mixed
-    {
-        return $this->const;
-    }
-
-    /**
-     * Attr
-     */
-    public function getAttr(): mixed
-    {
-        return $this->attr;
-    }
-
+	public function getClassType(): string
+	{
+		return CategoryProductSectionFieldConst::class;
+	}
+	
+	public function getName(): string
+	{
+		return CategoryProductSectionFieldConst::TYPE;
+	}
+	
 }

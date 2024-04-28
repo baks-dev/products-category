@@ -66,7 +66,6 @@ class CategoryProductSection extends EntityState
 	
 	public function __construct(CategoryProductEvent $event)
 	{
-		
 		$this->id = new CategoryProductSectionUid();
 		$this->event = $event;
 	}

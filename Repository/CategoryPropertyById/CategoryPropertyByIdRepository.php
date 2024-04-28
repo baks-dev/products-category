@@ -64,7 +64,7 @@ final class CategoryPropertyByIdRepository implements CategoryPropertyByIdInterf
           NEW %s(
               section.id,
               section_trans.name,
-              field.id,
+              field.const,
               field_trans.name,
               field.type,
               field.required,

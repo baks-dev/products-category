@@ -31,7 +31,7 @@ use BaksDev\Core\Type\Locale\Locale;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/** Секции для свойств продукта */
+/** @see CategoryProductSection */
 final class ProductSectionCollectionDTO implements CategoryProductSectionInterface
 {
 	#[Assert\Uuid]

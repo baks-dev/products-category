@@ -39,6 +39,8 @@ use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationType
 use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
 use BaksDev\Products\Category\Type\Parent\ParentCategoryProductType;
 use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
+use BaksDev\Products\Category\Type\Section\Field\Const\CategoryProductSectionFieldConst;
+use BaksDev\Products\Category\Type\Section\Field\Const\CategoryProductSectionFieldConstType;
 use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldType;
 use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use BaksDev\Products\Category\Type\Section\Id\CategoryProductSectionType;
@@ -51,11 +53,13 @@ return static function(ContainerConfigurator $container, DoctrineConfig $doctrin
 	
 	$doctrine->dbal()->type(CategoryProductSettingsIdentifier::TYPE)->class(CategoryProductSettingsType::class);
 	$doctrine->dbal()->type(CategoryProductSectionFieldUid::TYPE)->class(CategoryProductSectionFieldType::class);
-	
+	$doctrine->dbal()->type(CategoryProductSectionFieldConst::TYPE)->class(CategoryProductSectionFieldConstType::class);
+
 	$doctrine->dbal()->type(CategoryProductOffersUid::TYPE)->class(CategoryProductOffersType::class);
 	$container->services()->set(CategoryProductOffersUid::class)
 		->tag('controller.argument_value_resolver');
-	
+
+
 	$doctrine->dbal()->type(CategoryProductLandingUid::TYPE)->class(CategoryProductLandingType::class);
 	$doctrine->dbal()->type(CategoryProductUid::TYPE)->class(CategoryProductType::class);
 	$doctrine->dbal()->type(CategoryProductSectionUid::TYPE)->class(CategoryProductSectionType::class);

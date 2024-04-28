@@ -58,6 +58,7 @@ final class PropertyFieldsCategoryChoiceRepository implements PropertyFieldsCate
         $select = sprintf(
             'NEW %s(
               field.id,
+              field.const,
               field_trans.name
           )',
             CategoryProductSectionFieldUid::class,

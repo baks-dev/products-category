@@ -34,10 +34,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 /** @see CategoryProductSectionField */
 final class ProductSectionFieldCollectionDTO implements CategoryProductSectionFieldInterface
 {
-	#[Assert\Uuid]
-	private ?CategoryProductSectionFieldUid $id = null;
-	
-	/** Сортировка поля в секции */
+    #[Assert\Uuid]
+    private ?CategoryProductSectionFieldUid $const = null;
+
+    /** Сортировка поля в секции */
 	#[Assert\Range(min: 0, max: 999)]
 	private int $sort = 100;
 	
@@ -75,8 +75,18 @@ final class ProductSectionFieldCollectionDTO implements CategoryProductSectionFi
 	{
 		$this->translate = new  ArrayCollection();
 	}
-	
-	
+
+    /**
+     * Const
+     */
+    public function getConst(): ?CategoryProductSectionFieldUid
+    {
+        $this->const ?: $this->const = new CategoryProductSectionFieldUid();
+
+        return $this->const;
+    }
+
+
 	/** Сортировка поля в секции */
 	
 	public function getSort() : int

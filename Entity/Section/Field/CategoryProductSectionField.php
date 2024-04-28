@@ -49,6 +49,10 @@ class CategoryProductSectionField extends EntityState
 	#[ORM\ManyToOne(targetEntity: CategoryProductSection::class, inversedBy: "field")]
 	#[ORM\JoinColumn(name: 'section', referencedColumnName: 'id', nullable: true)]
 	private ?CategoryProductSection $section;
+
+    /** ID */
+    #[ORM\Column(type: CategoryProductSectionFieldUid::TYPE, nullable: true)]
+    private CategoryProductSectionFieldUid $const;
 	
 	/** Перевод */
 	#[ORM\OneToMany(targetEntity: Trans\CategoryProductSectionFieldTrans::class, mappedBy: 'field', cascade: ['all'])]
