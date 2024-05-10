@@ -33,13 +33,8 @@ final class CategoryProductSectionFieldUid extends Uid
 
 	public const TYPE = 'product_category_section_field';
 
-    /**
-     * @var mixed|null
-     */
     private mixed $attr;
-    /**
-     * @var mixed|null
-     */
+
     private mixed $const;
 
 

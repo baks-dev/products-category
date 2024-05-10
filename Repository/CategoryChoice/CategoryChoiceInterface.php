@@ -23,14 +23,31 @@
 
 namespace BaksDev\Products\Category\Repository\CategoryChoice;
 
+use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use Generator;
 
 interface CategoryChoiceInterface
 {
-	public function getCategoryCollection();
 
     /**
-     * Метод возвращает идентификатор категории с названием в аттрибуте
+     * Только активные разделы
      */
-    public function getProductCategory(CategoryProductUid $category) : ?CategoryProductUid;
+    public function onlyActive(): self;
+
+    /**
+     * Фильтр по идентификатору категории
+     */
+    public function category(CategoryProduct|CategoryProductUid|string $category): self;
+
+    /**
+     * Метод возвращает коллекцию категорий продукции с названием
+     */
+    public function findAll(): Generator;
+
+    /**
+     * Метод возвращает идентификатор категории с названием
+     */
+    public function find(): ?CategoryProductUid;
+
 }

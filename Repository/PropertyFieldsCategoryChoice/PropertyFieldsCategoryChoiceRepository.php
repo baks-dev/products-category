@@ -19,6 +19,7 @@
 namespace BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice;
 
 
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
 use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
@@ -43,13 +44,19 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class PropertyFieldsCategoryChoiceRepository implements PropertyFieldsCategoryChoiceInterface
 {
     private ORMQueryBuilder $ORMQueryBuilder;
+    private DBALQueryBuilder $DBALQueryBuilder;
 
-    public function __construct(ORMQueryBuilder $ORMQueryBuilder)
+    public function __construct(
+        ORMQueryBuilder $ORMQueryBuilder,
+        DBALQueryBuilder $DBALQueryBuilder
+    )
     {
         $this->ORMQueryBuilder = $ORMQueryBuilder;
+        $this->DBALQueryBuilder = $DBALQueryBuilder;
     }
 
-    /** Метод возвращает список всех свойств
+    /**
+     * Метод возвращает список всех свойств
      */
     public function getPropertyFieldsCollection(CategoryProductUid $category): ?array
     {
@@ -57,8 +64,8 @@ final class PropertyFieldsCategoryChoiceRepository implements PropertyFieldsCate
 
         $select = sprintf(
             'NEW %s(
-              field.id,
               field.const,
+              field.id,
               field_trans.name
           )',
             CategoryProductSectionFieldUid::class,
@@ -120,39 +127,36 @@ final class PropertyFieldsCategoryChoiceRepository implements PropertyFieldsCate
 
     public function getOffersFields(CategoryProductUid $category): ?CategoryProductSectionFieldUid
     {
-        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class)->bindLocal();
+        $dbal = $this->DBALQueryBuilder
+            ->createQueryBuilder(self::class)
+            ->bindLocal();
 
-        $select = sprintf(
-            'NEW %s(
-              category_offers.id,
-              category_offers_tarns.name
-          )',
-            CategoryProductSectionFieldUid::class,
-        );
-
-        $qb->select($select);
-
-        $qb
+        $dbal
             ->from(CategoryProduct::class, 'category')
             ->where('category.id = :category')
             ->setParameter('category', $category, CategoryProductUid::TYPE);
 
 
-        $qb->leftJoin(
+        $dbal->leftJoin(
+            'category',
             CategoryProductOffers::class,
             'category_offers',
-            'WITH',
             'category_offers.event = category.event',
         );
 
-        $qb->leftJoin(
+        $dbal->leftJoin(
+            'category_offers',
             CategoryProductOffersTrans::class,
             'category_offers_tarns',
-            'WITH',
             'category_offers_tarns.offer = category_offers.id AND category_offers_tarns.local = :local',
         );
 
-        return $qb->getQuery()->getOneOrNullResult();
+        /** Параметры конструктора объекта гидрации */
+        $dbal->select('category_offers.id AS value');
+        $dbal->addSelect('category.event AS const');
+        $dbal->addSelect('category_offers_tarns.name AS attr');
+
+        return $dbal->fetchHydrate(CategoryProductSectionFieldUid::class);
     }
 
     public function getVariationFields(CategoryProductOffersUid|string $offer): ?CategoryProductSectionFieldUid
@@ -162,32 +166,30 @@ final class PropertyFieldsCategoryChoiceRepository implements PropertyFieldsCate
             $offer = new CategoryProductOffersUid($offer);
         }
 
-        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class)->bindLocal();
+        $dbal = $this->DBALQueryBuilder
+            ->createQueryBuilder(self::class)
+            ->bindLocal()
+        ;
 
-        $select = sprintf(
-            'NEW %s(
-              category_variation.id,
-              category_variation_tarns.name
-          )',
-            CategoryProductSectionFieldUid::class,
-        );
-
-        $qb->select($select);
-
-        $qb
+        $dbal
             ->from(CategoryProductVariation::class, 'category_variation')
             ->where('category_variation.offer = :offer')
             ->setParameter('offer', $offer, CategoryProductOffersUid::TYPE);
 
 
-        $qb->leftJoin(
+        $dbal->leftJoin(
+            'category_variation',
             CategoryProductVariationTrans::class,
-            'category_variation_tarns',
-            'WITH',
-            'category_variation_tarns.variation = category_variation.id AND category_variation_tarns.local = :local',
+            'category_variation_trans',
+            'category_variation_trans.variation = category_variation.id AND category_variation_trans.local = :local',
         );
 
-        return $qb->getQuery()->getOneOrNullResult();
+        /** Параметры конструктора объекта гидрации */
+        $dbal->select('category_variation.id AS value');
+        $dbal->addSelect('category_variation.offer AS const');
+        $dbal->addSelect('category_variation_trans.name AS attr');
+
+        return $dbal->fetchHydrate(CategoryProductSectionFieldUid::class); // ->getOneOrNullResult();
     }
 
 
@@ -199,31 +201,27 @@ final class PropertyFieldsCategoryChoiceRepository implements PropertyFieldsCate
             $variation = new CategoryProductVariationUid($variation);
         }
 
-        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class)->bindLocal();
+        $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class)->bindLocal();
 
-        $select = sprintf(
-            'NEW %s(
-              category_modification.id,
-              category_modification_tarns.name
-          )',
-            CategoryProductSectionFieldUid::class,
-        );
-
-        $qb->select($select);
-
-        $qb
+        $dbal
             ->from(CategoryProductModification::class, 'category_modification')
             ->where('category_modification.variation = :variation')
             ->setParameter('variation', $variation, CategoryProductVariationUid::TYPE);
 
 
-        $qb->leftJoin(
+        $dbal->leftJoin(
+            'category_modification',
             CategoryProductModificationTrans::class,
-            'category_modification_tarns',
-            'WITH',
-            'category_modification_tarns.modification = category_modification.id AND category_modification_tarns.local = :local',
+            'category_modification_trans',
+            'category_modification_trans.modification = category_modification.id 
+            AND category_modification_trans.local = :local',
         );
 
-        return $qb->getQuery()->getOneOrNullResult();
+        /** Параметры конструктора объекта гидрации */
+        $dbal->select('category_modification.id AS value');
+        $dbal->addSelect('category_modification.variation AS const');
+        $dbal->addSelect('category_modification_trans.name AS attr');
+
+        return $dbal->fetchHydrate(CategoryProductSectionFieldUid::class);
     }
 }

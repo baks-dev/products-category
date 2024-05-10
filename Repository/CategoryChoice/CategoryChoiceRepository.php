@@ -23,66 +23,45 @@
 
 namespace BaksDev\Products\Category\Repository\CategoryChoice;
 
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 use BaksDev\Products\Category\Entity\Info\CategoryProductInfo;
 use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use Generator;
+use InvalidArgumentException;
 
 final class CategoryChoiceRepository implements CategoryChoiceInterface
 {
-
-    private ORMQueryBuilder $ORMQueryBuilder;
-
-    public function __construct(ORMQueryBuilder $ORMQueryBuilder,)
-    {
-        $this->ORMQueryBuilder = $ORMQueryBuilder;
-    }
-
-    /** Метод возвращает коллекцию категорий продукции */
-    public function getCategoryCollection(?CategoryProductUid $category = null): ?array
-    {
-        $orm = $this
-            ->ORMQueryBuilder->createQueryBuilder(self::class)
-            ->bindLocal();
-
-        $select = sprintf('new %s(category.id, trans.name)', CategoryProductUid::class);
-
-        $orm->select($select);
-
-        $orm->from(CategoryProduct::class, 'category', 'category.id');
-
-        /* Выбираем только активные */
-        $orm->join(
-            CategoryProductInfo::class,
-            'info',
-            'WITH',
-            'info.event = category.event AND info.active = true',
-        );
-
-        $orm->join(
-            CategoryProductEvent::class,
-            'event',
-            'WITH',
-            'event.id = category.event AND event.category = category.id',
-        );
-        $orm->leftJoin(
-            CategoryProductTrans::class,
-            'trans',
-            'WITH',
-            'trans.event = event.id AND trans.local = :local',
-        );
-
-        /* Кешируем результат ORM */
-        return $orm->enableCache('products-category', 86400)->getResult();
-    }
-
+    /**
+     * Только активные разделы
+     */
+    private bool $active = false;
 
     /**
-     * Метод возвращает идентификатор категории с названием в аттрибуте
+     * Идентификатор категории
      */
-    public function getProductCategory(CategoryProduct|CategoryProductUid|string $category): ?CategoryProductUid
+    private mixed $category = null;
+
+    private DBALQueryBuilder $DBALQueryBuilder;
+
+    public function __construct(
+        DBALQueryBuilder $DBALQueryBuilder
+    )
+    {
+        $this->DBALQueryBuilder = $DBALQueryBuilder;
+    }
+
+    public function onlyActive(): self
+    {
+        $this->active = true;
+        return $this;
+    }
+
+    /** Фильтр по идентификатору категории */
+    public function category(CategoryProduct|CategoryProductUid|string $category): self
     {
         if($category instanceof CategoryProduct)
         {
@@ -94,42 +73,77 @@ final class CategoryChoiceRepository implements CategoryChoiceInterface
             $category = new CategoryProductUid($category);
         }
 
-        $orm = $this->ORMQueryBuilder
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * Метод возвращает коллекцию категорий продукции
+     */
+    private function builder(): DBALQueryBuilder
+    {
+        $dbal = $this->DBALQueryBuilder
             ->createQueryBuilder(self::class)
             ->bindLocal();
 
-        $select = sprintf('new %s(category.id, trans.name)', CategoryProductUid::class);
+        $dbal->from(CategoryProduct::class, 'category');
 
-        $orm->select($select);
-
-        $orm
-            ->from(CategoryProduct::class, 'category', 'category.id')
-            ->where('category.id = :category')
-            ->setParameter('category', $category, CategoryProductUid::TYPE);
+        /* Категория с определенным идентификатором */
+        if($this->category)
+        {
+            $dbal
+                ->where('category.id = :category')
+                ->setParameter('category', $this->category, CategoryProductUid::TYPE);
+        }
 
         /* Выбираем только активные */
-        $orm->join(
-            CategoryProductInfo::class,
-            'info',
-            'WITH',
-            'info.event = category.event AND info.active = true',
-        );
+        if($this->active)
+        {
+            $dbal->join(
+                'category',
+                CategoryProductInfo::class,
+                'info',
+                'info.event = category.event AND info.active = true',
+            );
+        }
 
-        $orm->join(
-            CategoryProductEvent::class,
-            'event',
-            'WITH',
-            'event.id = category.event AND event.category = category.id',
-        );
-        $orm->leftJoin(
+        $dbal->leftJoin(
+            'category',
             CategoryProductTrans::class,
             'trans',
-            'WITH',
-            'trans.event = event.id AND trans.local = :local',
+            'trans.event = category.event AND trans.local = :local',
         );
 
+        /** Свойства конструктора объекта гидрации */
+        $dbal->select('category.id AS value');
+        $dbal->addSelect('trans.name AS options');
 
-        /* Кешируем результат ORM */
-        return $orm->enableCache('products-category', 86400)->getOneOrNullResult();
+        return $dbal;
     }
+
+
+    public function findAll(): Generator
+    {
+        $dbal = $this->builder();
+
+        return $dbal
+            ->enableCache('products-category', 86400)
+            ->fetchAllHydrate(CategoryProductUid::class);
+    }
+
+    public function find(): ?CategoryProductUid
+    {
+        if(empty($this->category))
+        {
+            throw new InvalidArgumentException('Invalid Argument category');
+        }
+
+        $dbal = $this->builder();
+
+        return $dbal
+            ->enableCache('products-category', 86400)
+            ->fetchHydrate(CategoryProductUid::class);
+    }
+
 }
