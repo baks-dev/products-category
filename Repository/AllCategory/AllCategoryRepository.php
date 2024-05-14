@@ -126,7 +126,7 @@ final class AllCategoryRepository implements AllCategoryInterface
         /** Количество вложенных категорий */
 
         // EXISTS Event IN Category
-        $dbalCounterExist = $this->DBALQueryBuilder->builder();
+        $dbalCounterExist = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
         $dbalCounterExist
             ->select('1')
@@ -135,7 +135,7 @@ final class AllCategoryRepository implements AllCategoryInterface
             ->andWhere('count_cat.event = category_event_count.id');
 
         // COUNT Event
-        $dbalCounter = $this->DBALQueryBuilder->builder();
+        $dbalCounter = $this->DBALQueryBuilder->createQueryBuilder(self::class);
         $dbalCounter
             ->select('COUNT(category_event_count.id)')
             ->from(CategoryProductEvent::TABLE, 'category_event_count')
