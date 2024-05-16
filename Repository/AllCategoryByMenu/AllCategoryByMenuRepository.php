@@ -167,11 +167,9 @@ final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
 
         $dbal->orderBy('category_event.sort', 'ASC');
 
-        /* Группировка  */
+
         $dbal->allGroupByExclude();
 
-
-        /* Кешируем результат DBAL */
         return $dbal
             ->enableCache('products-category', 86400)
             ->fetchAllAssociativeIndexed();

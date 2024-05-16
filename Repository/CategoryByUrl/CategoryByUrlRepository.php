@@ -185,7 +185,6 @@ final class CategoryByUrlRepository implements CategoryByUrlInterface
 
         $dbal->allGroupByExclude();
 
-        /* Кешируем результат DBAL */
         return $dbal
             ->enableCache('products-category', 86400)
             ->fetchAssociative();
