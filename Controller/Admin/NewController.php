@@ -76,6 +76,8 @@ final class NewController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid() && $form->has('Save'))
         {
+            $this->refreshTokenForm($form);
+
             $ProductCategory = $handler->handle($category);
 
             if($ProductCategory instanceof Entity\CategoryProduct)

@@ -56,6 +56,8 @@ final class EditController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid() && $form->has('Save'))
         {
+            $this->refreshTokenForm($form);
+
             $ProductCategory = $handler->handle($ProductCategoryDTO);
 
             if($ProductCategory instanceof Entity\CategoryProduct)
