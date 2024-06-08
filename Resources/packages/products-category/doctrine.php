@@ -23,6 +23,7 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use BaksDev\Products\Category\BaksDevProductsCategoryBundle;
 use BaksDev\Products\Category\Type\Event\CategoryProductEventType;
 use BaksDev\Products\Category\Type\Event\CategoryProductEventUid;
 use BaksDev\Products\Category\Type\Id\CategoryProductType;
@@ -79,14 +80,12 @@ return static function(ContainerConfigurator $container, DoctrineConfig $doctrin
 
     $services->set(CategoryProductUid::class)->class(CategoryProductUid::class);
 
-
     $emDefault = $doctrine->orm()->entityManager('default')->autoMapping(true);
 
-    $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
 
     $emDefault->mapping('products-category')
 		->type('attribute')
-		->dir($MODULE.'Entity')
+		->dir(BaksDevProductsCategoryBundle::PATH.'Entity')
 		->isBundle(false)
 		->prefix('BaksDev\Products\Category\Entity')
 		->alias('products-category')
