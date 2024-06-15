@@ -32,8 +32,8 @@ return static function (ContainerConfigurator $configurator, FrameworkConfig $fr
 
     $messenger
         ->transport('products-category')
-        ->dsn('%env(MESSENGER_TRANSPORT_DSN)%')
-        ->options(['queue_name' => 'products-category'])
+        ->dsn('redis://%env(REDIS_PASSWORD)%@%env(REDIS_HOST)%:%env(REDIS_PORT)%?auto_setup=true')
+        ->options(['stream' => 'products-category'])
         ->failureTransport('failed-products-category')
         ->retryStrategy()
         ->maxRetries(3)
@@ -44,7 +44,9 @@ return static function (ContainerConfigurator $configurator, FrameworkConfig $fr
 
     ;
 
-    $messenger->transport('failed-products-category')
+    $failure = $framework->messenger();
+
+    $failure->transport('failed-products-category')
         ->dsn('%env(MESSENGER_TRANSPORT_DSN)%')
         ->options(['queue_name' => 'failed-products-category'])
     ;

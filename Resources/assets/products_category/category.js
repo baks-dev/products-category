@@ -21,11 +21,6 @@
  */
 
 
-/* определяем язык системы по тегу HTML */
-// $htmlLang = document.getElementsByTagName('html');
-// const $lang = $htmlLang[0].getAttribute('lang');
-
-
 /** Коллекция СЕКЦИЙ для свойств продукта*/
 
 /* кнопка Добавить коллекцию */
@@ -286,7 +281,7 @@ document.querySelectorAll('.is-reference').forEach(function (isReference) {
 
 
 /** Получаем поле 'Название раздела' по локали для 'Символьный код категории' */
-let $name = document.querySelector("input[data-lang='product_category_form_translate_0_" + $lang + "']");
+let $name = document.querySelector("input[data-lang='product_category_form_translate_0_" + $locale + "']");
 
 if ($name) {
 
