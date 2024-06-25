@@ -29,10 +29,10 @@ use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
 
 interface OfferFieldsCategoryChoiceInterface
 {
+    public function category(CategoryProduct|CategoryProductUid|string $category): self;
+
     /**
      * Метод возвращает список свойств указанной категории (тип и название)
      */
-	public function findByCategory(
-        CategoryProduct|CategoryProductUid|string $category
-    ) : ?CategoryProductOffersUid;
+    public function findAllCategoryProductOffers(): ?CategoryProductOffersUid;
 }

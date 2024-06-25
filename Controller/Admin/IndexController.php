@@ -49,6 +49,7 @@ final class IndexController extends AbstractController
         int $page = 0,
     ): Response
     {
+
         // Поиск
         $search = new SearchDTO();
         $searchForm = $this->createForm(SearchForm::class, $search);

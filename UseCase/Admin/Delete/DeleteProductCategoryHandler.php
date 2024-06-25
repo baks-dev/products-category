@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\UseCase\Admin\Delete;
 
 use BaksDev\Core\Messenger\MessageDispatchInterface;
-use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 use BaksDev\Products\Category\Messenger\ProductCategoryMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -56,7 +56,7 @@ final class DeleteProductCategoryHandler
         $this->messageDispatch = $messageDispatch;
     }
 
-    public function handle(DeleteCategoryProductDTO $command,): string|CategoryProduct
+    public function handle(DeleteCategoryProductDTO $command): string|CategoryProduct
     {
         /* Валидация DTO */
         $errors = $this->validator->validate($command);

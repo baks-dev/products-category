@@ -28,7 +28,7 @@ use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
 
 interface CategoryModificationFormInterface
 {
-    public function findByVariation(
-        CategoryProductVariation|CategoryProductVariationUid|string $variation
-    ): ?CategoryModificationFormDTO;
+    public function variation(CategoryProductVariation|CategoryProductVariationUid|string $variation): self;
+
+    public function findAllModification(): ?CategoryModificationFormDTO;
 }

@@ -26,34 +26,20 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\Repository\OfferFieldsCategoryChoice;
 
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
+use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
 use BaksDev\Products\Category\Entity\Offers\Trans\CategoryProductOffersTrans;
-use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
 
 final class OfferFieldsCategoryChoiceRepository implements OfferFieldsCategoryChoiceInterface
 {
+    private ?CategoryProductUid $category = null;
 
-    private ORMQueryBuilder $ORMQueryBuilder;
+    public function __construct(private readonly ORMQueryBuilder $ORMQueryBuilder) {}
 
-
-    public function __construct(
-        ORMQueryBuilder $ORMQueryBuilder,
-    )
+    public function category(CategoryProduct|CategoryProductUid|string $category): self
     {
-        $this->ORMQueryBuilder = $ORMQueryBuilder;
-    }
-
-
-    /**
-     * Метод возвращает список свойств указанной категории (тип и название)
-     */
-    public function findByCategory(
-        CategoryProduct|CategoryProductUid|string $category
-    ): ?CategoryProductOffersUid
-    {
-
         if($category instanceof CategoryProduct)
         {
             $category = $category->getId();
@@ -64,6 +50,15 @@ final class OfferFieldsCategoryChoiceRepository implements OfferFieldsCategoryCh
             $category = new CategoryProductUid($category);
         }
 
+        $this->category = $category;
+        return $this;
+    }
+
+    /**
+     * Метод возвращает список свойств указанной категории (тип и название)
+     */
+    public function findAllCategoryProductOffers(): ?CategoryProductOffersUid
+    {
 
         $orm = $this->ORMQueryBuilder
             ->createQueryBuilder(self::class)
@@ -73,10 +68,18 @@ final class OfferFieldsCategoryChoiceRepository implements OfferFieldsCategoryCh
         $orm->select($select);
 
 
-        $orm
-            ->from(CategoryProduct::class, 'category')
-            ->where('category.id = :category')
-            ->setParameter('category', $category, CategoryProductUid::TYPE);
+        $orm->from(CategoryProduct::class, 'category');
+
+        if($this->category)
+        {
+            $orm
+                ->where('category.id = :category')
+                ->setParameter(
+                    'category',
+                    $this->category,
+                    CategoryProductUid::TYPE
+                );
+        }
 
         $orm->join(
             CategoryProductOffers::class,

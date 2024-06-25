@@ -21,24 +21,15 @@
  *  THE SOFTWARE.
  */
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+namespace BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice\ModificationCategoryProductSectionField;
 
-use BaksDev\Products\Category\BaksDevProductsCategoryBundle;
+use BaksDev\Products\Category\Entity\Offers\Variation\CategoryProductVariation;
+use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 
-return static function(ContainerConfigurator $configurator) {
-    $services = $configurator->services()
-        ->defaults()
-        ->autowire()
-        ->autoconfigure();
+interface ModificationCategoryProductSectionFieldInterface
+{
+    public function variation(CategoryProductVariation|CategoryProductVariationUid|string $variation): self;
 
-
-    $NAMESPACE = BaksDevProductsCategoryBundle::NAMESPACE;
-    $PATH = BaksDevProductsCategoryBundle::PATH;
-
-    $services->load($NAMESPACE, $PATH)
-        ->exclude([
-            $PATH.'{Entity,Resources,Type}',
-            $PATH.'**/*Message.php',
-            $PATH.'**/*DTO.php',
-        ]);
-};
+    public function findAllCategoryProductSectionField(): ?CategoryProductSectionFieldUid;
+}

@@ -29,10 +29,10 @@ use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
 
 interface VariationByOfferInterface
 {
+    public function offer(CategoryProductOffers|CategoryProductOffersUid|string $offer): self;
+
     /**
      * Метод получает идентификатор настройки торгового предложения продукта в категории
      */
-    public function findByOffer(
-        CategoryProductOffers|CategoryProductOffersUid|string $offer
-    ): ?CategoryProductVariation;
+    public function findCategoryProductVariation(): ?CategoryProductVariation;
 }

@@ -23,13 +23,14 @@
 
 namespace BaksDev\Products\Category\Repository\VariationFieldsCategoryChoice;
 
-
+use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
 use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
 use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
 
 interface VariationFieldsCategoryChoiceInterface
 {
-	/** Метод возвращает троговое предложение указанной категории (тип и название) */
-	
-	public function getVariationFieldType(CategoryProductOffersUid $offer) : ?CategoryProductVariationUid;
+    public function offer(CategoryProductOffers|CategoryProductOffersUid|string $offer): self;
+
+    /** Метод возвращает торговое предложение указанной категории (тип и название) */
+    public function findCategoryProductVariation(): ?CategoryProductVariationUid;
 }

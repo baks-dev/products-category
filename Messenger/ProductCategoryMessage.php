@@ -30,44 +30,48 @@ use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 
 final class ProductCategoryMessage
 {
-	/** Идентификатор */
-	private CategoryProductUid $id;
-	
-	/** Идентификатор события */
-	private CategoryProductEventUid $event;
-	
-	/** Идентификатор предыдущего события */
-	private ?CategoryProductEventUid $last;
-	
-	public function __construct(CategoryProductUid $id, CategoryProductEventUid $event, ?CategoryProductEventUid $last = null)
-	{
-		$this->last = $last;
-		$this->id = $id;
-		$this->event = $event;
-	}
-	
-	
-	/** Идентификатор */
-	
-	public function getId() : CategoryProductUid
-	{
-		return $this->id;
-	}
-	
-	
-	/** Идентификатор события */
-	
-	public function getEvent() : CategoryProductEventUid
-	{
-		return $this->event;
-	}
-	
-	
-	/** Идентификатор предыдущего события */
-	
-	public function getLast() : ?CategoryProductEventUid
-	{
-		return $this->last;
-	}
-	
+    /** Идентификатор */
+    private CategoryProductUid $id;
+
+    /** Идентификатор события */
+    private CategoryProductEventUid $event;
+
+    /** Идентификатор предыдущего события */
+    private ?CategoryProductEventUid $last;
+
+    public function __construct(
+        CategoryProductUid $id,
+        CategoryProductEventUid $event,
+        ?CategoryProductEventUid $last = null
+    )
+    {
+        $this->last = $last;
+        $this->id = $id;
+        $this->event = $event;
+    }
+
+
+    /** Идентификатор */
+
+    public function getId(): CategoryProductUid
+    {
+        return $this->id;
+    }
+
+
+    /** Идентификатор события */
+
+    public function getEvent(): CategoryProductEventUid
+    {
+        return $this->event;
+    }
+
+
+    /** Идентификатор предыдущего события */
+
+    public function getLast(): ?CategoryProductEventUid
+    {
+        return $this->last;
+    }
+
 }

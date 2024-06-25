@@ -23,10 +23,13 @@
 
 namespace BaksDev\Products\Category\Repository\AllFilterFieldsByCategory;
 
+use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 
 interface AllFilterFieldsByCategoryInterface
 {
-	/** Метод возвращает все свойства, участвующие в фильтре */
-	public function findAllByCategory(CategoryProductUid $category) : array;
+    public function category(CategoryProduct|CategoryProductUid|string $category): self;
+
+    /** Метод возвращает все свойства, участвующие в фильтре */
+    public function findAll(): array;
 }

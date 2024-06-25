@@ -28,12 +28,9 @@ namespace BaksDev\Products\Category\UseCase\Admin\NewEdit;
 use BaksDev\Core\Entity\AbstractHandler;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Files\Resources\Upload\Image\ImageUploadInterface;
-use BaksDev\Products\Category\Entity\Cover\CategoryProductCover;
-use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 use BaksDev\Products\Category\Messenger\ProductCategoryMessage;
-use BaksDev\Products\Category\Repository\UniqCategoryUrl\UniqCategoryUrlRepository;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Cover\CategoryProductCoverDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use DomainException;
 use Psr\Log\LoggerInterface;
@@ -41,38 +38,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class ProductCategoryHandler extends AbstractHandler
 {
-//    private EntityManagerInterface $entityManager;
-//
-//    private ValidatorInterface $validator;
-//
-//    private LoggerInterface $logger;
-//
-//    private ImageUploadInterface $imageUpload;
-//
-//    private UniqCategoryUrl $uniqCategoryUrl;
-//
-//    private MessageDispatchInterface $messageDispatch;
-//
-//    public function __construct(
-//        EntityManagerInterface $entityManager,
-//        ValidatorInterface $validator,
-//        LoggerInterface $logger,
-//        ImageUploadInterface $imageUpload,
-//        UniqCategoryUrl $uniqCategoryUrl,
-//        MessageDispatchInterface $messageDispatch
-//    )
-//    {
-//        $this->entityManager = $entityManager;
-//        $this->validator = $validator;
-//        $this->logger = $logger;
-//        $this->imageUpload = $imageUpload;
-//        $this->uniqCategoryUrl = $uniqCategoryUrl;
-//
-//        $this->messageDispatch = $messageDispatch;
-//    }
-
-
-    public function handle(CategoryProductDTO $command,): string|CategoryProduct
+    public function handle(CategoryProductDTO $command): string|CategoryProduct
     {
         /** Валидация DTO  */
         $this->validatorCollection->add($command);
@@ -109,10 +75,6 @@ final class ProductCategoryHandler extends AbstractHandler
         {
             return $this->validatorCollection->getErrorUniqid();
         }
-
-
-        //dump($command);
-        //dd($this->event);
 
         $this->entityManager->flush();
 

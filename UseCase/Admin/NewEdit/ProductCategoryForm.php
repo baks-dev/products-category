@@ -1,17 +1,17 @@
 <?php
 /*
  *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *  
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -36,123 +36,122 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class ProductCategoryForm extends AbstractType
 {
-	private ParentCategoryChoiceInterface $categoryParent;
-	
-	public function __construct(ParentCategoryChoiceInterface $categoryParent)
-	{
-		$this->categoryParent = $categoryParent;
-	}
-	
-	public function buildForm(FormBuilderInterface $builder, array $options) : void
-	{
-		/**  Сортировка категории */
-		$builder->add('sort', IntegerType::class);
-		
-		/** Обложка категории */
-		$builder->add('cover', NewEdit\Cover\ProductCategoryCoverForm::class);
-		
-		/** Неизменяемые свойства категории */
-		$builder->add('info', NewEdit\Info\InfoForm::class);
-		
-		
-		/** Идентификатор родительской категории */
-		$builder->add(
-			'parent',
-			ChoiceType::class,
-			[
-				'label' => false,
-				'required' => false,
-				'choices' => $this->categoryParent->findAll(),
-				'choice_value' => function(?ParentCategoryProductUid $type){
-					return $type?->getValue();
-				},
-				'choice_label' => function(ParentCategoryProductUid $type){
-					return  ($type->isParent() ? ' - ' : '') . $type->getOption();
-				},
-			]
-		);
-		
-		
-		/** Настройки локали категории */
-		$builder->add('translate', CollectionType::class, [
-			'entry_type' => NewEdit\Trans\CategoryTransForm::class,
-			'entry_options' => ['label' => false],
-			'label' => false,
-			'by_reference' => false,
-			'allow_delete' => true,
-			'allow_add' => true,
-			'prototype_name' => '__category_translate__',
-		]);
-		
-		/** Настройки SEO категории */
-		$builder->add('seo', CollectionType::class, [
-			'entry_type' => NewEdit\Seo\SeoCollectionForm::class,
-			'entry_options' => ['label' => false],
-			'label' => false,
-			'by_reference' => false,
-			'allow_delete' => true,
-			'allow_add' => true,
-			'prototype_name' => '__category_seo__',
-		]);
-		
-		/** Посадочные блоки */
-		$builder->add('landing', CollectionType::class, [
-			'entry_type' => NewEdit\Landing\LandingCollectionForm::class,
-			'entry_options' => ['label' => false],
-			'label' => false,
-			'by_reference' => false,
-			'allow_delete' => true,
-			'allow_add' => true,
-			'prototype_name' => '__category_landing__',
-		]);
-		
-		/** Секции свойств продукта категории */
-		$builder->add('section', CollectionType::class, [
-			'entry_type' => NewEdit\Section\SectionCollectionForm::class,
-			'entry_options' => ['label' => false],
-			'label' => false,
-			'by_reference' => false,
-			'allow_delete' => true,
-			'allow_add' => true,
-			'prototype_name' => '__category_section__',
-		]);
-		
-		/** Торговые предложения */
-		
-		/*$builder->add('offer', CollectionType::class, [
-			'entry_type' => NewEdit\Offers\ProductCategoryOffersForm::class,
-			'entry_options' => ['label' => false],
-			'label' => false,
-			'by_reference' => false,
-			'allow_delete' => true,
-			'allow_add' => true,
-			'prototype_name' => '__category_offer__'
-		]);*/
-		
-		
-		/** Товары в категории с торговым предложением */
-		$builder->add('offer', NewEdit\Offers\ProductCategoryOffersForm::class);
-		
-		
-		/* Сохранить ******************************************************/
-		$builder->add(
-			'Save',
-			SubmitType::class,
-			['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-primary']]
-		);
-		
-	}
-	
-	public function configureOptions(OptionsResolver $resolver) : void
-	{
-		$resolver->setDefaults
-		(
-			[
-				'data_class' => CategoryProductDTO::class,
-				'method' => 'POST',
-				'attr' => ['class' => 'w-100'],
-			]
-		);
-	}
-	
+    private ParentCategoryChoiceInterface $categoryParent;
+
+    public function __construct(ParentCategoryChoiceInterface $categoryParent)
+    {
+        $this->categoryParent = $categoryParent;
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        /**  Сортировка категории */
+        $builder->add('sort', IntegerType::class);
+
+        /** Обложка категории */
+        $builder->add('cover', NewEdit\Cover\ProductCategoryCoverForm::class);
+
+        /** Неизменяемые свойства категории */
+        $builder->add('info', NewEdit\Info\InfoForm::class);
+
+
+        /** Идентификатор родительской категории */
+        $builder->add(
+            'parent',
+            ChoiceType::class,
+            [
+                'label' => false,
+                'required' => false,
+                'choices' => $this->categoryParent->findAll(),
+                'choice_value' => function(?ParentCategoryProductUid $type) {
+                    return $type?->getValue();
+                },
+                'choice_label' => function(ParentCategoryProductUid $type) {
+                    return ($type->isParent() ? ' - ' : '').$type->getOption();
+                },
+            ]
+        );
+
+
+        /** Настройки локали категории */
+        $builder->add('translate', CollectionType::class, [
+            'entry_type' => NewEdit\Trans\CategoryTransForm::class,
+            'entry_options' => ['label' => false],
+            'label' => false,
+            'by_reference' => false,
+            'allow_delete' => true,
+            'allow_add' => true,
+            'prototype_name' => '__category_translate__',
+        ]);
+
+        /** Настройки SEO категории */
+        $builder->add('seo', CollectionType::class, [
+            'entry_type' => NewEdit\Seo\SeoCollectionForm::class,
+            'entry_options' => ['label' => false],
+            'label' => false,
+            'by_reference' => false,
+            'allow_delete' => true,
+            'allow_add' => true,
+            'prototype_name' => '__category_seo__',
+        ]);
+
+        /** Посадочные блоки */
+        $builder->add('landing', CollectionType::class, [
+            'entry_type' => NewEdit\Landing\LandingCollectionForm::class,
+            'entry_options' => ['label' => false],
+            'label' => false,
+            'by_reference' => false,
+            'allow_delete' => true,
+            'allow_add' => true,
+            'prototype_name' => '__category_landing__',
+        ]);
+
+        /** Секции свойств продукта категории */
+        $builder->add('section', CollectionType::class, [
+            'entry_type' => NewEdit\Section\SectionCollectionForm::class,
+            'entry_options' => ['label' => false],
+            'label' => false,
+            'by_reference' => false,
+            'allow_delete' => true,
+            'allow_add' => true,
+            'prototype_name' => '__category_section__',
+        ]);
+
+        /** Торговые предложения */
+
+        /*$builder->add('offer', CollectionType::class, [
+            'entry_type' => NewEdit\Offers\ProductCategoryOffersForm::class,
+            'entry_options' => ['label' => false],
+            'label' => false,
+            'by_reference' => false,
+            'allow_delete' => true,
+            'allow_add' => true,
+            'prototype_name' => '__category_offer__'
+        ]);*/
+
+
+        /** Товары в категории с торговым предложением */
+        $builder->add('offer', NewEdit\Offers\ProductCategoryOffersForm::class);
+
+
+        /* Сохранить ******************************************************/
+        $builder->add(
+            'Save',
+            SubmitType::class,
+            ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-primary']]
+        );
+
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults(
+            [
+                'data_class' => CategoryProductDTO::class,
+                'method' => 'POST',
+                'attr' => ['class' => 'w-100'],
+            ]
+        );
+    }
+
 }

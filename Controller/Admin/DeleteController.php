@@ -45,6 +45,7 @@ final class DeleteController extends AbstractController
         Entity\Event\CategoryProductEvent $Event,
     ): Response
     {
+
         $category = new DeleteCategoryProductDTO();
         $Event->getDto($category);
         $form = $this->createForm(DeleteProductCategoryForm::class, $category, [

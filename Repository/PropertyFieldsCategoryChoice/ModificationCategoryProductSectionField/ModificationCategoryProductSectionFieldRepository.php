@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -23,21 +23,20 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Products\Category\Repository\CategoryModificationForm;
+namespace BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice\ModificationCategoryProductSectionField;
 
-use BaksDev\Core\Doctrine\ORMQueryBuilder;
-use BaksDev\Products\Category\Entity\CategoryProduct;
-use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Products\Category\Entity\Offers\Variation\CategoryProductVariation;
 use BaksDev\Products\Category\Entity\Offers\Variation\Modification\CategoryProductModification;
 use BaksDev\Products\Category\Entity\Offers\Variation\Modification\Trans\CategoryProductModificationTrans;
 use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 
-final class CategoryModificationFormRepository implements CategoryModificationFormInterface
+final class ModificationCategoryProductSectionFieldRepository implements ModificationCategoryProductSectionFieldInterface
 {
     private ?CategoryProductVariationUid $variation = null;
 
-    public function __construct(private readonly ORMQueryBuilder $ORMQueryBuilder) {}
+    public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
 
     public function variation(CategoryProductVariation|CategoryProductVariationUid|string $variation): self
     {
@@ -53,40 +52,19 @@ final class CategoryModificationFormRepository implements CategoryModificationFo
 
         $this->variation = $variation;
         return $this;
-
     }
 
-    public function findAllModification(): ?CategoryModificationFormDTO
+
+    public function findAllCategoryProductSectionField(): ?CategoryProductSectionFieldUid
     {
-        $qb = $this->ORMQueryBuilder
-            ->createQueryBuilder(self::class)
-            ->bindLocal();
+        $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class)->bindLocal();
 
-        $select = sprintf(
-            'new %s(
-            modification.id,
-            modification.reference,
-            modification.image,
-            modification.price,
-            modification.quantitative,
-            modification.article,
-            modification_trans.name,
-            
-            modification.postfix,
-            modification_trans.postfix
-            
-        )',
-            CategoryModificationFormDTO::class
-        );
-
-        $qb->select($select);
-
-        $qb->from(CategoryProductModification::class, 'modification');
+        $dbal->from(CategoryProductModification::class, 'category_modification');
 
         if($this->variation)
         {
-            $qb
-                ->where('modification.variation = :variation')
+            $dbal
+                ->where('category_modification.variation = :variation')
                 ->setParameter(
                     'variation',
                     $this->variation,
@@ -94,42 +72,19 @@ final class CategoryModificationFormRepository implements CategoryModificationFo
                 );
         }
 
-        $qb
-            ->join(
-                CategoryProductVariation::class,
-                'variation',
-                'WITH',
-                'variation.id = modification.variation'
-            );
+        $dbal->leftJoin(
+            'category_modification',
+            CategoryProductModificationTrans::class,
+            'category_modification_trans',
+            'category_modification_trans.modification = category_modification.id 
+            AND category_modification_trans.local = :local',
+        );
 
-        $qb
-            ->join(
-                CategoryProductOffers::class,
-                'offer',
-                'WITH',
-                'offer.id = variation.offer'
-            );
+        /** Параметры конструктора объекта гидрации */
+        $dbal->select('category_modification.id AS value');
+        $dbal->addSelect('category_modification.variation AS const');
+        $dbal->addSelect('category_modification_trans.name AS attr');
 
-        $qb
-            ->join(
-                CategoryProduct::class,
-                'category',
-                'WITH',
-                'category.event = offer.event'
-            );
-
-        $qb
-            ->leftJoin(
-                CategoryProductModificationTrans::class,
-                'modification_trans',
-                'WITH',
-                'modification_trans.modification = modification.id AND 
-                modification_trans.local = :local'
-            );
-
-
-        return $qb->getQuery()->getOneOrNullResult();
-
+        return $dbal->fetchHydrate(CategoryProductSectionFieldUid::class);
     }
-
 }

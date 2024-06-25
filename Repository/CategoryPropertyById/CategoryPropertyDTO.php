@@ -23,7 +23,6 @@
 
 namespace BaksDev\Products\Category\Repository\CategoryPropertyById;
 
-
 use BaksDev\Core\Type\Field\InputField;
 use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use BaksDev\Products\Category\Type\Section\Id\CategoryProductSectionUid;
@@ -31,50 +30,47 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class CategoryPropertyDTO
 {
-	
-	/** Идентификатор Секции */
-	public CategoryProductSectionUid $sectionUid;
-	
-	/** Перевод секции */
-	public string $sectionTrans;
-	
-	/** Идентификатор поля */
-	public CategoryProductSectionFieldUid $fieldUid;
-	
-	/** Перевод поля */
-	public string $fieldTrans;
-	
-	/** Опсиание поля */
-	public ?string $fieldDesc;
-	
-	/** Тип поля (input|select|integer|textarea|.....)  */
-	public InputField $fieldType;
-	
-	/** Обязательное к заполнению поле */
-	public bool $fieldRequired;
-	
-	
-	public function __construct(
-		CategoryProductSectionUid $sectionUid,
-		string $sectionTrans,
-		CategoryProductSectionFieldUid $fieldUid,
-		string $fieldTrans,
-		InputField $fieldType,
-		bool $fieldRequired,
-		?string $fieldDesc,
-	
-	)
-	{
-		
-		$this->sectionUid = $sectionUid;   /* ID Секции  */
-		$this->sectionTrans = $sectionTrans; /* Перевод секции */
-		
-		$this->fieldUid = $fieldUid; /* ID поля   */
-		$this->fieldTrans = $fieldTrans; /* Перевод поля */
-		$this->fieldType = $fieldType; /* Тип поля (input|select|integer|textarea|.....) */
-		$this->fieldRequired = $fieldRequired; /* Обязательное к заполнению поле */
-		$this->fieldDesc = $fieldDesc; /* Описание */
-	}
-	
-}
+    /** Идентификатор Секции */
+    public CategoryProductSectionUid $sectionUid;
 
+    /** Перевод секции */
+    public string $sectionTrans;
+
+    /** Идентификатор поля */
+    public CategoryProductSectionFieldUid $fieldUid;
+
+    /** Перевод поля */
+    public string $fieldTrans;
+
+    /** Опсиание поля */
+    public ?string $fieldDesc;
+
+    /** Тип поля (input|select|integer|textarea|.....)  */
+    public InputField $fieldType;
+
+    /** Обязательное к заполнению поле */
+    public bool $fieldRequired;
+
+
+    public function __construct(
+        CategoryProductSectionUid $sectionUid,
+        string $sectionTrans,
+        CategoryProductSectionFieldUid $fieldUid,
+        string $fieldTrans,
+        InputField $fieldType,
+        bool $fieldRequired,
+        ?string $fieldDesc,
+    )
+    {
+
+        $this->sectionUid = $sectionUid;   /* ID Секции  */
+        $this->sectionTrans = $sectionTrans; /* Перевод секции */
+
+        $this->fieldUid = $fieldUid; /* ID поля   */
+        $this->fieldTrans = $fieldTrans; /* Перевод поля */
+        $this->fieldType = $fieldType; /* Тип поля (input|select|integer|textarea|.....) */
+        $this->fieldRequired = $fieldRequired; /* Обязательное к заполнению поле */
+        $this->fieldDesc = $fieldDesc; /* Описание */
+    }
+
+}

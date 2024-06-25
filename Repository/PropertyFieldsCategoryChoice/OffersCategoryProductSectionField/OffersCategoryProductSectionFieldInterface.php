@@ -21,15 +21,15 @@
  *  THE SOFTWARE.
  */
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+namespace BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice\OffersCategoryProductSectionField;
 
-use BaksDev\Products\Category\BaksDevProductsCategoryBundle;
-use Symfony\Config\FrameworkConfig;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 
-return static function(FrameworkConfig $config) {
+interface OffersCategoryProductSectionFieldInterface
+{
+    public function category(CategoryProduct|CategoryProductUid|string $category): self;
 
-    $config
-        ->translator()
-        ->paths([BaksDevProductsCategoryBundle::PATH.'Resources/translations/']);
-
-};
+    public function findAllCategoryProductSectionField(): ?CategoryProductSectionFieldUid;
+}

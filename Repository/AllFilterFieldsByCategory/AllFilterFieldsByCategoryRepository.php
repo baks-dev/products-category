@@ -27,46 +27,57 @@ namespace BaksDev\Products\Category\Repository\AllFilterFieldsByCategory;
 
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Entity\Section\CategoryProductSection;
 use BaksDev\Products\Category\Entity\Section\Field\CategoryProductSectionField;
 use BaksDev\Products\Category\Entity\Section\Field\Trans\CategoryProductSectionFieldTrans;
-use BaksDev\Products\Category\Entity\Section\CategoryProductSection;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 
 final class AllFilterFieldsByCategoryRepository implements AllFilterFieldsByCategoryInterface
 {
+    private ?CategoryProductUid $category = null;
 
-    private DBALQueryBuilder $DBALQueryBuilder;
-
-    public function __construct(DBALQueryBuilder $DBALQueryBuilder)
-    {
-        $this->DBALQueryBuilder = $DBALQueryBuilder;
-    }
+    public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
 
     /**
      * Метод возвращает все свойства, участвующие в фильтре
      */
-
-    public function findAllByCategory(CategoryProduct|CategoryProductUid|string $category): array
+    public function category(CategoryProduct|CategoryProductUid|string $category): self
     {
-        if ($category instanceof CategoryProduct) {
+        if($category instanceof CategoryProduct)
+        {
             $category = $category->getId();
         }
 
-        if (is_string($category)) {
+        if(is_string($category))
+        {
             $category = new CategoryProductUid($category);
         }
+
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function findAll(): array
+    {
 
         $qb = $this->DBALQueryBuilder
             ->createQueryBuilder(self::class)
             ->bindLocal();
 
-        $qb
-            ->from(CategoryProduct::TABLE, 'category')
-            ->where('category.id = :category')
-            ->setParameter('category', $category);
+        $qb->from(CategoryProduct::TABLE, 'category');
+
+
+        if($this->category)
+        {
+            $qb
+                ->where('category.id = :category')
+                ->setParameter('category', $this->category, CategoryProductUid::TYPE);
+        }
 
         $qb
-            ->leftJoin('category',
+            ->leftJoin(
+                'category',
                 CategoryProductSection::TABLE,
                 'category_section',
                 'category_section.event = category.event'
@@ -86,7 +97,8 @@ final class AllFilterFieldsByCategoryRepository implements AllFilterFieldsByCate
 
         $qb
             ->addSelect('category_section_field_trans.name')
-            ->leftJoin('category_section_field',
+            ->leftJoin(
+                'category_section_field',
                 CategoryProductSectionFieldTrans::TABLE,
                 'category_section_field_trans',
                 'category_section_field_trans.field = category_section_field.id AND category_section_field_trans.local = :local'

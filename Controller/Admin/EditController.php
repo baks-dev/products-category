@@ -39,7 +39,6 @@ use Symfony\Component\Routing\Annotation\Route;
 #[RoleSecurity('ROLE_PRODUCT_CATEGORY_EDIT')]
 final class EditController extends AbstractController
 {
-
     #[Route('/admin/product/category/edit/{id}', name: 'admin.newedit.edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,

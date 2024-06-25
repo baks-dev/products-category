@@ -26,22 +26,15 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\Repository\AllCategoryByMenu;
 
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
+use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Cover\CategoryProductCover;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 use BaksDev\Products\Category\Entity\Info\CategoryProductInfo;
-use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 
 final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
 {
-    private DBALQueryBuilder $DBALQueryBuilder;
-
-    public function __construct(
-        DBALQueryBuilder $DBALQueryBuilder,
-    )
-    {
-        $this->DBALQueryBuilder = $DBALQueryBuilder;
-    }
+    public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
 
     /**
      * Метод возвращает все категории и их вложенные для двухуровневого меню
@@ -82,7 +75,8 @@ final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
         $dbal
             ->addSelect('category_cover.ext AS category_cover_ext')
             ->addSelect('category_cover.cdn AS category_cover_cdn')
-            ->addSelect("
+            ->addSelect(
+                "
 			CASE
 			 WHEN category_cover.name IS NOT NULL THEN
 					CONCAT ( '/upload/".$dbal->table(CategoryProductCover::class)."' , '/', category_cover.name)
@@ -113,32 +107,37 @@ final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
         /* ВЛОЖЕННЫЕ РАЗДЕЛЫ */
 
         // $dbal->addSelect('parent_category_event.id AS parent_event');
-        $dbal->leftJoin('category',
+        $dbal->leftJoin(
+            'category',
             CategoryProductEvent::class,
             'parent_category_event',
             'parent_category_event.parent = category.id'
         );
 
-        $dbal->leftJoin('parent_category_event',
+        $dbal->leftJoin(
+            'parent_category_event',
             CategoryProductInfo::class,
             'parent_category_info',
             'parent_category_info.event = parent_category_event.id'
         );
 
-        $dbal->leftJoin('parent_category_event',
+        $dbal->leftJoin(
+            'parent_category_event',
             CategoryProductCover::class,
             'parent_category_cover',
             'parent_category_cover.event = parent_category_event.id'
         );
 
         // $dbal->addSelect('parent_category_trans.name AS parent_category_name');
-        $dbal->leftJoin('parent_category_event',
+        $dbal->leftJoin(
+            'parent_category_event',
             CategoryProductTrans::class,
             'parent_category_trans',
             'parent_category_trans.event = parent_category_event.id  AND parent_category_trans.local = :local'
         );
 
-        $dbal->addSelect("JSON_AGG
+        $dbal->addSelect(
+            "JSON_AGG
 		( DISTINCT
 			
 				JSONB_BUILD_OBJECT

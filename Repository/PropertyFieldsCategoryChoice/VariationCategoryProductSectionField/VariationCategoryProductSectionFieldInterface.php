@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,16 +21,15 @@
  *  THE SOFTWARE.
  */
 
-declare(strict_types=1);
+namespace BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice\VariationCategoryProductSectionField;
 
-namespace BaksDev\Products\Category\Messenger;
+use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
+use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 
-use BaksDev\Core\Cache\AppCacheInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-
-#[AsMessageHandler]
-final class ProductCategoryDispatch
+interface VariationCategoryProductSectionFieldInterface
 {
-	public function __invoke(ProductCategoryMessage $message): void {}
+    public function offer(CategoryProductOffers|CategoryProductOffersUid|string $offer): self;
+
+    public function findAllCategoryProductSectionField(): ?CategoryProductSectionFieldUid;
 }

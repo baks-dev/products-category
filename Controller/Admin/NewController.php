@@ -57,6 +57,7 @@ final class NewController extends AbstractController
         ?CategoryProductEventUid $id = null,
     ): Response
     {
+
         $parent = $cat ? new ParentCategoryProductUid($cat->getId()) : null;
         $Event = $id ? $entityManager->getRepository(CategoryEntity\Event\CategoryProductEvent::class)->find(
             $id

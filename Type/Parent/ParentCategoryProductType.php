@@ -28,14 +28,14 @@ use Doctrine\DBAL\Types\Types;
 
 final class ParentCategoryProductType extends UidType
 {
-	public function getClassType(): string
-	{
-		return ParentCategoryProductUid::class;
-	}
-	
-	public function getName(): string
-	{
+    public function getClassType(): string
+    {
+        return ParentCategoryProductUid::class;
+    }
+
+    public function getName(): string
+    {
         return ParentCategoryProductUid::TYPE;
-	}
-	
+    }
+
 }

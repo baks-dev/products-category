@@ -26,27 +26,20 @@ namespace BaksDev\Products\Category\Repository\AllCategory;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
+use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Cover\CategoryProductCover;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
-use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
 
 final class AllCategoryRepository implements AllCategoryInterface
 {
-    private PaginatorInterface $paginator;
-    private DBALQueryBuilder $DBALQueryBuilder;
-
     private ?SearchDTO $search = null;
 
     public function __construct(
-        DBALQueryBuilder $DBALQueryBuilder,
-        PaginatorInterface $paginator
-    )
-    {
-        $this->paginator = $paginator;
-        $this->DBALQueryBuilder = $DBALQueryBuilder;
-    }
+        private readonly DBALQueryBuilder $DBALQueryBuilder,
+        private readonly PaginatorInterface $paginator
+    ) {}
 
     public function search(SearchDTO $search): self
     {
@@ -81,31 +74,31 @@ final class AllCategoryRepository implements AllCategoryInterface
         $dbal
             ->select('category.id')
             ->addSelect('category.event')
-            ->from(CategoryProduct::TABLE, 'category');
+            ->from(CategoryProduct::class, 'category');
 
         // События категории
-        $dbal->addSelect('category_event.sort AS category_sort');
-        $dbal->addSelect('category_event.parent AS category_parent');
-
-        $dbal->join(
-            'category',
-            CategoryProductEvent::TABLE,
-            'category_event',
-            'category_event.id = category.event AND '.
-            ($parent ? 'category_event.parent = :parent_category' : 'category_event.parent IS NULL')
-        );
+        $dbal
+            ->addSelect('category_event.sort AS category_sort')
+            ->addSelect('category_event.parent AS category_parent')
+            ->join(
+                'category',
+                CategoryProductEvent::class,
+                'category_event',
+                'category_event.id = category.event AND '.
+                ($parent ? 'category_event.parent = :parent_category' : 'category_event.parent IS NULL')
+            );
 
         // Обложка
-        $dbal->addSelect('category_cover.name AS category_cover_name');
-        $dbal->addSelect('category_cover.ext AS category_cover_ext');
-        $dbal->addSelect('category_cover.cdn AS category_cover_cdn');
-
-        $dbal->leftJoin(
-            'category_event',
-            CategoryProductCover::TABLE,
-            'category_cover',
-            'category_cover.event = category_event.id'
-        );
+        $dbal
+            ->addSelect('category_cover.name AS category_cover_name')
+            ->addSelect('category_cover.ext AS category_cover_ext')
+            ->addSelect('category_cover.cdn AS category_cover_cdn')
+            ->leftJoin(
+                'category_event',
+                CategoryProductCover::TABLE,
+                'category_cover',
+                'category_cover.event = category_event.id'
+            );
 
         if($parent)
         {
@@ -113,21 +106,23 @@ final class AllCategoryRepository implements AllCategoryInterface
         }
 
         // Перевод категории
-        $dbal->addSelect('category_trans.name AS category_name');
-        $dbal->addSelect('category_trans.description AS category_description');
-
-        $dbal->leftJoin(
-            'category_event',
-            CategoryProductTrans::TABLE,
-            'category_trans',
-            'category_trans.event = category_event.id AND category_trans.local = :local'
-        );
+        $dbal
+            ->addSelect('category_trans.name AS category_name')
+            ->addSelect('category_trans.description AS category_description')
+            ->leftJoin(
+                'category_event',
+                CategoryProductTrans::class,
+                'category_trans',
+                '
+                    category_trans.event = category_event.id AND 
+                    category_trans.local = :local
+                '
+            );
 
         /** Количество вложенных категорий */
 
         // EXISTS Event IN Category
         $dbalCounterExist = $this->DBALQueryBuilder->createQueryBuilder(self::class);
-
         $dbalCounterExist
             ->select('1')
             ->from(CategoryProduct::TABLE, 'count_cat')
@@ -138,13 +133,13 @@ final class AllCategoryRepository implements AllCategoryInterface
         $dbalCounter = $this->DBALQueryBuilder->createQueryBuilder(self::class);
         $dbalCounter
             ->select('COUNT(category_event_count.id)')
-            ->from(CategoryProductEvent::TABLE, 'category_event_count')
+            ->from(CategoryProductEvent::class, 'category_event_count')
             ->where('category_event_count.parent = category.id');
 
         $dbalCounter
             ->join(
                 'category_event_count',
-                CategoryProduct::TABLE,
+                CategoryProduct::class,
                 'count_cat',
                 'count_cat.id = category_event_count.category AND count_cat.event = category_event_count.id'
             );

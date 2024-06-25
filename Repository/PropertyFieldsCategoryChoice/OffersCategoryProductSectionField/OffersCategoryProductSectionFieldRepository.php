@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -23,19 +23,20 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Products\Category\Repository\OfferByCategory;
+namespace BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice\OffersCategoryProductSectionField;
 
-use BaksDev\Core\Doctrine\ORMQueryBuilder;
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
+use BaksDev\Products\Category\Entity\Offers\Trans\CategoryProductOffersTrans;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
-use Doctrine\ORM\EntityManagerInterface;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 
-final class OfferByCategoryRepository implements OfferByCategoryInterface
+final class OffersCategoryProductSectionFieldRepository implements OffersCategoryProductSectionFieldInterface
 {
     private ?CategoryProductUid $category = null;
 
-    public function __construct(private readonly ORMQueryBuilder $ORMQueryBuilder) {}
+    public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
 
     public function category(CategoryProduct|CategoryProductUid|string $category): self
     {
@@ -46,26 +47,25 @@ final class OfferByCategoryRepository implements OfferByCategoryInterface
 
         if(is_string($category))
         {
-            $category = new CategoryProductUid($category);
+            $category = new CategoryProductUid();
         }
+
         $this->category = $category;
         return $this;
     }
 
-    /**
-     * Метод получает идентификатор настройки торгового предложения продукта в категории
-     */
-    public function findCategoryProductOffers(): ?CategoryProductOffers
+
+    public function findAllCategoryProductSectionField(): ?CategoryProductSectionFieldUid
     {
-        $orm = $this->ORMQueryBuilder->createQueryBuilder(self::class);
+        $dbal = $this->DBALQueryBuilder
+            ->createQueryBuilder(self::class)
+            ->bindLocal();
 
-        $orm->select('offer');
-
-        $orm->from(CategoryProduct::class, 'category');
+        $dbal->from(CategoryProduct::class, 'category');
 
         if($this->category)
         {
-            $orm
+            $dbal
                 ->where('category.id = :category')
                 ->setParameter(
                     'category',
@@ -74,15 +74,25 @@ final class OfferByCategoryRepository implements OfferByCategoryInterface
                 );
         }
 
-
-        $orm->leftJoin(
+        $dbal->leftJoin(
+            'category',
             CategoryProductOffers::class,
-            'offer',
-            'WITH',
-            'offer.event = category.event'
+            'category_offers',
+            'category_offers.event = category.event',
         );
 
+        $dbal->leftJoin(
+            'category_offers',
+            CategoryProductOffersTrans::class,
+            'category_offers_tarns',
+            'category_offers_tarns.offer = category_offers.id AND category_offers_tarns.local = :local',
+        );
 
-        return $orm->getQuery()->getOneOrNullResult();
+        /** Параметры конструктора объекта гидрации */
+        $dbal->select('category_offers.id AS value');
+        $dbal->addSelect('category.event AS const');
+        $dbal->addSelect('category_offers_tarns.name AS attr');
+
+        return $dbal->fetchHydrate(CategoryProductSectionFieldUid::class);
     }
 }

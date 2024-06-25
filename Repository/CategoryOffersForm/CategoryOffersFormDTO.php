@@ -1,17 +1,17 @@
 <?php
 /*
  *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *  
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,47 +23,46 @@
 
 namespace BaksDev\Products\Category\Repository\CategoryOffersForm;
 
-use BaksDev\Products\Category\Type\Offers\Id\OffersUid;
 use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
+use BaksDev\Products\Category\Type\Offers\Id\OffersUid;
 
 final class CategoryOffersFormDTO
 {
-	public CategoryProductOffersUid $id;
-	
-	public string $name;
-	public ?string $reference;
-	public bool $image;
-	public bool $price;
-	public bool $quantitative;
-	public bool $article;
+    public CategoryProductOffersUid $id;
+
+    public ?string $name;
+    public ?string $reference;
+    public bool $image;
+    public bool $price;
+    public bool $quantitative;
+    public bool $article;
 
     public bool $postfix;
     public ?string $postfixName;
 
 
     public function __construct(
-		CategoryProductOffersUid $id,
-		?string $reference,
-		bool $image,
-		bool $price,
-		bool $quantitative,
-		bool $article,
-		string $name,
-
+        CategoryProductOffersUid $id,
+        ?string $reference,
+        bool $image,
+        bool $price,
+        bool $quantitative,
+        bool $article,
+        ?string $name,
         bool $postfix,
         ?string $postfixName,
-	)
-	{
-		$this->id = $id;
-		$this->name = $name;
-		$this->reference = $reference;
-		$this->image = $image;
-		$this->price = $price;
-		$this->article = $article;
-		$this->quantitative = $quantitative;
+    )
+    {
+        $this->id = $id;
+        $this->name = $name;
+        $this->reference = $reference;
+        $this->image = $image;
+        $this->price = $price;
+        $this->article = $article;
+        $this->quantitative = $quantitative;
 
         $this->postfix = $postfix;
         $this->postfixName = $postfixName;
     }
-	
+
 }

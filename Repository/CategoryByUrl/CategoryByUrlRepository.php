@@ -26,22 +26,17 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\Repository\CategoryByUrl;
 
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
+use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Cover\CategoryProductCover;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 use BaksDev\Products\Category\Entity\Info\CategoryProductInfo;
 use BaksDev\Products\Category\Entity\Landing\CategoryProductLanding;
-use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class CategoryByUrlRepository implements CategoryByUrlInterface
 {
-    private DBALQueryBuilder $DBALQueryBuilder;
-
-    public function __construct(DBALQueryBuilder $DBALQueryBuilder)
-    {
-        $this->DBALQueryBuilder = $DBALQueryBuilder;
-    }
+    public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
 
 
     /**
@@ -65,7 +60,8 @@ final class CategoryByUrlRepository implements CategoryByUrlInterface
 
         $dbal
             ->addSelect('product_category.id AS category_id')
-            ->join('info',
+            ->join(
+                'info',
                 CategoryProduct::class,
                 'product_category',
                 'product_category.event = info.event'
@@ -74,7 +70,8 @@ final class CategoryByUrlRepository implements CategoryByUrlInterface
 
         $dbal
             ->addSelect('product_category_event.parent AS category_parent')
-            ->join('product_category',
+            ->join(
+                'product_category',
                 CategoryProductEvent::class,
                 'product_category_event',
                 'product_category_event.id = product_category.event'
@@ -82,7 +79,8 @@ final class CategoryByUrlRepository implements CategoryByUrlInterface
 
         $dbal
             ->addSelect('product_category_trans.name AS category_name')
-            ->leftJoin('product_category',
+            ->leftJoin(
+                'product_category',
                 CategoryProductTrans::class,
                 'product_category_trans',
                 'product_category_trans.event = product_category_event.id  AND product_category_trans.local = :local'
@@ -92,7 +90,8 @@ final class CategoryByUrlRepository implements CategoryByUrlInterface
         $dbal
             ->addSelect('product_category_landing.header AS category_header')
             ->addSelect('product_category_landing.bottom AS category_bottom')
-            ->leftJoin('product_category',
+            ->leftJoin(
+                'product_category',
                 CategoryProductLanding::class,
                 'product_category_landing',
                 'product_category_landing.event = product_category_event.id  AND product_category_landing.local = :local'
@@ -102,7 +101,8 @@ final class CategoryByUrlRepository implements CategoryByUrlInterface
         /* КОРНЕВОЙ РАЗДЕЛ */
 
         $dbal
-            ->leftJoin('product_category_event',
+            ->leftJoin(
+                'product_category_event',
                 CategoryProduct::class,
                 'parent_product_category',
                 'parent_product_category.id = product_category_event.parent'
@@ -110,7 +110,8 @@ final class CategoryByUrlRepository implements CategoryByUrlInterface
 
         $dbal
             ->addSelect('parent_product_category_trans.name AS parent_category_name')
-            ->leftJoin('parent_product_category',
+            ->leftJoin(
+                'parent_product_category',
                 CategoryProductTrans::class,
                 'parent_product_category_trans',
                 'parent_product_category_trans.event = parent_product_category.event AND parent_product_category_trans.local = :local'
@@ -119,7 +120,8 @@ final class CategoryByUrlRepository implements CategoryByUrlInterface
         $dbal
             ->addSelect('parent_product_category_info.url AS parent_category_url')
             ->addSelect('parent_product_category_info.counter AS parent_category_counter')
-            ->leftJoin('parent_product_category',
+            ->leftJoin(
+                'parent_product_category',
                 CategoryProductInfo::class,
                 'parent_product_category_info',
                 'parent_product_category_info.event = parent_product_category.event '
@@ -129,19 +131,22 @@ final class CategoryByUrlRepository implements CategoryByUrlInterface
         /* ВЛОЖЕННЫЕ РАЗДЕЛЫ */
 
 
-        $dbal->leftJoin('product_category',
+        $dbal->leftJoin(
+            'product_category',
             CategoryProductEvent::class,
             'parent_category_event',
             'parent_category_event.parent = product_category.id'
         );
 
-        $dbal->leftJoin('parent_category_event',
+        $dbal->leftJoin(
+            'parent_category_event',
             CategoryProductInfo::class,
             'parent_category_info',
             'parent_category_info.event = parent_category_event.id'
         );
 
-        $dbal->leftJoin('parent_category_event',
+        $dbal->leftJoin(
+            'parent_category_event',
             CategoryProductCover::class,
             'parent_category_cover',
             'parent_category_cover.event = parent_category_event.id'
@@ -149,14 +154,16 @@ final class CategoryByUrlRepository implements CategoryByUrlInterface
 
 
         //$dbal->addSelect('parent_category_trans.name AS parent_category_name');
-        $dbal->leftJoin('parent_category_event',
+        $dbal->leftJoin(
+            'parent_category_event',
             CategoryProductTrans::class,
             'parent_category_trans',
             'parent_category_trans.event = parent_category_event.id  AND parent_category_trans.local = :local'
         );
 
 
-        $dbal->addSelect("JSON_AGG
+        $dbal->addSelect(
+            "JSON_AGG
 		( DISTINCT
 			
 				JSONB_BUILD_OBJECT

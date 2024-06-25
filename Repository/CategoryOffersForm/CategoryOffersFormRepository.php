@@ -1,17 +1,17 @@
 <?php
 /*
  *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *  
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,22 +24,19 @@
 namespace BaksDev\Products\Category\Repository\CategoryOffersForm;
 
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
+use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
 use BaksDev\Products\Category\Entity\Offers\Trans\CategoryProductOffersTrans;
-use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
-
 
 final class CategoryOffersFormRepository implements CategoryOffersFormInterface
 {
-    private ORMQueryBuilder $ORMQueryBuilder;
+    private ?CategoryProductUid $category = null;
 
-    public function __construct(ORMQueryBuilder $ORMQueryBuilder)
-    {
-        $this->ORMQueryBuilder = $ORMQueryBuilder;
-    }
+    public function __construct(private readonly ORMQueryBuilder $ORMQueryBuilder) {}
 
-    public function findByCategory(CategoryProduct|CategoryProductUid|string $category): ?CategoryOffersFormDTO
+
+    public function category(CategoryProduct|CategoryProductUid|string $category): self
     {
         if($category instanceof CategoryProduct)
         {
@@ -51,6 +48,12 @@ final class CategoryOffersFormRepository implements CategoryOffersFormInterface
             $category = new CategoryProductUid($category);
         }
 
+        $this->category = $category;
+        return $this;
+    }
+
+    public function findAllOffers(): ?CategoryOffersFormDTO
+    {
         $orm = $this->ORMQueryBuilder
             ->createQueryBuilder(self::class)
             ->bindLocal();
@@ -75,14 +78,22 @@ final class CategoryOffersFormRepository implements CategoryOffersFormInterface
 
         $orm->from(CategoryProductOffers::class, 'offers');
 
-        $orm
-            ->join(
-                CategoryProduct::class,
-                'category',
-                'WITH', 'category.event = offers.event'
-            )
-            ->where('category.id = :category')
-            ->setParameter('category', $category, CategoryProductUid::TYPE);
+        if($this->category)
+        {
+            $orm
+                ->join(
+                    CategoryProduct::class,
+                    'category',
+                    'WITH',
+                    'category.event = offers.event'
+                )
+                ->where('category.id = :category')
+                ->setParameter(
+                    'category',
+                    $this->category,
+                    CategoryProductUid::TYPE
+                );
+        }
 
 
         $orm

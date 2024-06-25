@@ -29,8 +29,8 @@ use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
 
 interface ModificationFieldsCategoryChoiceInterface
 {
-    public function findByVariation(
-        CategoryProductVariation|CategoryProductVariationUid|string $variation
-    ): ?CategoryProductModificationUid;
+    public function variation(CategoryProductVariation|CategoryProductVariationUid|string $variation): self;
+
+    public function findAllModification(): ?CategoryProductModificationUid;
 
 }

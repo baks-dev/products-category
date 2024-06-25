@@ -26,28 +26,19 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\Repository\ModificationFieldsCategoryChoice;
 
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
+use BaksDev\Products\Category\Entity\Offers\Variation\CategoryProductVariation;
 use BaksDev\Products\Category\Entity\Offers\Variation\Modification\CategoryProductModification;
 use BaksDev\Products\Category\Entity\Offers\Variation\Modification\Trans\CategoryProductModificationTrans;
-use BaksDev\Products\Category\Entity\Offers\Variation\CategoryProductVariation;
 use BaksDev\Products\Category\Type\Offers\Modification\CategoryProductModificationUid;
 use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
 
 final class ModificationFieldsCategoryChoiceRepository implements ModificationFieldsCategoryChoiceInterface
 {
+    private string|CategoryProductVariationUid|CategoryProductVariation $variation;
 
-    private ORMQueryBuilder $ORMQueryBuilder;
+    public function __construct(private readonly ORMQueryBuilder $ORMQueryBuilder) {}
 
-    public function __construct(
-        ORMQueryBuilder $ORMQueryBuilder
-    )
-    {
-        $this->ORMQueryBuilder = $ORMQueryBuilder;
-    }
-
-
-    public function findByVariation(
-        CategoryProductVariation|CategoryProductVariationUid|string $variation
-    ): ?CategoryProductModificationUid
+    public function variation(CategoryProductVariation|CategoryProductVariationUid|string $variation): self
     {
         if($variation instanceof CategoryProductVariation)
         {
@@ -59,19 +50,35 @@ final class ModificationFieldsCategoryChoiceRepository implements ModificationFi
             $variation = new CategoryProductVariationUid($variation);
         }
 
+        $this->variation = $variation;
+        return $this;
+
+    }
+
+    public function findAllModification(): ?CategoryProductModificationUid
+    {
         $orm = $this->ORMQueryBuilder
             ->createQueryBuilder(self::class)
             ->bindLocal();
 
-        $select = sprintf('new %s(modification.id, trans.name, modification.reference)',
+        $select = sprintf(
+            'new %s(modification.id, trans.name, modification.reference)',
             CategoryProductModificationUid::class
         );
         $orm->select($select);
 
-        $orm
-            ->from(CategoryProductVariation::class, 'variation')
-            ->where('variation.id = :variation')
-            ->setParameter('variation', $variation, CategoryProductVariationUid::TYPE);
+        $orm->from(CategoryProductVariation::class, 'variation');
+
+        if($this->variation)
+        {
+            $orm
+                ->where('variation.id = :variation')
+                ->setParameter(
+                    'variation',
+                    $this->variation,
+                    CategoryProductVariationUid::TYPE
+                );
+        }
 
 
         $orm->join(

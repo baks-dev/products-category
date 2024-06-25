@@ -1,17 +1,17 @@
 <?php
 /*
  *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *  
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -35,47 +35,43 @@ use Symfony\Component\Validator\Constraints as Assert;
 /** @see CategoryProductVariation */
 final class CategoryProductVariationDTO implements CategoryProductVariationInterface
 {
-	
-	#[Assert\Uuid]
-	private ?CategoryProductVariationUid $id = null;
-	
-	/** Флаг, то что торговое предложение имеет множественные варианты */
-	private bool $variation = false;
-	
-	/** Справочник */
-	//private ?string $reference = null;
-	
-	/** Справочник */
-	private ?InputField $reference = null;
-	
-	/** Загрузка пользовательских изображений */
-	private bool $image = false;
-	
-	/** Торговое предложение с ценой */
-	private bool $price = false;
-	
-	/** Количественный учет */
-	private bool $quantitative = false;
-	
-	/** Множественный вариант с артикулом */
-	private bool $article = false;
+    #[Assert\Uuid]
+    private ?CategoryProductVariationUid $id = null;
+
+    /** Флаг, то что торговое предложение имеет множественные варианты */
+    private bool $variation = false;
+
+    /** Справочник */
+    private ?InputField $reference = null;
+
+    /** Загрузка пользовательских изображений */
+    private bool $image = false;
+
+    /** Торговое предложение с ценой */
+    private bool $price = false;
+
+    /** Количественный учет */
+    private bool $quantitative = false;
+
+    /** Множественный вариант с артикулом */
+    private bool $article = false;
 
     /** Множественный вариант  с постфиксом */
     private bool $postfix = false;
-	
-	/** Настройки локали торгового предложения */
-	#[Assert\Valid]
-	private ArrayCollection $translate;
-	
-	
-	/** Множественные варианты торговых предложений  */
-	private Modification\CategoryProductModificationDTO $modification;
-	
-	public function __construct()
-	{
-		$this->translate = new ArrayCollection();
-		$this->modification = new Modification\CategoryProductModificationDTO();
-	}
+
+    /** Настройки локали торгового предложения */
+    #[Assert\Valid]
+    private ArrayCollection $translate;
+
+
+    /** Множественные варианты торговых предложений  */
+    private Modification\CategoryProductModificationDTO $modification;
+
+    public function __construct()
+    {
+        $this->translate = new ArrayCollection();
+        $this->modification = new Modification\CategoryProductModificationDTO();
+    }
 
 
     /**
@@ -85,132 +81,131 @@ final class CategoryProductVariationDTO implements CategoryProductVariationInter
     {
         return $this->id;
     }
-    
 
-	/** Справочник */
 
-	public function getReference() : ?InputField
-	{
-		return $this->reference?->getType() ? $this->reference : null;
-	}
+    /** Справочник */
 
-	public function setReference(?InputField $reference) : void
-	{
-		$this->reference = $reference;
-	}
+    public function getReference(): ?InputField
+    {
+        return $this->reference?->getType() ? $this->reference : null;
+    }
 
-	/** Загрузка пользовательских изображений */
-	
-	public function getImage() : bool
-	{
-		return $this->image;
-	}
-	
-	public function setImage(bool $image) : void
-	{
-		$this->image = $image;
-	}
-	
-	/** Торговое предложение с ценой */
-	
-	
-	public function getPrice() : bool
-	{
-		return $this->price;
-	}
-	
-	public function setPrice(bool $price) : void
-	{
-		$this->price = $price;
-	}
-	
-	/** Настройки локали торгового предложения */
-	
-	public function getTranslate() : ArrayCollection
-	{
-		if(!$this->translate->isEmpty())
-		{
-			$this->variation = true;
-		}
-		
-		/* Вычисляем расхождение и добавляем неопределенные локали */
-		foreach(Locale::diffLocale($this->translate) as $locale)
-		{
-			$OffersTransDTO = new Trans\CategoryProductVariationTransDTO();
-			$OffersTransDTO->setLocal($locale);
-			$this->addTranslate($OffersTransDTO);
-		}
-		
-		return $this->translate;
-	}
-	
-	public function addTranslate(Trans\CategoryProductVariationTransDTO $trans) : void
-	{
+    public function setReference(?InputField $reference): void
+    {
+        $this->reference = $reference;
+    }
+
+    /** Загрузка пользовательских изображений */
+
+    public function getImage(): bool
+    {
+        return $this->image;
+    }
+
+    public function setImage(bool $image): void
+    {
+        $this->image = $image;
+    }
+
+    /** Торговое предложение с ценой */
+
+
+    public function getPrice(): bool
+    {
+        return $this->price;
+    }
+
+    public function setPrice(bool $price): void
+    {
+        $this->price = $price;
+    }
+
+    /** Настройки локали торгового предложения */
+
+    public function getTranslate(): ArrayCollection
+    {
+        if(!$this->translate->isEmpty())
+        {
+            $this->variation = true;
+        }
+
+        /* Вычисляем расхождение и добавляем неопределенные локали */
+        foreach(Locale::diffLocale($this->translate) as $locale)
+        {
+            $OffersTransDTO = new Trans\CategoryProductVariationTransDTO();
+            $OffersTransDTO->setLocal($locale);
+            $this->addTranslate($OffersTransDTO);
+        }
+
+        return $this->translate;
+    }
+
+    public function addTranslate(Trans\CategoryProductVariationTransDTO $trans): void
+    {
         if(empty($trans->getLocal()->getLocalValue()))
         {
             return;
         }
 
-		if(!$this->translate->contains($trans))
-		{
-			$this->translate->add($trans);
-		}
-	}
-	
-	public function removeTranslate(Trans\CategoryProductVariationTransDTO $trans) : void
-	{
-		$this->translate->removeElement($trans);
-	}
-	
-	/** Вариант с артикулом */
-	
-	public function getArticle() : bool
-	{
-		return $this->article;
-	}
-	
-	public function setArticle(bool $article) : void
-	{
-		$this->article = $article;
-	}
-	
-	
-	/** Количественный учет */
-	
-	public function getQuantitative() : bool
-	{
-		return $this->quantitative;
-	}
-	
-	public function setQuantitative(bool $quantitative) : void
-	{
-		$this->quantitative = $quantitative;
-	}
-	
-	/** Флаг, то что торговое предложение имеет множественные варианты */
-	
-	public function isVariation() : bool
-	{
-		return $this->variation;
-	}
-	
-	public function setVariation(bool $variation) : void
-	{
-		$this->variation = $variation;
-	}
-	
-	
+        if(!$this->translate->contains($trans))
+        {
+            $this->translate->add($trans);
+        }
+    }
 
-	public function getModification() : Modification\CategoryProductModificationDTO
-	{
-		return $this->modification;
-	}
-	
+    public function removeTranslate(Trans\CategoryProductVariationTransDTO $trans): void
+    {
+        $this->translate->removeElement($trans);
+    }
 
-	public function setModification(Modification\CategoryProductModificationDTO $modification) : void
-	{
-		$this->modification = $modification;
-	}
+    /** Вариант с артикулом */
+
+    public function getArticle(): bool
+    {
+        return $this->article;
+    }
+
+    public function setArticle(bool $article): void
+    {
+        $this->article = $article;
+    }
+
+
+    /** Количественный учет */
+
+    public function getQuantitative(): bool
+    {
+        return $this->quantitative;
+    }
+
+    public function setQuantitative(bool $quantitative): void
+    {
+        $this->quantitative = $quantitative;
+    }
+
+    /** Флаг, то что торговое предложение имеет множественные варианты */
+
+    public function isVariation(): bool
+    {
+        return $this->variation;
+    }
+
+    public function setVariation(bool $variation): void
+    {
+        $this->variation = $variation;
+    }
+
+
+    public function getModification(): Modification\CategoryProductModificationDTO
+    {
+        return $this->modification;
+    }
+
+
+    public function setModification(Modification\CategoryProductModificationDTO $modification): void
+    {
+        $this->modification = $modification;
+    }
 
     /** Множественный вариант  с постфиксом */
 

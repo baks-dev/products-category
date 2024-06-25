@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -23,23 +23,20 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Products\Category\Repository\VariationFieldsCategoryChoice;
+namespace BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice\VariationCategoryProductSectionField;
 
-use BaksDev\Core\Doctrine\ORMQueryBuilder;
-use BaksDev\Core\Type\Locale\Locale;
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
 use BaksDev\Products\Category\Entity\Offers\Variation\CategoryProductVariation;
 use BaksDev\Products\Category\Entity\Offers\Variation\Trans\CategoryProductVariationTrans;
 use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
-use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 
-final class VariationFieldsCategoryChoiceRepository implements VariationFieldsCategoryChoiceInterface
+final class VariationCategoryProductSectionFieldRepository implements VariationCategoryProductSectionFieldInterface
 {
-    private ?CategoryProductOffersUid $offer;
+    private ?CategoryProductOffersUid $offer = null;
 
-    public function __construct(private readonly ORMQueryBuilder $ORMQueryBuilder) {}
-
+    public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
 
     public function offer(CategoryProductOffers|CategoryProductOffersUid|string $offer): self
     {
@@ -57,50 +54,33 @@ final class VariationFieldsCategoryChoiceRepository implements VariationFieldsCa
         return $this;
     }
 
-    public function findCategoryProductVariation(): ?CategoryProductVariationUid
+    public function findAllCategoryProductSectionField(): ?CategoryProductSectionFieldUid
     {
-        $qb = $this->ORMQueryBuilder
+        $dbal = $this->DBALQueryBuilder
             ->createQueryBuilder(self::class)
             ->bindLocal();
 
-        $select = sprintf(
-            'new %s(variation.id, trans.name, variation.reference)',
-            CategoryProductVariationUid::class
-        );
-
-        $qb->select($select);
-
-        $qb
-            ->from(CategoryProductOffers::class, 'offer');
+        $dbal->from(CategoryProductVariation::class, 'category_variation');
 
         if($this->offer)
         {
-            $qb
-                ->where('offer.id = :offer')
-                ->setParameter(
-                    'offer',
-                    $this->offer,
-                    CategoryProductOffersUid::TYPE
-                );
+            $dbal
+                ->where('category_variation.offer = :offer')
+                ->setParameter('offer', $this->offer, CategoryProductOffersUid::TYPE);
         }
 
-
-        $qb->join(
-            CategoryProductVariation::class,
-            'variation',
-            'WITH',
-            'variation.offer = offer.id'
-        );
-
-        $qb->leftJoin(
+        $dbal->leftJoin(
+            'category_variation',
             CategoryProductVariationTrans::class,
-            'trans',
-            'WITH',
-            'trans.variation = variation.id AND trans.local = :local'
+            'category_variation_trans',
+            'category_variation_trans.variation = category_variation.id AND category_variation_trans.local = :local',
         );
 
-        /* Кешируем результат ORM */
-        return $qb->enableCache('products-category', 86400)->getOneOrNullResult();
+        /** Параметры конструктора объекта гидрации */
+        $dbal->select('category_variation.id AS value');
+        $dbal->addSelect('category_variation.offer AS const');
+        $dbal->addSelect('category_variation_trans.name AS attr');
 
+        return $dbal->fetchHydrate(CategoryProductSectionFieldUid::class); // ->getOneOrNullResult();
     }
 }

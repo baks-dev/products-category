@@ -51,12 +51,12 @@ final class DeleteControllerTest extends WebTestCase
         // Получаем одно из событий
         $Event = self::$identifier;
 
-        if ($Event)
+        if($Event)
         {
             self::ensureKernelShutdown();
             $client = static::createClient();
 
-            foreach (TestUserAccount::getDevice() as $device)
+            foreach(TestUserAccount::getDevice() as $device)
             {
                 $client->setServerParameter('HTTP_USER_AGENT', $device);
 
@@ -78,12 +78,12 @@ final class DeleteControllerTest extends WebTestCase
         // Получаем одно из событий
         $Event = self::$identifier;
 
-        if ($Event)
+        if($Event)
         {
             self::ensureKernelShutdown();
             $client = static::createClient();
 
-            foreach (TestUserAccount::getDevice() as $device)
+            foreach(TestUserAccount::getDevice() as $device)
             {
                 $client->setServerParameter('HTTP_USER_AGENT', $device);
 
@@ -105,12 +105,12 @@ final class DeleteControllerTest extends WebTestCase
         // Получаем одно из событий
         $Event = self::$identifier;
 
-        if ($Event)
+        if($Event)
         {
             self::ensureKernelShutdown();
             $client = static::createClient();
 
-            foreach (TestUserAccount::getDevice() as $device)
+            foreach(TestUserAccount::getDevice() as $device)
             {
                 $client->setServerParameter('HTTP_USER_AGENT', $device);
 
@@ -131,12 +131,12 @@ final class DeleteControllerTest extends WebTestCase
         // Получаем одно из событий
         $Event = self::$identifier;
 
-        if ($Event)
+        if($Event)
         {
             self::ensureKernelShutdown();
             $client = static::createClient();
 
-            foreach (TestUserAccount::getDevice() as $device)
+            foreach(TestUserAccount::getDevice() as $device)
             {
                 $client->setServerParameter('HTTP_USER_AGENT', $device);
 

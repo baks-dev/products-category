@@ -23,8 +23,7 @@
 
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-
-return function(RoutingConfigurator $routes){
+return function(RoutingConfigurator $routes) {
 
     $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
 
@@ -34,7 +33,6 @@ return function(RoutingConfigurator $routes){
         false,
         $MODULE.'Controller/**/*Test.php'
     )
-		->prefix(\BaksDev\Core\Type\Locale\Locale::routes())
-		->namePrefix('products-category:')
-	;
+        ->prefix(\BaksDev\Core\Type\Locale\Locale::routes())
+        ->namePrefix('products-category:');
 };

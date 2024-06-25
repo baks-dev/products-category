@@ -25,23 +25,23 @@ namespace BaksDev\Products\Category\Type\Settings;
 
 final class CategoryProductSettingsIdentifier
 {
-	public const TYPE = 'product_category_settings';
-	
-	private string $value;
-	
-	public function __construct()
-	{
-		$this->value = self::TYPE;
-	}
-	
-	public function __toString(): string
-	{
-		return $this->value;
-	}
-	
-	public function getValue(): string
-	{
-		return $this->value;
-	}
-	
+    public const TYPE = 'product_category_settings';
+
+    private string $value;
+
+    public function __construct()
+    {
+        $this->value = self::TYPE;
+    }
+
+    public function __toString(): string
+    {
+        return $this->value;
+    }
+
+    public function getValue(): string
+    {
+        return $this->value;
+    }
+
 }
