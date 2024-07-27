@@ -30,7 +30,7 @@ use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldU
 
 final class PropertyFieldsCategoryChoiceRepository implements PropertyFieldsCategoryChoiceInterface
 {
-    private string|CategoryProduct|CategoryProductUid $category;
+    private ?CategoryProductUid $category = null;
 
     public function __construct(private readonly ORMQueryBuilder $ORMQueryBuilder) {}
 
