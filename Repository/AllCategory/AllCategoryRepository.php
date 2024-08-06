@@ -162,4 +162,51 @@ final class AllCategoryRepository implements AllCategoryInterface
         return $this->paginator->fetchAllAssociative($dbal);
 
     }
+
+
+    public function getRecursive(): ?array
+    {
+        $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class)->bindLocal();
+
+        // Категория
+        $dbal
+            ->select('category.id')
+            ->addSelect('category.event')
+            ->from(CategoryProduct::class, 'category');
+
+        $dbal
+            ->addSelect('category_event.sort')
+            ->addSelect('category_event.parent')
+            ->joinRecursive(
+                'category',
+                CategoryProductEvent::class,
+                'category_event',
+                'category_event.id = category.event'
+            );
+
+        $dbal
+            ->addSelect('category_trans.name AS category_name')
+            ->leftJoin(
+                'category',
+                CategoryProductTrans::class,
+                'category_trans',
+                'category_trans.event = category.event AND category_trans.local = :local'
+            );
+
+
+        $dbal
+            ->addSelect("CONCAT ('/upload/".$dbal->table(CategoryProductCover::class)."' , '/', category_cover.name) AS category_cover_image")
+            ->addSelect('category_cover.cdn AS category_cover_cdn')
+            ->addSelect('category_cover.ext AS category_cover_ext')
+            ->leftJoin(
+                'category',
+                CategoryProductCover::class,
+                'category_cover',
+                'category_cover.event = category.event'
+            );
+
+        return $dbal->findAllRecursive(['parent' => 'id']);
+
+
+    }
 }

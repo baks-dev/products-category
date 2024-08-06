@@ -50,5 +50,7 @@ interface AllCategoryInterface
 	 */
 	
 	public function fetchProductParentAllAssociative(?ParentCategoryProductUid $parent = null) : PaginatorInterface;
+
+    public function getRecursive(): ?array;
 	
 }

@@ -25,11 +25,11 @@ namespace BaksDev\Products\Category\Entity\Offers;
 
 use BaksDev\Core\Entity\EntityState;
 use BaksDev\Core\Type\Field\InputField;
-use BaksDev\Products\Category\Entity\Event\Event;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
+use BaksDev\Products\Category\Entity\Event\Event;
 use BaksDev\Products\Category\Entity\Offers\Variation\CategoryProductVariation;
-use BaksDev\Products\Category\Type\Offers\Id\OffersUid;
 use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
+use BaksDev\Products\Category\Type\Offers\Id\OffersUid;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -106,7 +106,7 @@ class CategoryProductOffers extends EntityState
     {
         $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
 
-        if ($dto instanceof CategoryProductOffersInterface)
+        if($dto instanceof CategoryProductOffersInterface)
         {
             return parent::getDto($dto);
         }
@@ -116,9 +116,10 @@ class CategoryProductOffers extends EntityState
 
     public function setEntity($dto): mixed
     {
-        if ($dto instanceof CategoryProductOffersInterface || $dto instanceof self)
+        if($dto instanceof CategoryProductOffersInterface || $dto instanceof self)
         {
-            if ($dto->isOffer()) {
+            if($dto->isOffer())
+            {
                 return parent::setEntity($dto);
             }
 
@@ -127,186 +128,4 @@ class CategoryProductOffers extends EntityState
 
         throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
     }
-
-    //    public function removeElement() : void
-    //    {
-    //        $this->event = null;
-    //    }
-
-    //    private function equals($dto) : bool
-    //    {
-    //        if($dto instanceof ProductCategoryOffersInterface)
-    //        {
-    //            return  $this->id === $dto->getEquals();
-    //        }
-    //
-    //        throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
-    //    }
-
-    //    /**
-    //     * @return string|null
-    //     */
-    //    public function getReference() : ?string
-    //    {
-    //        return $this->reference;
-    //    }
-    //
-    //    /**
-    //     * @return bool
-    //     */
-    //    public function isImage() : bool
-    //    {
-    //        return $this->image;
-    //    }
-    //
-    //    /**
-    //     * @return bool
-    //     */
-    //    public function isArticle() : bool
-    //    {
-    //        return $this->article;
-    //    }
-    //
-    //    /**
-    //     * @return bool
-    //     */
-    //    public function isPrice() : bool
-    //    {
-    //        return $this->price;
-    //    }
-    //
-    //    /**
-    //     * @return bool
-    //     */
-    //    public function isMultiple() : bool
-    //    {
-    //        return $this->multiple;
-    //    }
-    //
-    //    /**
-    //     * @return bool
-    //     */
-    //    public function isQuantitative() : bool
-    //    {
-    //        return $this->quantitative;
-    //    }
-    //
-
-    //    public function updCategoryOffer(OffersInterface $offer) : void
-    //    {
-    //        if(property_exists($offer, 'trans'))
-    //        {
-    //            foreach($offer->trans as $trans)
-    //            {
-    //                $categorySectionTrans = new Offers\Trans($this, $trans->local);
-    //                $categorySectionTrans->updOfferTrans($trans);
-    //                $this->addTrans($categorySectionTrans);
-    //            }
-    //        }
-    //
-    //        if(property_exists($offer, 'reference'))
-    //        {
-    //            $this->reference = $offer->reference;
-    //        }
-    //
-    //        if(property_exists($offer, 'image'))
-    //        {
-    //            $this->image = $offer->image;
-    //        }
-    //
-    //        if(property_exists($offer, 'price'))
-    //        {
-    //            $this->price = $offer->price;
-    //        }
-    //
-    //        if(property_exists($offer, 'multiple'))
-    //        {
-    //            $this->multiple = $offer->multiple;
-    //        }
-    //
-    //        if(property_exists($offer, 'sort'))
-    //        {
-    //            $this->sort = $offer->sort;
-    //        }
-    //    }
-
-    //    /** Добавляем перевод торгового предложения
-    //     * @param Section\Trans $trans
-    //     * @return void
-    //     */
-    //    public function addTrans(Offers\Trans $trans) : void
-    //    {
-    //        if(!$this->trans->contains($trans))
-    //        {
-    //            $this->trans[] = $trans;
-    //        }
-    //    }
-
-    //
-    //
-    //    /**
-    //     * @return ArrayCollection
-    //     */
-    //    public function getTrans() : Collection
-    //    {
-    //        /* Вычисляем расхождение и добавляем неопределенные локали */
-    //        foreach(Locale::diffLocale($this->trans) as $locale)
-    //        {
-    //            $this->addTrans(new Offers\Trans($this, $locale));
-    //        }
-    //
-    //        return $this->trans;
-    //    }
-    //
-    //
-    //    /** Добавляем перевод категории
-    //     * @param Trans $trans
-    //     * @return void
-    //     */
-    //    public function addTrans(Offers\Trans $trans) : void
-    //    {
-    //        if(!$this->trans->contains($trans))
-    //        {
-    //            $this->trans[] = $trans;
-    //        }
-    //    }
-    //
-    //
-
-    //    public function __construct(Event|CategoryEvent $event)
-    //    {
-    //        $this->id = new OffersUid();
-    //        $this->event = $event instanceof Event ? $event->getId() : $event;
-    //    }
-    //
-    //
-    //    /**
-    //     * @param string|null $reference
-    //     * @param bool $isImage
-    //     * @param bool $isPrice
-    //     * @param bool $isMultiple
-    //     * @param int $sort
-    //     */
-    //    public function addOffers(
-    //      bool $isImage,
-    //      bool $isPrice,
-    //      bool $isMultiple,
-    //      int $sort,
-    //      string $reference = null,
-    //    ) : void
-    //    {
-    //        $this->reference = $reference;
-    //        $this->isImage = $isImage;
-    //        $this->isPrice = $isPrice;
-    //        $this->isMultiple = $isMultiple;
-    //        $this->sort = $sort;
-    //    }
-    //
-    //    /**
-    //     * @return OffersUid
-    //     */
-    //    public function getId() : OffersUid
-    //    {
-    //        return $this->id;
-    //    }
 }
