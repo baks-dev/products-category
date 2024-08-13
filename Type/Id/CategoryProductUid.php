@@ -34,18 +34,26 @@ final class CategoryProductUid extends Uid
 
     private mixed $options;
 
+    private mixed $attr;
+
     public function __construct(
         AbstractUid|self|string|null $value = null,
-        mixed $options = null
+        mixed $options = null,
+        mixed $attr = null
     )
     {
         parent::__construct($value);
         $this->options = $options;
+        $this->attr = $attr;
     }
-
 
     public function getOptions(): mixed
     {
         return $this->options;
+    }
+
+    public function getAttr(): mixed
+    {
+        return $this->attr;
     }
 }

@@ -23,55 +23,55 @@
 
 namespace BaksDev\Products\Category\Repository\ParentCategoryChoiceForm;
 
-use BaksDev\Core\Doctrine\ORMQueryBuilder;
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
+use Generator;
 
-final class ParentCategoryChoiceRepository implements ParentCategoryChoiceInterface
+final readonly class ParentCategoryChoiceRepository implements ParentCategoryChoiceInterface
 {
-    public function __construct(private readonly ORMQueryBuilder $ORMQueryBuilder) {}
+    public function __construct(private DBALQueryBuilder $DBALQueryBuilder) {}
 
     /**
-     * Метод получает массив категорий для формы и преобразует названия (path) согласно вложенности
+     * Метод получает рекурсивно список категорий согласно вложенности
      */
-    public function findAll(): array
+    public function findAll(): Generator
     {
-        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class)
-            ->bindLocal();
+        $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class)->bindLocal();
 
-        $select = sprintf('new %s(category.id, trans.name, event.parent)', ParentCategoryProductUid::class);
+        // Категория
+        $dbal
+            ->select('category.id')
+            ->addSelect('category.event')
+            ->from(CategoryProduct::class, 'category');
 
-        $qb->select($select);
+        $dbal
+            ->addSelect('category_event.sort')
+            ->addSelect('category_event.parent')
+            ->joinRecursive(
+                'category',
+                CategoryProductEvent::class,
+                'category_event',
+                'category_event.id = category.event'
+            );
 
-        $qb->from(CategoryProduct::class, 'category', 'category.id');
+        $dbal
+            ->addSelect('category_trans.name')
+            ->leftJoin(
+                'category',
+                CategoryProductTrans::class,
+                'category_trans',
+                'category_trans.event = category.event AND category_trans.local = :local'
+            );
 
-        $qb->join(
-            CategoryProductEvent::class,
-            'event',
-            'WITH',
-            'event.id = category.event AND event.category = category.id'
-        );
+        $result = $dbal->findAllRecursive(['parent' => 'id']);
 
-        $qb->leftJoin(
-            CategoryProductTrans::class,
-            'trans',
-            'WITH',
-            'trans.event = event.id AND trans.local = :local'
-        );
-
-        $qb->orderBy(
-            'CASE
-                    WHEN event.parent IS NULL
-                    THEN category.id
-                    ELSE event.parent
-                  END',
-            'DESC'
-        );
-
-
-        return $qb->getQuery()->getResult();
+        foreach($result as $item)
+        {
+            yield new ParentCategoryProductUid($item['id'], $item['name'], $item['parent']);
+        }
     }
 
 }

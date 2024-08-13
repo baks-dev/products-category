@@ -26,6 +26,7 @@ namespace BaksDev\Products\Category\Repository\CategoryChoice;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
 use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 use BaksDev\Products\Category\Entity\Info\CategoryProductInfo;
 use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
@@ -71,16 +72,36 @@ final class CategoryChoiceRepository implements CategoryChoiceInterface
         return $this;
     }
 
-    /**
-     * Метод возвращает коллекцию категорий продукции
-     */
-    private function builder(): DBALQueryBuilder
-    {
-        $dbal = $this->DBALQueryBuilder
-            ->createQueryBuilder(self::class)
-            ->bindLocal();
 
-        $dbal->from(CategoryProduct::class, 'category');
+    public function findAll(): Generator
+    {
+        $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class)->bindLocal();
+
+        // Категория
+        $dbal
+            ->select('category.id')
+            //->addSelect('category.event')
+            ->from(CategoryProduct::class, 'category');
+
+        $dbal
+            ->addSelect('category_event.sort')
+            ->addSelect('category_event.parent')
+            ->joinRecursive(
+                'category',
+                CategoryProductEvent::class,
+                'category_event',
+                'category_event.id = category.event'
+            );
+
+        $dbal
+            ->addSelect('category_trans.name')
+            ->leftJoin(
+                'category',
+                CategoryProductTrans::class,
+                'category_trans',
+                'category_trans.event = category.event AND category_trans.local = :local'
+            );
+
 
         /* Категория с определенным идентификатором */
         if($this->category)
@@ -89,6 +110,48 @@ final class CategoryChoiceRepository implements CategoryChoiceInterface
                 ->where('category.id = :category')
                 ->setParameter('category', $this->category, CategoryProductUid::TYPE);
         }
+
+
+        /* Выбираем только активные */
+        if($this->active)
+        {
+            $dbal->join(
+                'category',
+                CategoryProductInfo::class,
+                'info',
+                'info.event = category.event AND info.active = true',
+            );
+        }
+
+        $result = $dbal->findAllRecursive(['parent' => 'id']);
+
+        foreach($result as $item)
+        {
+            yield new CategoryProductUid($item['id'], $item['name'], $item['parent']);
+        }
+
+        //        return $dbal
+        //            ->enableCache('products-category', 86400)
+        //            ->fetchAllHydrate(CategoryProductUid::class);
+    }
+
+    public function find(): ?CategoryProductUid
+    {
+        if(empty($this->category))
+        {
+            throw new InvalidArgumentException('Invalid Argument category');
+        }
+
+        $dbal = $this->DBALQueryBuilder
+            ->createQueryBuilder(self::class)
+            ->bindLocal();
+
+        $dbal->from(CategoryProduct::class, 'category');
+
+        /* Категория с определенным идентификатором */
+        $dbal
+            ->where('category.id = :category')
+            ->setParameter('category', $this->category, CategoryProductUid::TYPE);
 
         /* Выбираем только активные */
         if($this->active)
@@ -111,28 +174,6 @@ final class CategoryChoiceRepository implements CategoryChoiceInterface
         /** Свойства конструктора объекта гидрации */
         $dbal->select('category.id AS value');
         $dbal->addSelect('trans.name AS options');
-
-        return $dbal;
-    }
-
-
-    public function findAll(): Generator
-    {
-        $dbal = $this->builder();
-
-        return $dbal
-            ->enableCache('products-category', 86400)
-            ->fetchAllHydrate(CategoryProductUid::class);
-    }
-
-    public function find(): ?CategoryProductUid
-    {
-        if(empty($this->category))
-        {
-            throw new InvalidArgumentException('Invalid Argument category');
-        }
-
-        $dbal = $this->builder();
 
         return $dbal
             ->enableCache('products-category', 86400)
