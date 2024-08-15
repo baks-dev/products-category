@@ -57,8 +57,6 @@ class CategoryProductModification extends EntityState
     private Collection $translate;
 
     /** Справочник */
-    //	#[ORM\Column(type: Types::STRING, length: 32, nullable: true)]
-    //	private ?string $reference = null;
     #[ORM\Column(type: InputField::TYPE, length: 32, nullable: true, options: ['default' => 'input'])]
     private ?InputField $reference = null;
 

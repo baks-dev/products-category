@@ -74,7 +74,7 @@ class CategoryProductVariationTrans extends EntityState
     {
         $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
 
-        if ($dto instanceof CategoryProductVariationTransInterface)
+        if($dto instanceof CategoryProductVariationTransInterface)
         {
             return parent::getDto($dto);
         }
@@ -84,7 +84,7 @@ class CategoryProductVariationTrans extends EntityState
 
     public function setEntity($dto): mixed
     {
-        if ($dto instanceof CategoryProductVariationTransInterface || $dto instanceof self)
+        if($dto instanceof CategoryProductVariationTransInterface || $dto instanceof self)
         {
             return parent::setEntity($dto);
         }
@@ -94,7 +94,8 @@ class CategoryProductVariationTrans extends EntityState
 
     public function name(Locale $locale): ?string
     {
-        if ($this->local->getLocalValue() === $locale->getLocalValue()) {
+        if($this->local->getLocalValue() === $locale->getLocalValue())
+        {
             return $this->name;
         }
 

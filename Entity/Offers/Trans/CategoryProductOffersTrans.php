@@ -71,7 +71,7 @@ class CategoryProductOffersTrans extends EntityState
     {
         $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
 
-        if ($dto instanceof CategoryProductOffersTransInterface)
+        if($dto instanceof CategoryProductOffersTransInterface)
         {
             return parent::getDto($dto);
         }
@@ -81,7 +81,7 @@ class CategoryProductOffersTrans extends EntityState
 
     public function setEntity($dto): mixed
     {
-        if ($dto instanceof CategoryProductOffersTransInterface || $dto instanceof self)
+        if($dto instanceof CategoryProductOffersTransInterface || $dto instanceof self)
         {
             return parent::setEntity($dto);
         }
