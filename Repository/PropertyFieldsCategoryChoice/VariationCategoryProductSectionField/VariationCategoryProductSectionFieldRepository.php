@@ -54,7 +54,7 @@ final class VariationCategoryProductSectionFieldRepository implements VariationC
         return $this;
     }
 
-    public function findAllCategoryProductSectionField(): ?CategoryProductSectionFieldUid
+    public function findAllCategoryProductSectionField(): CategoryProductSectionFieldUid|false
     {
         $dbal = $this->DBALQueryBuilder
             ->createQueryBuilder(self::class)

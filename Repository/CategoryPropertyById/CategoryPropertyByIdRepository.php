@@ -122,7 +122,7 @@ final class CategoryPropertyByIdRepository implements CategoryPropertyByIdInterf
             CategoryProductSectionField::class,
             'field',
             'WITH',
-            'field.section = section.id'
+            'field.section = section.id AND field.const IS NOT NULL'
         );
 
 

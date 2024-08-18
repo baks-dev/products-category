@@ -55,7 +55,7 @@ final class ModificationCategoryProductSectionFieldRepository implements Modific
     }
 
 
-    public function findAllCategoryProductSectionField(): ?CategoryProductSectionFieldUid
+    public function findAllCategoryProductSectionField(): CategoryProductSectionFieldUid|false
     {
         $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class)->bindLocal();
 

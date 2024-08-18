@@ -55,7 +55,7 @@ final class OffersCategoryProductSectionFieldRepository implements OffersCategor
     }
 
 
-    public function findAllCategoryProductSectionField(): ?CategoryProductSectionFieldUid
+    public function findAllCategoryProductSectionField(): CategoryProductSectionFieldUid|false
     {
         $dbal = $this->DBALQueryBuilder
             ->createQueryBuilder(self::class)

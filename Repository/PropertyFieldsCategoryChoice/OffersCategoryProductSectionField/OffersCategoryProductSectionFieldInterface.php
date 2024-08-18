@@ -31,5 +31,5 @@ interface OffersCategoryProductSectionFieldInterface
 {
     public function category(CategoryProduct|CategoryProductUid|string $category): self;
 
-    public function findAllCategoryProductSectionField(): ?CategoryProductSectionFieldUid;
+    public function findAllCategoryProductSectionField(): CategoryProductSectionFieldUid|false;
 }

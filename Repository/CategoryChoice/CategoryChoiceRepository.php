@@ -30,6 +30,7 @@ use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 use BaksDev\Products\Category\Entity\Info\CategoryProductInfo;
 use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Products\Product\Entity\Category\ProductCategory;
 use Generator;
 use InvalidArgumentException;
 
@@ -103,6 +104,27 @@ final class CategoryChoiceRepository implements CategoryChoiceInterface
             );
 
 
+        /** Возвращает только категории, у которых имеется продукция */
+        //        $dbal
+        //            ->leftOneJoin(
+        //                'product_offer',
+        //                ProductOfferPrice::class,
+        //                'product_offer_price',
+        //                'product_offer_price.offer = product_offer.id',
+        //                'offer'
+        //            );
+
+
+        //        $dbal
+        //            ->addSelect('product_category.root AS product_category')
+        //            ->leftOneJoin(
+        //                'category',
+        //                ProductCategory::class,
+        //                'product_category',
+        //                'product_category.category = category.id AND product_category.root = true',
+        //                'category'
+        //            );
+
         /* Категория с определенным идентификатором */
         if($this->category)
         {
@@ -135,7 +157,7 @@ final class CategoryChoiceRepository implements CategoryChoiceInterface
         //            ->fetchAllHydrate(CategoryProductUid::class);
     }
 
-    public function find(): ?CategoryProductUid
+    public function find(): CategoryProductUid|false
     {
         if(empty($this->category))
         {

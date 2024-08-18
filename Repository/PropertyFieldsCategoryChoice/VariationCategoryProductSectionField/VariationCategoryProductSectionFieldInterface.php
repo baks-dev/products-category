@@ -31,5 +31,5 @@ interface VariationCategoryProductSectionFieldInterface
 {
     public function offer(CategoryProductOffers|CategoryProductOffersUid|string $offer): self;
 
-    public function findAllCategoryProductSectionField(): ?CategoryProductSectionFieldUid;
+    public function findAllCategoryProductSectionField(): CategoryProductSectionFieldUid|false;
 }
