@@ -23,6 +23,7 @@
 
 namespace BaksDev\Products\Category\Repository\CategoryPropertyById;
 
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
 use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
@@ -36,9 +37,11 @@ final class CategoryPropertyByIdRepository implements CategoryPropertyByIdInterf
 {
     private string|CategoryProduct|CategoryProductUid $category;
 
-    public function __construct(private readonly ORMQueryBuilder $ORMQueryBuilder) {}
+    public function __construct(
+        private readonly DBALQueryBuilder $DBALQueryBuilder,
+    ) {}
 
-    public function category(CategoryProduct|CategoryProductUid|string $category): self
+    public function forCategory(CategoryProduct|CategoryProductUid|string $category): self
     {
         if($category instanceof CategoryProduct)
         {
@@ -54,36 +57,17 @@ final class CategoryPropertyByIdRepository implements CategoryPropertyByIdInterf
         return $this;
     }
 
-
-    public function findAllProperty(): ?array
+    public function findAll(): false|array
     {
-
-        $orm = $this->ORMQueryBuilder
+        $dbal = $this->DBALQueryBuilder
             ->createQueryBuilder(self::class)
             ->bindLocal();
 
-        $select = sprintf(
-            '
-          NEW %s(
-              section.id,
-              section_trans.name,
-              field.const,
-              field_trans.name,
-              field.type,
-              field.required,
-              field_trans.description
-          )',
-            CategoryPropertyDTO::class
-        );
-
-        $orm->select($select);
-
-        $orm
-            ->from(CategoryProduct::class, 'category');
+        $dbal->from(CategoryProduct::class, 'category');
 
         if($this->category)
         {
-            $orm
+            $dbal
                 ->where('category.id = :category')
                 ->setParameter(
                     'category',
@@ -92,61 +76,65 @@ final class CategoryPropertyByIdRepository implements CategoryPropertyByIdInterf
                 );
         }
 
-        $orm->join(
+        $dbal->leftJoin(
+            'category',
             CategoryProductEvent::class,
             'category_event',
-            'WITH',
             'category_event.id = category.event'
         );
 
+
         /* Секции свойств */
-        $orm->join(
+        $dbal->leftJoin(
+            'category',
             CategoryProductSection::class,
             'section',
-            'WITH',
-            '  section.event = category_event.id'
+            'section.event = category.event'
         );
 
+
         /* Перевод секции */
-        $orm->join(
+        $dbal->leftJoin(
+            'section',
             CategoryProductSectionTrans::class,
             'section_trans',
-            'WITH',
             'section_trans.section = section.id AND section_trans.local = :local'
         );
 
 
         /* Перевод полей */
         //$orm->addSelect('field.id');
-        $orm->join(
+        $dbal->join(
+            'section',
             CategoryProductSectionField::class,
             'field',
-            'WITH',
             'field.section = section.id AND field.const IS NOT NULL'
         );
 
 
-        $orm->join(
+        $dbal->leftJoin(
+            'field',
             CategoryProductSectionFieldTrans::class,
             'field_trans',
-            'WITH',
             'field_trans.field = field.id AND field_trans.local = :local'
         );
 
 
-        $orm->orderBy('section.sort', 'ASC');
-        $orm->addOrderBy('field.sort', 'ASC');
+        $dbal->orderBy('section.sort', 'ASC');
+        $dbal->addOrderBy('field.sort', 'ASC');
 
 
-        /* Преобразуем ключи */
-        $dto = null;
+        $dbal->select('field.const');
 
-        foreach($orm->getQuery()->getResult() as $item)
-        {
-            $dto[(string) $item->fieldUid] = $item;
-        }
+        $dbal->addSelect('section.id AS section');
+        $dbal->addSelect('section_trans.name AS section_trans');
+        $dbal->addSelect('field.const AS field');
+        $dbal->addSelect('field_trans.name AS field_trans');
+        $dbal->addSelect('field.type AS field_type');
+        $dbal->addSelect('field.required AS required');
+        $dbal->addSelect('field_trans.description AS description');
 
-        return $dto;
+        return $dbal->fetchAllIndexHydrate(PropertyCategoryDTO::class);
+
     }
-
 }
