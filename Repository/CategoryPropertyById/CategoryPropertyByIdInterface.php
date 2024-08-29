@@ -28,7 +28,7 @@ use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 
 interface CategoryPropertyByIdInterface
 {
-    public function forCategory(CategoryProduct|CategoryProductUid|string $category): self;
+    public function forCategory(CategoryProduct|CategoryProductUid|string|null $category): self;
 
     public function findAll(): array|false;
 }

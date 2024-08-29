@@ -35,14 +35,19 @@ use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 
 final class CategoryPropertyByIdRepository implements CategoryPropertyByIdInterface
 {
-    private string|CategoryProduct|CategoryProductUid $category;
+    private CategoryProductUid|false $category = false;
 
     public function __construct(
         private readonly DBALQueryBuilder $DBALQueryBuilder,
     ) {}
 
-    public function forCategory(CategoryProduct|CategoryProductUid|string $category): self
+    public function forCategory(CategoryProduct|CategoryProductUid|string|null $category): self
     {
+        if($category === null)
+        {
+            return $this;
+        }
+
         if($category instanceof CategoryProduct)
         {
             $category = $category->getId();
@@ -54,6 +59,7 @@ final class CategoryPropertyByIdRepository implements CategoryPropertyByIdInterf
         }
 
         $this->category = $category;
+
         return $this;
     }
 
