@@ -74,7 +74,7 @@ final class OffersCategoryProductSectionFieldRepository implements OffersCategor
                 );
         }
 
-        $dbal->leftJoin(
+        $dbal->join(
             'category',
             CategoryProductOffers::class,
             'category_offers',
