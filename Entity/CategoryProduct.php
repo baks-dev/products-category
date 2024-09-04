@@ -49,6 +49,11 @@ class CategoryProduct
     #[ORM\Column(type: CategoryProductEventUid::TYPE, unique: true, nullable: false)]
     private ?CategoryProductEventUid $event = null;
 
+    public function __toString(): string
+    {
+        return (string) $this->id;
+    }
+
 
     public function __construct()
     {

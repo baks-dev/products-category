@@ -27,8 +27,8 @@ use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Products\Category\Entity;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductDTO;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\ProductCategoryForm;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\ProductCategoryHandler;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductForm;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductHandler;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,14 +43,14 @@ final class EditController extends AbstractController
     public function edit(
         Request $request,
         #[MapEntity] Entity\Event\CategoryProductEvent $Event,
-        ProductCategoryHandler $handler,
+        CategoryProductHandler $handler,
     ): Response
     {
 
         $ProductCategoryDTO = $Event->getDto(CategoryProductDTO::class);
 
         // Форма добавления
-        $form = $this->createForm(ProductCategoryForm::class, $ProductCategoryDTO);
+        $form = $this->createForm(CategoryProductForm::class, $ProductCategoryDTO);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid() && $form->has('Save'))

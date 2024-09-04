@@ -26,11 +26,14 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\Messenger;
 
 use BaksDev\Core\Cache\AppCacheInterface;
+use BaksDev\Products\Category\Repository\CategoryProductCurrentEvent\CategoryProductCurrentEventInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 final class ProductCategoryNullHandler
 {
+    public function __construct(CategoryProductCurrentEventInterface $categoryProductCurrentEvent) {}
+
     public function __invoke(ProductCategoryMessage $message): void {}
 }

@@ -30,8 +30,8 @@ use BaksDev\Products\Category\Entity as CategoryEntity;
 use BaksDev\Products\Category\Type\Event\CategoryProductEventUid;
 use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductDTO;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\ProductCategoryForm;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\ProductCategoryHandler;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductForm;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,7 +52,7 @@ final class NewController extends AbstractController
     public function new(
         Request $request,
         EntityManagerInterface $entityManager,
-        ProductCategoryHandler $handler,
+        CategoryProductHandler $handler,
         #[MapEntity] ?CategoryEntity\CategoryProduct $cat = null,
         ?CategoryProductEventUid $id = null,
     ): Response
@@ -72,7 +72,7 @@ final class NewController extends AbstractController
         }
 
         // Форма добавления
-        $form = $this->createForm(ProductCategoryForm::class, $category);
+        $form = $this->createForm(CategoryProductForm::class, $category);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid() && $form->has('Save'))
