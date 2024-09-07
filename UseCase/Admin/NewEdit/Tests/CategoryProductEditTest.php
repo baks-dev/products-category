@@ -51,7 +51,7 @@ use Symfony\Component\DependencyInjection\Attribute\When;
  * @group category-product
  * @group category-product-usecase
  *
- * depends BaksDev\Products\Category\UseCase\Admin\NewEdit\Tests\CategoryProductNewTest::class
+ * @depends BaksDev\Products\Category\UseCase\Admin\NewEdit\Tests\CategoryProductNewTest::class
  */
 #[When(env: 'test')]
 class CategoryProductEditTest extends KernelTestCase
@@ -66,6 +66,7 @@ class CategoryProductEditTest extends KernelTestCase
 
 
         self::assertNotNull($CategoryProductEvent);
+        self::assertNotFalse($CategoryProductEvent);
 
         /** @see CategoryProductDTO */
         $CategoryProductDTO = new CategoryProductDTO();
