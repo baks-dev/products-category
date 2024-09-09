@@ -21,6 +21,9 @@
  */
 
 
+let formName = document.forms.category_product_form;
+
+
 /** Коллекция СЕКЦИЙ для свойств продукта*/
 
 /* кнопка Добавить коллекцию */
@@ -30,7 +33,8 @@ let $addButtonSection = document.getElementById('section_addCollection');
 /* Блок для новой коллекции */
 let $blockCollection = document.getElementById('section_collection');
 
-if ($blockCollection) {
+if($blockCollection)
+{
     // /* добавить событие на удаление ко всем существующим элементам формы в блок с классом .del-item */
     // let $delItem = $blockCollection.querySelectorAll('.del-item-section');
     //
@@ -58,7 +62,8 @@ if ($blockCollection) {
 
     /* Существующие кнопки Добавить поле в секцию */
     let $addButtonField = document.querySelectorAll('[id^="createSectionField"]');
-    $addButtonField.forEach(function (item) {
+    $addButtonField.forEach(function(item)
+    {
         createSectionField(item.dataset.section);
     });
 
@@ -95,14 +100,15 @@ if ($blockCollection) {
      */
 
     /* Добавляем новую коллекцию */
-    $addButtonSection.addEventListener('click', function () {
+    $addButtonSection.addEventListener('click', function()
+    {
         /* получаем прототип коллекции  */
         let newForm = this.dataset.prototype;
         let index = this.dataset.index * 1;
 
 
         /* Замена '__name__' в HTML-коде прототипа на
-        вместо этого будет число, основанное на том, сколько коллекций */
+         вместо этого будет число, основанное на том, сколько коллекций */
         newForm = newForm.replace(/__category_section__/g, index);
         //newForm = newForm.replace(/__FIELD_SORT__/g, 100);
         //newForm = newForm.replace(/__FIELDS_INDEX__/g, 1);
@@ -148,19 +154,24 @@ if ($blockCollection) {
 
 
 /** Добавить секцию  */
-function deleteSection($block) {
+function deleteSection($block)
+{
 
     let $delItem = $block.querySelectorAll('.del-item-section');
 
     /* Удаляем при клике колекцию СЕКЦИЙ */
-    $delItem.forEach(function (item) {
-        item.addEventListener('click', function () {
+    $delItem.forEach(function(item)
+    {
+        item.addEventListener('click', function()
+        {
 
             let $counter = $block.getElementsByClassName('item-collection-section').length;
 
-            if ($counter > 1) {
+            if($counter > 1)
+            {
                 item.closest('.item-collection-section').remove();
-            } else {
+            } else
+            {
                 alert('Минимально должна быть добавлена одна секция');
             }
         });
@@ -168,20 +179,25 @@ function deleteSection($block) {
 }
 
 /** Удалить свойство из секции  */
-function deleteField($block) {
+function deleteField($block)
+{
 
     $delItem = $block.querySelectorAll('.del-item-field');
 
     /* Удаляем при клике свойство из секции */
-    $delItem.forEach(function (item) {
-        item.addEventListener('click', function () {
+    $delItem.forEach(function(item)
+    {
+        item.addEventListener('click', function()
+        {
 
             let $fieldCollection = document.getElementById('field-collection-' + this.dataset.section);
             let $counter = $fieldCollection.querySelectorAll('.item-collection-field').length;
 
-            if ($counter > 1) {
+            if($counter > 1)
+            {
                 item.closest('.item-collection-field').remove();
-            } else {
+            } else
+            {
                 alert('Минимально должна быть добавлена одна секция');
             }
         });
@@ -190,13 +206,15 @@ function deleteField($block) {
 
 
 /** Добавить свойство в секцию  */
-function createSectionField(section) {
+function createSectionField(section)
+{
 
     /* Событие на клик добавления полей в секцию */
     let $btnAddFields = document.getElementById('createSectionField' + section);
 
     //$btnCreateSectionField = div.querySelector('#createSectionField'+ index);
-    $btnAddFields.addEventListener('click', function () {
+    $btnAddFields.addEventListener('click', function()
+    {
 
         //$btnAddFields = document.getElementById('createSectionField'+section)
 
@@ -209,7 +227,7 @@ function createSectionField(section) {
 
 
         /* Замена '__name__' в HTML-коде прототипа на
-                    вместо этого будет число, основанное на том, сколько коллекций */
+         вместо этого будет число, основанное на том, сколько коллекций */
         newForm = newForm.replace(/__category_section__/g, section_id);
         newForm = newForm.replace(/__section_field__/g, index);
         newForm = newForm.replace(/__FIELD_SORT__/g, index * 10 + 100);
@@ -268,12 +286,14 @@ function createSectionField(section) {
 // }
 
 
-document.querySelectorAll('.is-reference').forEach(function (isReference) {
+document.querySelectorAll('.is-reference').forEach(function(isReference)
+{
 
     /* Обрабатываем уже существующие и сохраненные ТП */
     chanfeReferenc(isReference);
 
-    isReference.addEventListener('change', function () {
+    isReference.addEventListener('change', function()
+    {
         chanfeReferenc(this);
     });
 
@@ -281,17 +301,21 @@ document.querySelectorAll('.is-reference').forEach(function (isReference) {
 
 
 /** Получаем поле 'Название раздела' по локали для 'Символьный код категории' */
-let $name = document.querySelector("input[data-lang='product_category_form_translate_0_" + $locale + "']");
+let $name = document.querySelector("input[data-lang='" + formName.name + "_translate_0_" + $locale + "']");
 
-if ($name) {
+if($name)
+{
 
     let retry = 100;
 
-    setTimeout(function RLTnSEEzgM() {
+    setTimeout(function RLTnSEEzgM()
+    {
 
-        if (retry >= 1000) { return; }
+        if(retry >= 1000)
+        { return; }
 
-        if (typeof catUrl.debounce === 'function') {
+        if(typeof catUrl.debounce === 'function')
+        {
 
             $name.addEventListener('input', catUrl.debounce(500));
             return;
@@ -304,9 +328,10 @@ if ($name) {
     }, 100);
 
 
-    function catUrl() {
+    function catUrl()
+    {
         /* Заполняем транслитом URL */
-        document.getElementById('product_category_form_info_url').value = translitRuEn(this.value).toLowerCase();
+        document.getElementById(formName + '_info_url').value = translitRuEn(this.value).toLowerCase();
     }
 }
 
@@ -327,22 +352,24 @@ if ($name) {
 
 
 $offerSettings = document.getElementById('offer-settings');
-$checkboxOfferSettings = document.getElementById('product_category_form_offer_offer');
-$nameOfferSettings = document.querySelectorAll("input[id^='product_category_form_offer_translate']");
+$checkboxOfferSettings = document.getElementById(formName.name + '_offer_offer');
+$nameOfferSettings = document.querySelectorAll("input[id^='" + formName.name + "_offer_translate']");
 
 $variationSettings = document.getElementById('variation-settings');
-$checkboxVariationSettings = document.getElementById('product_category_form_offer_variation_variation');
-$nameVariationSettings = document.querySelectorAll("input[id^='product_category_form_offer_variation_translate']");
+$checkboxVariationSettings = document.getElementById(formName.name + '_offer_variation_variation');
+$nameVariationSettings = document.querySelectorAll("input[id^='" + formName.name + "_offer_variation_translate']");
 
 
 $modificationSettings = document.getElementById('modification-settings');
-$checkboxModificationSettings = document.getElementById('product_category_form_offer_variation_modification_modification');
-$nameModificationSettings = document.querySelectorAll("input[id^='product_category_form_offer_variation_modification_translate']");
+$checkboxModificationSettings = document.getElementById(formName.name + '_offer_variation_modification_modification');
+$nameModificationSettings = document.querySelectorAll("input[id^='" + formName.name + "_offer_variation_modification_translate']");
 
 
-$checkboxOfferSettings.addEventListener('change', function () {
+$checkboxOfferSettings.addEventListener('change', function()
+{
 
-    if (this.checked == false) {
+    if(this.checked == false)
+    {
         $offerSettings.classList.add('d-none');
 
         $checkboxVariationSettings.checked = false;
@@ -361,11 +388,14 @@ $checkboxOfferSettings.addEventListener('change', function () {
         Array.from($nameModificationSettings).forEach(e => e.removeAttribute('required'));
 
 
-    } else {
+    } else
+    {
 
         /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
-        Array.from($nameOfferSettings).forEach(e => {
-            if (e.name.match("postfix") === null) {
+        Array.from($nameOfferSettings).forEach(e =>
+        {
+            if(e.name.match("postfix") === null)
+            {
                 e.setAttribute('required', true)
             }
         });
@@ -378,21 +408,26 @@ $checkboxOfferSettings.addEventListener('change', function () {
 });
 
 
-$checkboxVariationSettings.addEventListener('change', function () {
+$checkboxVariationSettings.addEventListener('change', function()
+{
 
 
-    if (this.checked == false) {
+    if(this.checked == false)
+    {
         $variationSettings.classList.add('d-none');
 
         /* Делаем поле Name НЕ обязательным */
         Array.from($nameVariationSettings).forEach(e => e.removeAttribute('required'));
 
-    } else {
+    } else
+    {
         $variationSettings.classList.remove('d-none');
 
         /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
-        Array.from($nameVariationSettings).forEach(e => {
-            if (e.name.match("postfix") === null) {
+        Array.from($nameVariationSettings).forEach(e =>
+        {
+            if(e.name.match("postfix") === null)
+            {
                 e.setAttribute('required', true)
             }
         });
@@ -401,20 +436,25 @@ $checkboxVariationSettings.addEventListener('change', function () {
 });
 
 
-$checkboxModificationSettings.addEventListener('change', function () {
+$checkboxModificationSettings.addEventListener('change', function()
+{
 
-    if (this.checked == false) {
+    if(this.checked == false)
+    {
         $modificationSettings.classList.add('d-none');
 
         /* Делаем поле Name НЕ обязательным */
         Array.from($nameModificationSettings).forEach(e => e.removeAttribute('required'));
 
-    } else {
+    } else
+    {
         $modificationSettings.classList.remove('d-none');
 
         /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
-        Array.from($nameModificationSettings).forEach(e => {
-            if (e.name.match("postfix") === null) {
+        Array.from($nameModificationSettings).forEach(e =>
+        {
+            if(e.name.match("postfix") === null)
+            {
                 e.setAttribute('required', true)
             }
         });
@@ -423,7 +463,8 @@ $checkboxModificationSettings.addEventListener('change', function () {
 });
 
 
-if ($checkboxOfferSettings.checked == false) {
+if($checkboxOfferSettings.checked == false)
+{
     $offerSettings.classList.add('d-none');
 
     $checkboxVariationSettings.checked = false;
@@ -444,7 +485,8 @@ if ($checkboxOfferSettings.checked == false) {
     $modificationSettings.classList.add('d-none');
 
 
-} else {
+} else
+{
 
     $offerSettings.classList.remove('d-none');
 
@@ -452,24 +494,30 @@ if ($checkboxOfferSettings.checked == false) {
     $checkboxModificationSettings.disabled = false;
 
     /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
-    Array.from($nameOfferSettings).forEach(e => {
-        if (e.name.match("postfix") === null) {
+    Array.from($nameOfferSettings).forEach(e =>
+    {
+        if(e.name.match("postfix") === null)
+        {
             e.setAttribute('required', true)
         }
     });
 }
 
 
-if ($checkboxVariationSettings.checked == false) {
+if($checkboxVariationSettings.checked == false)
+{
     /* Делаем поле Name НЕ обязательным */
     Array.from($nameVariationSettings).forEach(e => e.removeAttribute('required'));
 
     $variationSettings.classList.add('d-none');
 
-} else {
+} else
+{
     /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
-    Array.from($nameVariationSettings).forEach(e => {
-        if (e.name.match("postfix") === null) {
+    Array.from($nameVariationSettings).forEach(e =>
+    {
+        if(e.name.match("postfix") === null)
+        {
             e.setAttribute('required', true)
         }
     });
@@ -478,16 +526,20 @@ if ($checkboxVariationSettings.checked == false) {
 }
 
 
-if ($checkboxModificationSettings.checked == false) {
+if($checkboxModificationSettings.checked == false)
+{
     /* Делаем поле Name НЕ обязательным */
     Array.from($nameModificationSettings).forEach(e => e.removeAttribute('required'));
 
     $modificationSettings.classList.add('d-none');
 
-} else {
+} else
+{
     /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
-    Array.from($nameModificationSettings).forEach(e => {
-        if (e.name.match("postfix") === null) {
+    Array.from($nameModificationSettings).forEach(e =>
+    {
+        if(e.name.match("postfix") === null)
+        {
             e.setAttribute('required', true)
         }
     });
@@ -497,31 +549,35 @@ if ($checkboxModificationSettings.checked == false) {
 }
 
 
-function chanfeReferenc($this) {
+function chanfeReferenc($this)
+{
 
     let ref = document.getElementById($this.dataset.reference);
-    if ($this.checked === true) {
+    if($this.checked === true)
+    {
         ref.classList.remove('d-none');
-    } else {
+    } else
+    {
         ref.classList.add('d-none');
         ref.selectedIndex = 0; /* сбрасываем select */
     }
 }
 
 
-document.querySelectorAll('.change-postfix').forEach(function (postfix) {
+document.querySelectorAll('.change-postfix').forEach(function(postfix)
+{
 
-    postfix.addEventListener('change', function ()
+    postfix.addEventListener('change', function()
     {
 
-        document.querySelectorAll('.' + this.id).forEach(function (element) {
+        document.querySelectorAll('.' + this.id).forEach(function(element)
+        {
 
-            if (postfix.checked == true)
+            if(postfix.checked == true)
             {
                 element.classList.remove('d-none');
                 element.querySelector('input').setAttribute('required', true);
-            }
-            else
+            } else
             {
                 element.classList.add('d-none');
                 let inpt = element.querySelector('input');
