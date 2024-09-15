@@ -65,7 +65,7 @@ final class CategoryProductVariationDTO implements CategoryProductVariationInter
 
 
     /** Множественные варианты торговых предложений  */
-    private Modification\CategoryProductModificationDTO $modification;
+    private ?Modification\CategoryProductModificationDTO $modification;
 
     public function __construct()
     {
@@ -196,16 +196,25 @@ final class CategoryProductVariationDTO implements CategoryProductVariationInter
     }
 
 
-    public function getModification(): Modification\CategoryProductModificationDTO
+    public function getModification(): ?Modification\CategoryProductModificationDTO
     {
         return $this->modification;
     }
 
 
-    public function setModification(Modification\CategoryProductModificationDTO $modification): void
+    public function setModification(?Modification\CategoryProductModificationDTO $modification): void
     {
         $this->modification = $modification;
     }
+
+    public function resetModification(): void
+    {
+        if($this->modification->isModification() === false)
+        {
+            $this->modification = null;
+        }
+    }
+
 
     /** Множественный вариант  с постфиксом */
 

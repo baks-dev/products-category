@@ -58,6 +58,8 @@ final class NewController extends AbstractController
     ): Response
     {
 
+
+
         $parent = $cat ? new ParentCategoryProductUid($cat->getId()) : null;
         $Event = $id ? $entityManager->getRepository(CategoryEntity\Event\CategoryProductEvent::class)->find(
             $id
@@ -77,7 +79,9 @@ final class NewController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid() && $form->has('Save'))
         {
-            $this->refreshTokenForm($form);
+            //dd($request->request);
+
+            //$this->refreshTokenForm($form);
 
             $ProductCategory = $handler->handle($category);
 

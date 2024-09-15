@@ -27,7 +27,7 @@ use BaksDev\Core\Type\Field\InputField;
 use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Entity\Offers\CategoryProductOffersInterface;
 use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\Trans\ProductOffersTransDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\Trans\CategoryProductOffersTransDTO;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -62,7 +62,7 @@ final class CategoryProductOffersDTO implements CategoryProductOffersInterface
     private ArrayCollection $translate;
 
     /** Множественные варианты торговых предложений  */
-    private Variation\CategoryProductVariationDTO $variation;
+    private ?Variation\CategoryProductVariationDTO $variation;
 
 
     public function __construct()
@@ -170,7 +170,7 @@ final class CategoryProductOffersDTO implements CategoryProductOffersInterface
         /* Вычисляем расхождение и добавляем неопределенные локали */
         foreach(Locale::diffLocale($this->translate) as $locale)
         {
-            $OffersTransDTO = new ProductOffersTransDTO();
+            $OffersTransDTO = new CategoryProductOffersTransDTO();
             $OffersTransDTO->setLocal($locale);
             $this->addTranslate($OffersTransDTO);
         }
@@ -179,7 +179,7 @@ final class CategoryProductOffersDTO implements CategoryProductOffersInterface
     }
 
 
-    public function addTranslate(ProductOffersTransDTO $trans): void
+    public function addTranslate(CategoryProductOffersTransDTO $trans): void
     {
         if(empty($trans->getLocal()->getLocalValue()))
         {
@@ -193,7 +193,7 @@ final class CategoryProductOffersDTO implements CategoryProductOffersInterface
     }
 
 
-    public function removeTranslate(ProductOffersTransDTO $trans): void
+    public function removeTranslate(CategoryProductOffersTransDTO $trans): void
     {
         $this->translate->removeElement($trans);
     }
@@ -215,7 +215,7 @@ final class CategoryProductOffersDTO implements CategoryProductOffersInterface
 
     /** Множественные варианты торговых предложений  */
 
-    public function getVariation(): Variation\CategoryProductVariationDTO
+    public function getVariation(): ?Variation\CategoryProductVariationDTO
     {
         return $this->variation;
     }
@@ -231,8 +231,17 @@ final class CategoryProductOffersDTO implements CategoryProductOffersInterface
 
     public function isOffer(): bool
     {
-
         return $this->offer;
+    }
+
+    public function resetVariation(): void
+    {
+        $this->variation->resetModification();
+
+        if($this->variation->isVariation() === false)
+        {
+            $this->variation = null;
+        }
     }
 
 

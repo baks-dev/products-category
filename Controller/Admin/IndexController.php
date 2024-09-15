@@ -37,7 +37,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[AsController]
-#[RoleSecurity('ROLE_PRODUCT_CATEGORY')]
+#[RoleSecurity('ROLE_PRODUCT_CATEGORY_INDEX')]
 final class IndexController extends AbstractController
 {
     #[Route('/admin/product/categorys/{cat}/{page<\d+>}', name: 'admin.index', // defaults: ['cat' => null],

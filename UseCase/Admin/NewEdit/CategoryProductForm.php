@@ -26,12 +26,15 @@ namespace BaksDev\Products\Category\UseCase\Admin\NewEdit;
 use BaksDev\Products\Category\Repository\ParentCategoryChoiceForm\ParentCategoryChoiceInterface;
 use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\CategoryProductOffersDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class CategoryProductForm extends AbstractType
@@ -49,10 +52,10 @@ final class CategoryProductForm extends AbstractType
         $builder->add('sort', IntegerType::class);
 
         /** Обложка категории */
-        $builder->add('cover', NewEdit\Cover\ProductCategoryCoverForm::class);
+        $builder->add('cover', NewEdit\Cover\CategoryProductCoverForm::class);
 
         /** Неизменяемые свойства категории */
-        $builder->add('info', NewEdit\Info\InfoForm::class);
+        $builder->add('info', NewEdit\Info\CategoryProductInfoForm::class);
 
 
         /** Идентификатор родительской категории */
@@ -75,7 +78,7 @@ final class CategoryProductForm extends AbstractType
 
         /** Настройки локали категории */
         $builder->add('translate', CollectionType::class, [
-            'entry_type' => NewEdit\Trans\CategoryTransForm::class,
+            'entry_type' => NewEdit\Trans\CategoryProductTransForm::class,
             'entry_options' => ['label' => false],
             'label' => false,
             'by_reference' => false,
@@ -86,7 +89,7 @@ final class CategoryProductForm extends AbstractType
 
         /** Настройки SEO категории */
         $builder->add('seo', CollectionType::class, [
-            'entry_type' => NewEdit\Seo\SeoCollectionForm::class,
+            'entry_type' => NewEdit\Seo\CategoryProductSeoCollectionForm::class,
             'entry_options' => ['label' => false],
             'label' => false,
             'by_reference' => false,
@@ -97,7 +100,7 @@ final class CategoryProductForm extends AbstractType
 
         /** Посадочные блоки */
         $builder->add('landing', CollectionType::class, [
-            'entry_type' => NewEdit\Landing\LandingCollectionForm::class,
+            'entry_type' => NewEdit\Landing\CategoryProductLandingCollectionForm::class,
             'entry_options' => ['label' => false],
             'label' => false,
             'by_reference' => false,
@@ -108,7 +111,7 @@ final class CategoryProductForm extends AbstractType
 
         /** Секции свойств продукта категории */
         $builder->add('section', CollectionType::class, [
-            'entry_type' => NewEdit\Section\SectionCollectionForm::class,
+            'entry_type' => NewEdit\Section\CategoryProductSectionCollectionForm::class,
             'entry_options' => ['label' => false],
             'label' => false,
             'by_reference' => false,
@@ -130,8 +133,21 @@ final class CategoryProductForm extends AbstractType
         ]);*/
 
 
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event): void {
+
+            /** @var CategoryProductDTO $data */
+            $data = $event->getData();
+
+            if($data->getOffer() === null)
+            {
+                $data->setOffer(new CategoryProductOffersDTO());
+            }
+
+        });
+
+
         /** Товары в категории с торговым предложением */
-        $builder->add('offer', NewEdit\Offers\ProductCategoryOffersForm::class);
+        $builder->add('offer', NewEdit\Offers\CategoryProductOffersForm::class, ['label' => false]);
 
 
         /* Сохранить ******************************************************/

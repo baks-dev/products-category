@@ -5,10 +5,8 @@
 	<ul class="nav nav-pills gap-3 mb-3" id="nav-{{ form.offer.vars.id }}" role="tablist">
 		
 		{% for translate in form.offer.translate %}
-			
-			
-			
-			<li class="nav-item" role="presentation">
+
+            <li class="nav-item" role="presentation">
 				<button class="btn fw-bolder nav-link{{ app.request.locale == translate.vars.value.local? ' active' : '' }}"
 						data-bs-toggle="tab"
 						type="button"

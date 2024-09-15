@@ -34,15 +34,15 @@ use BaksDev\Products\Category\Entity\Landing\CategoryProductLanding;
 use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class CategoryByUrlRepository implements CategoryByUrlInterface
+final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
 {
-    public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
+    public function __construct(private DBALQueryBuilder $DBALQueryBuilder) {}
 
 
     /**
      *  Категория по части URI
      */
-    public function findByUrl(string $urn): bool|array
+    public function findByUrl(string $url): array|false
     {
         $dbal = $this
             ->DBALQueryBuilder->createQueryBuilder(self::class)
@@ -55,7 +55,7 @@ final class CategoryByUrlRepository implements CategoryByUrlInterface
             ->from(CategoryProductInfo::class, 'info')
             ->where('info.url = :url')
             ->andWhere('info.active = true')
-            ->setParameter('url', $urn);
+            ->setParameter('url', $url);
 
 
         $dbal
@@ -70,7 +70,7 @@ final class CategoryByUrlRepository implements CategoryByUrlInterface
 
         $dbal
             ->addSelect('product_category_event.parent AS category_parent')
-            ->join(
+            ->leftJoin(
                 'product_category',
                 CategoryProductEvent::class,
                 'product_category_event',
@@ -194,7 +194,7 @@ final class CategoryByUrlRepository implements CategoryByUrlInterface
 
         return $dbal
             ->enableCache('products-category', 86400)
-            ->fetchAssociative();
+            ->fetchAssociative() ?: false;
 
     }
 }

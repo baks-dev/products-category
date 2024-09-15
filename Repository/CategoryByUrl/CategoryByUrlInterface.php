@@ -25,5 +25,5 @@ namespace BaksDev\Products\Category\Repository\CategoryByUrl;
 
 interface CategoryByUrlInterface
 {
-	public function findByUrl(string $urn) : bool|array;
+    public function findByUrl(string $url): array|false;
 }

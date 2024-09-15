@@ -18,6 +18,7 @@
 
 namespace BaksDev\Products\Category\Controller\Admin\Tests;
 
+use BaksDev\Products\Category\Security\VoterIndex;
 use BaksDev\Users\User\Tests\TestUserAccount;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
@@ -28,9 +29,9 @@ final class IndexControllerTest extends WebTestCase
 {
     private const URL = '/admin/product/categorys';
 
-    private const ROLE = 'ROLE_PRODUCT_CATEGORY';
-
-    /** Доступ по роли ROLE_PRODUCT */
+    /**
+     * Доступ по роли  ROLE_PRODUCT_CATEGORY_INDEX
+     */
     public function testRoleSuccessful(): void
     {
         self::ensureKernelShutdown();
@@ -40,7 +41,7 @@ final class IndexControllerTest extends WebTestCase
         {
             $client->setServerParameter('HTTP_USER_AGENT', $device);
 
-            $usr = TestUserAccount::getModer(self::ROLE);
+            $usr = TestUserAccount::getModer(VoterIndex::getVoter());
 
             $client->loginUser($usr, 'user');
             $client->request('GET', self::URL);
@@ -51,7 +52,9 @@ final class IndexControllerTest extends WebTestCase
         self::assertTrue(true);
     }
 
-    /** Доступ по роли ROLE_ADMIN */
+    /**
+     * Доступ по роли ROLE_ADMIN
+     */
     public function testRoleAdminSuccessful(): void
     {
         self::ensureKernelShutdown();
@@ -72,7 +75,9 @@ final class IndexControllerTest extends WebTestCase
         self::assertTrue(true);
     }
 
-    /** Доступ по роли ROLE_USER */
+    /**
+     * Доступ по роли ROLE_USER
+     */
     public function testRoleUserFiled(): void
     {
         self::ensureKernelShutdown();

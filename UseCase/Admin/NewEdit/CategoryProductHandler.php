@@ -40,6 +40,28 @@ final class CategoryProductHandler extends AbstractHandler
 {
     public function handle(CategoryProductDTO $command): string|CategoryProduct
     {
+
+        //        if($command->getOffer()?->isOffer())
+        //        {
+        //            $offer = $command->getOffer();
+        //
+        //            if($offer?->getVariation()->isVariation())
+        //            {
+        //                $variation = $offer?->getVariation();
+        //
+        //                if($variation->getModification()->isModification())
+        //                {
+        //
+        //
+        //                }
+        //
+        //            }
+        //
+        //        }
+
+        /** Делаем сброс иерархии настроек торговых предложений  */
+        $command->resetOffer();
+
         /** Валидация DTO  */
         $this->validatorCollection->add($command);
 
@@ -75,6 +97,7 @@ final class CategoryProductHandler extends AbstractHandler
         {
             return $this->validatorCollection->getErrorUniqid();
         }
+
 
         $this->entityManager->flush();
 

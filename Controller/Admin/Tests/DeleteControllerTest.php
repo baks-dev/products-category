@@ -18,135 +18,100 @@
 
 namespace BaksDev\Products\Category\Controller\Admin\Tests;
 
-use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Security\VoterDelete;
 use BaksDev\Products\Category\Type\Event\CategoryProductEventUid;
 use BaksDev\Users\User\Tests\TestUserAccount;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/** @group products-category */
+/**
+ * @group products-category
+ * @depends BaksDev\Products\Category\UseCase\Admin\NewEdit\Tests\CategoryProductNewTest::class
+ */
 #[When(env: 'test')]
 final class DeleteControllerTest extends WebTestCase
 {
     private const URL = '/admin/product/category/delete/%s';
 
-    private const ROLE = 'ROLE_PRODUCT_CATEGORY_DELETE';
-
-    private static ?CategoryProductEventUid $identifier = null;
-
-    public static function setUpBeforeClass(): void
-    {
-        $em = self::getContainer()->get(EntityManagerInterface::class);
-        self::$identifier = $em->getRepository(CategoryProduct::class)->findOneBy([], ['id' => 'DESC'])?->getEvent();
-
-        $em->clear();
-        //$em->close();
-    }
-
-
-    /** Доступ по роли */
+    /**
+     * Доступ по роли ROLE_PRODUCT_CATEGORY_DELETE
+     */
     public function testRoleSuccessful(): void
     {
-        // Получаем одно из событий
-        $Event = self::$identifier;
+        self::ensureKernelShutdown();
+        $client = static::createClient();
 
-        if($Event)
+        foreach(TestUserAccount::getDevice() as $device)
         {
-            self::ensureKernelShutdown();
-            $client = static::createClient();
+            $usr = TestUserAccount::getModer(VoterDelete::getVoter()); // ROLE_PRODUCT_CATEGORY_DELETE
 
-            foreach(TestUserAccount::getDevice() as $device)
-            {
-                $client->setServerParameter('HTTP_USER_AGENT', $device);
+            $client->setServerParameter('HTTP_USER_AGENT', $device);
+            $client->loginUser($usr, 'user');
+            $client->request('GET', sprintf(self::URL, CategoryProductEventUid::TEST));
 
-                $usr = TestUserAccount::getModer(self::ROLE);
-
-                $client->loginUser($usr, 'user');
-                $client->request('GET', sprintf(self::URL, $Event->getValue()));
-
-                self::assertResponseIsSuccessful();
-            }
+            self::assertResponseIsSuccessful();
         }
-
-        self::assertTrue(true);
     }
 
-    // доступ по роли ROLE_ADMIN
+    /**
+     * Доступ по роли ROLE_ADMIN
+     */
     public function testRoleAdminSuccessful(): void
     {
-        // Получаем одно из событий
-        $Event = self::$identifier;
+        self::ensureKernelShutdown();
+        $client = static::createClient();
 
-        if($Event)
+        foreach(TestUserAccount::getDevice() as $device)
         {
-            self::ensureKernelShutdown();
-            $client = static::createClient();
+            $usr = TestUserAccount::getAdmin();
 
-            foreach(TestUserAccount::getDevice() as $device)
-            {
-                $client->setServerParameter('HTTP_USER_AGENT', $device);
+            $client->setServerParameter('HTTP_USER_AGENT', $device);
+            $client->loginUser($usr, 'user');
+            $client->request('GET', sprintf(self::URL, CategoryProductEventUid::TEST));
 
-                $usr = TestUserAccount::getAdmin();
-
-                $client->loginUser($usr, 'user');
-                $client->request('GET', sprintf(self::URL, $Event->getValue()));
-
-                self::assertResponseIsSuccessful();
-            }
+            self::assertResponseIsSuccessful();
         }
-
-        self::assertTrue(true);
     }
 
-    // доступ по роли ROLE_USER
+    /**
+     * Доступ по роли ROLE_USER
+     */
     public function testRoleUserDeny(): void
     {
-        // Получаем одно из событий
-        $Event = self::$identifier;
+        self::ensureKernelShutdown();
+        $client = static::createClient();
 
-        if($Event)
+        foreach(TestUserAccount::getDevice() as $device)
         {
-            self::ensureKernelShutdown();
-            $client = static::createClient();
+            $usr = TestUserAccount::getUsr();
 
-            foreach(TestUserAccount::getDevice() as $device)
-            {
-                $client->setServerParameter('HTTP_USER_AGENT', $device);
+            $client->setServerParameter('HTTP_USER_AGENT', $device);
+            $client->loginUser($usr, 'user');
+            $client->request('GET', sprintf(self::URL, CategoryProductEventUid::TEST));
 
-                $usr = TestUserAccount::getUsr();
-                $client->loginUser($usr, 'user');
-                $client->request('GET', sprintf(self::URL, $Event->getValue()));
-
-                self::assertResponseStatusCodeSame(403);
-            }
+            self::assertResponseStatusCodeSame(403);
         }
 
-        self::assertTrue(true);
     }
 
-    /** Доступ по без роли */
+    /**
+     * Доступ по без роли
+     */
     public function testGuestFiled(): void
     {
-        // Получаем одно из событий
-        $Event = self::$identifier;
 
-        if($Event)
+        self::ensureKernelShutdown();
+        $client = static::createClient();
+
+        foreach(TestUserAccount::getDevice() as $device)
         {
-            self::ensureKernelShutdown();
-            $client = static::createClient();
+            $client->setServerParameter('HTTP_USER_AGENT', $device);
 
-            foreach(TestUserAccount::getDevice() as $device)
-            {
-                $client->setServerParameter('HTTP_USER_AGENT', $device);
+            $client->request('GET', sprintf(self::URL, CategoryProductEventUid::TEST));
 
-                $client->request('GET', sprintf(self::URL, $Event->getValue()));
-
-                // Full authentication is required to access this resource
-                self::assertResponseStatusCodeSame(401);
-            }
+            // Full authentication is required to access this resource
+            self::assertResponseStatusCodeSame(401);
         }
 
-        self::assertTrue(true);
     }
 }

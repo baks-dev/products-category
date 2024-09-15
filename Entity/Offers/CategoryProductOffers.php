@@ -118,6 +118,8 @@ class CategoryProductOffers extends EntityState
     {
         if($dto instanceof CategoryProductOffersInterface || $dto instanceof self)
         {
+
+
             if($dto->isOffer())
             {
                 return parent::setEntity($dto);

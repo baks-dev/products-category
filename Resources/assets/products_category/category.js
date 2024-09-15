@@ -303,250 +303,401 @@ document.querySelectorAll('.is-reference').forEach(function(isReference)
 /** Получаем поле 'Название раздела' по локали для 'Символьный код категории' */
 let $name = document.querySelector("input[data-lang='" + formName.name + "_translate_0_" + $locale + "']");
 
-if($name)
+executeFunc(function charUrlCode()
 {
-
-    let retry = 100;
-
-    setTimeout(function RLTnSEEzgM()
+    if($name === null)
     {
+        return false;
+    }
 
-        if(retry >= 1000)
-        { return; }
+    if(typeof catUrl.debounce !== 'function')
+    {
+        return false;
+    }
 
-        if(typeof catUrl.debounce === 'function')
+
+    $name.addEventListener('input', catUrl.debounce(500));
+
+    return true;
+})
+
+
+//if($name)
+//{
+//
+//    let retry = 100;
+//
+//    setTimeout(function RLTnSEEzgM()
+//    {
+//
+//        if(retry >= 1000)
+//        { return; }
+//
+//        if(typeof catUrl.debounce === 'function')
+//        {
+//
+//            $name.addEventListener('input', catUrl.debounce(500));
+//            return;
+//        }
+//
+//        retry = retry * 2;
+//
+//        setTimeout(RLTnSEEzgM, retry);
+//
+//    }, 100);
+//
+//
+//    function catUrl()
+//    {
+//        /* Заполняем транслитом URL */
+//        document.getElementById(formName + '_info_url').value = translitRuEn(this.value).toLowerCase();
+//    }
+//}
+
+function catUrl()
+{
+    let inputUrl = document.getElementById(formName.name + '_info_url');
+
+    if(inputUrl === null)
+    {
+        return;
+    }
+
+    /* Заполняем транслитом URL */
+    inputUrl.value = translitRuEn(this.value).toLowerCase();
+}
+
+
+// Функция для установки поведения чекбоксов торговых предложений
+function setupCheckboxGroup(namePart)
+{
+    const checkboxes = document.querySelectorAll(`input[type="checkbox"][name*="${namePart}"]`);
+
+    if(checkboxes.length > 0)
+    {
+        checkboxes.forEach(function(item)
         {
-
-            $name.addEventListener('input', catUrl.debounce(500));
-            return;
-        }
-
-        retry = retry * 2;
-
-        setTimeout(RLTnSEEzgM, retry);
-
-    }, 100);
-
-
-    function catUrl()
-    {
-        /* Заполняем транслитом URL */
-        document.getElementById(formName + '_info_url').value = translitRuEn(this.value).toLowerCase();
+            item.addEventListener('change', function()
+            {
+                const currentCheck = this.id; // ID текущего чекбокса
+                checkboxes.forEach(function(event)
+                {
+                    if(event.id !== currentCheck)
+                    {
+                        event.checked = false; // Снимаем отметку с других чекбоксов
+                    }
+                });
+            });
+        });
     }
 }
 
-/* Торговое предложение с ценой - снимаем чекбокс*/
-// let isPrice = document.querySelectorAll('input[id*="_isPrice"]');
-//
-// isPrice.forEach(function (item) {
-//     item.addEventListener('change', function (event) {
-//         let check = this.id;
-//         document.querySelectorAll('input[id*="_isPrice"]').forEach(function (event) {
-//             if(event.id !== check) { event.checked = false; }
-//         });
-//     });
-// });
+setupCheckboxGroup('price');
+setupCheckboxGroup('article');
+setupCheckboxGroup('quantitative');
+setupCheckboxGroup('image');
 
 
 /** Обрабатываем чекбоксы торговых предложений и вариантов */
 
-
-$offerSettings = document.getElementById('offer-settings');
 $checkboxOfferSettings = document.getElementById(formName.name + '_offer_offer');
-$nameOfferSettings = document.querySelectorAll("input[id^='" + formName.name + "_offer_translate']");
-
-$variationSettings = document.getElementById('variation-settings');
 $checkboxVariationSettings = document.getElementById(formName.name + '_offer_variation_variation');
-$nameVariationSettings = document.querySelectorAll("input[id^='" + formName.name + "_offer_variation_translate']");
-
-
-$modificationSettings = document.getElementById('modification-settings');
 $checkboxModificationSettings = document.getElementById(formName.name + '_offer_variation_modification_modification');
+
+
+$nameOfferSettings = document.querySelectorAll("input[id^='" + formName.name + "_offer_translate']");
+$nameVariationSettings = document.querySelectorAll("input[id^='" + formName.name + "_offer_variation_translate']");
 $nameModificationSettings = document.querySelectorAll("input[id^='" + formName.name + "_offer_variation_modification_translate']");
 
 
+toggleSettings($checkboxOfferSettings);
+toggleSettings($checkboxVariationSettings);
+toggleSettings($checkboxModificationSettings);
+
+
+// Функция для управления видимостью и обязательностью полей
+function toggleSettings(checkbox, children = null)
+{
+    let settingsContainer = document.getElementById(checkbox.id + '_settings');
+
+    let inputElements;
+
+    if(checkbox.id === $checkboxOfferSettings.id)
+    {
+        inputElements = $nameOfferSettings;
+    }
+
+    if(checkbox.id === $checkboxVariationSettings.id)
+    {
+        inputElements = $nameVariationSettings;
+    }
+
+    if(checkbox.id === $checkboxModificationSettings.id)
+    {
+        inputElements = $nameModificationSettings;
+    }
+
+    if(checkbox.checked)
+    {
+
+        // показываем блок натсроек
+        settingsContainer.classList.remove('d-none');
+
+        /** Сбрасываем обязательные для заполнения элементы */
+        Array.from(inputElements).forEach(input =>
+        {
+            if(!input.name.includes("postfix"))
+            {
+                input.setAttribute('required', true);
+            }
+        });
+
+        /** Отключаем конпку выбора дочернего элемента */
+        if(children)
+        {
+            children.disabled = false;
+        }
+
+    } else
+    {
+
+        // скрываем блок натсроек
+        settingsContainer.classList.add('d-none');
+
+        /** Если кнопка Торговое предложение -  отключаем кнопку Множественный вариант */
+        if(checkbox.id === formName.name + '_offer_offer')
+        {
+            $checkboxVariationSettings.checked = false;
+            $checkboxVariationSettings.chedisabledcked = true;
+            toggleSettings($checkboxVariationSettings);
+        }
+
+        /** Если кнопка Множественный вариант - отключаем кнопку Модификаций вариант */
+        if(checkbox.id === $checkboxVariationSettings.id)
+        {
+            $checkboxModificationSettings.checked = false;
+            $checkboxModificationSettings.disabled = true;
+            toggleSettings($checkboxModificationSettings);
+        }
+
+        /** Делаем элементы обязательными для заполнения */
+        Array.from(inputElements).forEach(input => input.removeAttribute('required'));
+
+    }
+}
+
+// Обработчик для чекбокса "Offer"
 $checkboxOfferSettings.addEventListener('change', function()
 {
-
-    if(this.checked == false)
-    {
-        $offerSettings.classList.add('d-none');
-
-        $checkboxVariationSettings.checked = false;
-        $checkboxVariationSettings.disabled = true;
-
-        $checkboxModificationSettings.checked = false;
-        $checkboxModificationSettings.disabled = true;
-
-
-        $variationSettings.classList.add('d-none');
-        $modificationSettings.classList.add('d-none');
-
-        /* Делаем поле Name НЕ обязательным */
-        Array.from($nameOfferSettings).forEach(e => e.removeAttribute('required'));
-        Array.from($nameVariationSettings).forEach(e => e.removeAttribute('required'));
-        Array.from($nameModificationSettings).forEach(e => e.removeAttribute('required'));
-
-
-    } else
-    {
-
-        /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
-        Array.from($nameOfferSettings).forEach(e =>
-        {
-            if(e.name.match("postfix") === null)
-            {
-                e.setAttribute('required', true)
-            }
-        });
-
-        $offerSettings.classList.remove('d-none');
-
-        $checkboxVariationSettings.disabled = false;
-        $checkboxModificationSettings.disabled = false;
-    }
+    toggleSettings(this, $checkboxVariationSettings);
 });
 
-
+// Обработчик для чекбокса "Variation"
 $checkboxVariationSettings.addEventListener('change', function()
 {
-
-
-    if(this.checked == false)
-    {
-        $variationSettings.classList.add('d-none');
-
-        /* Делаем поле Name НЕ обязательным */
-        Array.from($nameVariationSettings).forEach(e => e.removeAttribute('required'));
-
-    } else
-    {
-        $variationSettings.classList.remove('d-none');
-
-        /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
-        Array.from($nameVariationSettings).forEach(e =>
-        {
-            if(e.name.match("postfix") === null)
-            {
-                e.setAttribute('required', true)
-            }
-        });
-
-    }
+    toggleSettings(this, $checkboxModificationSettings);
 });
 
-
+// Обработчик для чекбокса "Modification"
 $checkboxModificationSettings.addEventListener('change', function()
 {
-
-    if(this.checked == false)
-    {
-        $modificationSettings.classList.add('d-none');
-
-        /* Делаем поле Name НЕ обязательным */
-        Array.from($nameModificationSettings).forEach(e => e.removeAttribute('required'));
-
-    } else
-    {
-        $modificationSettings.classList.remove('d-none');
-
-        /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
-        Array.from($nameModificationSettings).forEach(e =>
-        {
-            if(e.name.match("postfix") === null)
-            {
-                e.setAttribute('required', true)
-            }
-        });
-
-    }
+    toggleSettings(this);
 });
 
 
-if($checkboxOfferSettings.checked == false)
-{
-    $offerSettings.classList.add('d-none');
+//$checkboxOfferSettings.addEventListener('change', function()
+//{
+//
+//    if(this.checked === false)
+//    {
+//        $offerSettings.classList.add('d-none');
+//
+//        $checkboxVariationSettings.checked = false;
+//        $checkboxVariationSettings.disabled = true;
+//
+//        $checkboxModificationSettings.checked = false;
+//        $checkboxModificationSettings.disabled = true;
+//
+//
+//        $variationSettings.classList.add('d-none');
+//
+//        $modificationSettings.classList.add('d-none');
+//
+//        /* Делаем поле Name НЕ обязательным */
+//        Array.from($nameOfferSettings).forEach(e => e.removeAttribute('required'));
+//        Array.from($nameVariationSettings).forEach(e => e.removeAttribute('required'));
+//        Array.from($nameModificationSettings).forEach(e => e.removeAttribute('required'));
+//
+//
+//    } else
+//    {
+//
+//        /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
+//        Array.from($nameOfferSettings).forEach(e =>
+//        {
+//            if(e.name.match("postfix") === null)
+//            {
+//                e.setAttribute('required', true)
+//            }
+//        });
+//
+//        $offerSettings.classList.remove('d-none');
+//
+//        $checkboxVariationSettings.disabled = false;
+//        $checkboxModificationSettings.disabled = false;
+//    }
+//});
+//
+//
+//$checkboxVariationSettings.addEventListener('change', function()
+//{
+//    if(this.checked === false)
+//    {
+//        $variationSettings.classList.add('d-none');
+//
+//
+//        $checkboxModificationSettings.checked = false;
+//        $checkboxModificationSettings.disabled = true;
+//
+//        $modificationSettings.classList.add('d-none');
+//
+//
+//        /* Делаем поле Name НЕ обязательным */
+//        Array.from($nameVariationSettings).forEach(e => e.removeAttribute('required'));
+//        Array.from($nameModificationSettings).forEach(e => e.removeAttribute('required'));
+//
+//    } else
+//    {
+//        $variationSettings.classList.remove('d-none');
+//
+//        /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
+//        Array.from($nameVariationSettings).forEach(e =>
+//        {
+//            if(e.name.match("postfix") === null)
+//            {
+//                e.setAttribute('required', true)
+//            }
+//        });
+//
+//        $checkboxModificationSettings.disabled = false;
+//
+//    }
+//});
+//
+//
+//$checkboxModificationSettings.addEventListener('change', function()
+//{
+//
+//    if(this.checked === false)
+//    {
+//        $modificationSettings.classList.add('d-none');
+//
+//        /* Делаем поле Name НЕ обязательным */
+//        Array.from($nameModificationSettings).forEach(e => e.removeAttribute('required'));
+//
+//    } else
+//    {
+//        $modificationSettings.classList.remove('d-none');
+//
+//        /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
+//        Array.from($nameModificationSettings).forEach(e =>
+//        {
+//            if(e.name.match("postfix") === null)
+//            {
+//                e.setAttribute('required', true)
+//            }
+//        });
+//
+//    }
+//});
+//
 
-    $checkboxVariationSettings.checked = false;
-    $checkboxVariationSettings.disabled = true;
-
-    $checkboxModificationSettings.checked = false;
-    $checkboxModificationSettings.disabled = true;
-
-
-    /* Делаем поле Name НЕ обязательным */
-
-    Array.from($nameOfferSettings).forEach(e => e.removeAttribute('required'));
-
-    Array.from($nameVariationSettings).forEach(e => e.removeAttribute('required'));
-    $variationSettings.classList.add('d-none');
-
-    Array.from($nameModificationSettings).forEach(e => e.removeAttribute('required'));
-    $modificationSettings.classList.add('d-none');
-
-
-} else
-{
-
-    $offerSettings.classList.remove('d-none');
-
-    $checkboxVariationSettings.disabled = false;
-    $checkboxModificationSettings.disabled = false;
-
-    /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
-    Array.from($nameOfferSettings).forEach(e =>
-    {
-        if(e.name.match("postfix") === null)
-        {
-            e.setAttribute('required', true)
-        }
-    });
-}
-
-
-if($checkboxVariationSettings.checked == false)
-{
-    /* Делаем поле Name НЕ обязательным */
-    Array.from($nameVariationSettings).forEach(e => e.removeAttribute('required'));
-
-    $variationSettings.classList.add('d-none');
-
-} else
-{
-    /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
-    Array.from($nameVariationSettings).forEach(e =>
-    {
-        if(e.name.match("postfix") === null)
-        {
-            e.setAttribute('required', true)
-        }
-    });
-
-    $variationSettings.classList.remove('d-none');
-}
-
-
-if($checkboxModificationSettings.checked == false)
-{
-    /* Делаем поле Name НЕ обязательным */
-    Array.from($nameModificationSettings).forEach(e => e.removeAttribute('required'));
-
-    $modificationSettings.classList.add('d-none');
-
-} else
-{
-    /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
-    Array.from($nameModificationSettings).forEach(e =>
-    {
-        if(e.name.match("postfix") === null)
-        {
-            e.setAttribute('required', true)
-        }
-    });
-
-
-    $modificationSettings.classList.remove('d-none');
-}
+//
+//if($checkboxOfferSettings.checked === false)
+//{
+//    $offerSettings.classList.add('d-none');
+//
+//    $checkboxVariationSettings.checked = false;
+//    $checkboxVariationSettings.disabled = true;
+//
+//    $checkboxModificationSettings.checked = false;
+//    $checkboxModificationSettings.disabled = true;
+//
+//
+//    /* Делаем поле Name НЕ обязательным */
+//
+//    Array.from($nameOfferSettings).forEach(e => e.removeAttribute('required'));
+//
+//    Array.from($nameVariationSettings).forEach(e => e.removeAttribute('required'));
+//    $variationSettings.classList.add('d-none');
+//
+//    Array.from($nameModificationSettings).forEach(e => e.removeAttribute('required'));
+//    $modificationSettings.classList.add('d-none');
+//
+//
+//} else
+//{
+//
+//    $offerSettings.classList.remove('d-none');
+//
+//    $checkboxVariationSettings.disabled = false;
+//    $checkboxModificationSettings.disabled = false;
+//
+//    /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
+//    Array.from($nameOfferSettings).forEach(e =>
+//    {
+//        if(e.name.match("postfix") === null)
+//        {
+//            e.setAttribute('required', true)
+//        }
+//    });
+//}
+//
+//
+//if($checkboxVariationSettings.checked === false)
+//{
+//    /* Делаем поле Name НЕ обязательным */
+//    Array.from($nameVariationSettings).forEach(e => e.removeAttribute('required'));
+//
+//    $variationSettings.classList.add('d-none');
+//
+//} else
+//{
+//    /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
+//    Array.from($nameVariationSettings).forEach(e =>
+//    {
+//        if(e.name.match("postfix") === null)
+//        {
+//            e.setAttribute('required', true)
+//        }
+//    });
+//
+//    $variationSettings.classList.remove('d-none');
+//}
+//
+//
+//if($checkboxModificationSettings.checked === false)
+//{
+//    /* Делаем поле Name НЕ обязательным */
+//    Array.from($nameModificationSettings).forEach(e => e.removeAttribute('required'));
+//
+//    $modificationSettings.classList.add('d-none');
+//
+//} else
+//{
+//    /* Делаем поле Name ОБЯЗАТЕЛЬНЫМ */
+//    Array.from($nameModificationSettings).forEach(e =>
+//    {
+//        if(e.name.match("postfix") === null)
+//        {
+//            e.setAttribute('required', true)
+//        }
+//    });
+//
+//
+//    $modificationSettings.classList.remove('d-none');
+//}
+//
 
 
 function chanfeReferenc($this)
@@ -573,7 +724,7 @@ document.querySelectorAll('.change-postfix').forEach(function(postfix)
         document.querySelectorAll('.' + this.id).forEach(function(element)
         {
 
-            if(postfix.checked == true)
+            if(postfix.checked === true)
             {
                 element.classList.remove('d-none');
                 element.querySelector('input').setAttribute('required', true);

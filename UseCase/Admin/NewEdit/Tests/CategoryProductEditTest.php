@@ -30,18 +30,18 @@ use BaksDev\Core\Type\Field\InputField;
 use BaksDev\Products\Category\Repository\CategoryProductCurrentEvent\CategoryProductCurrentEventInterface;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductDTO;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Landing\ProductLandingCollectionDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Landing\CategoryProductLandingCollectionDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\CategoryProductOffersDTO;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\Trans\ProductOffersTransDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\Trans\CategoryProductOffersTransDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\Variation\CategoryProductVariationDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\Variation\Modification\CategoryProductModificationDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\Variation\Modification\Trans\CategoryProductModificationTransDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\Variation\Trans\CategoryProductVariationTransDTO;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\Fields\ProductSectionFieldCollectionDTO;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\Fields\Trans\ProductSectionFieldTransDTO;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\ProductSectionCollectionDTO;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\Trans\ProductSectionTransDTO;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Seo\ProductSeoCollectionDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\CategoryProductSectionCollectionDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\Fields\CategoryProductSectionFieldCollectionDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\Fields\Trans\CategoryProductSectionFieldTransDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\Trans\CategoryProductSectionTransDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Seo\CategoryProductSeoCollectionDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Trans\CategoryProductTransDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -88,7 +88,7 @@ class CategoryProductEditTest extends KernelTestCase
 
         $CategoryProductDTO->getLanding();
 
-        /** @var ProductLandingCollectionDTO $ProductLandingCollectionDTO */
+        /** @var CategoryProductLandingCollectionDTO $ProductLandingCollectionDTO */
         foreach($CategoryProductDTO->getLanding() as $ProductLandingCollectionDTO)
         {
             self::assertEquals('Test Landing Header', $ProductLandingCollectionDTO->getHeader());
@@ -100,7 +100,7 @@ class CategoryProductEditTest extends KernelTestCase
         }
 
 
-        /** @var ProductSeoCollectionDTO $ProductSeoCollectionDTO */
+        /** @var CategoryProductSeoCollectionDTO $ProductSeoCollectionDTO */
         foreach($CategoryProductDTO->getSeo() as $ProductSeoCollectionDTO)
         {
             self::assertEquals('Test Category Seo Title', $ProductSeoCollectionDTO->getTitle());
@@ -115,12 +115,12 @@ class CategoryProductEditTest extends KernelTestCase
         }
 
 
-        /** @var ProductSectionCollectionDTO $ProductSectionCollectionDTO */
+        /** @var CategoryProductSectionCollectionDTO $ProductSectionCollectionDTO */
 
         self::assertCount(1, $CategoryProductDTO->getSection());
         $ProductSectionCollectionDTO = $CategoryProductDTO->getSection()->current();
 
-        /** @var ProductSectionFieldCollectionDTO $ProductSectionFieldCollectionDTO */
+        /** @var CategoryProductSectionFieldCollectionDTO $ProductSectionFieldCollectionDTO */
 
         self::assertCount(1, $ProductSectionCollectionDTO->getField());
         $ProductSectionFieldCollectionDTO = $ProductSectionCollectionDTO->getField()->current();
@@ -154,7 +154,7 @@ class CategoryProductEditTest extends KernelTestCase
         $ProductSectionFieldCollectionDTO->setPublic(true);
 
 
-        /** @var ProductSectionFieldTransDTO $ProductSectionFieldTransDTO */
+        /** @var CategoryProductSectionFieldTransDTO $ProductSectionFieldTransDTO */
         foreach($ProductSectionFieldCollectionDTO->getTranslate() as $ProductSectionFieldTransDTO)
         {
             self::assertEquals('Test Category Section Field Name', $ProductSectionFieldTransDTO->getName());
@@ -166,7 +166,7 @@ class CategoryProductEditTest extends KernelTestCase
         }
 
 
-        /** @var ProductSectionTransDTO $ProductSectionTransDTO */
+        /** @var CategoryProductSectionTransDTO $ProductSectionTransDTO */
         foreach($ProductSectionCollectionDTO->getTranslate() as $ProductSectionTransDTO)
         {
             self::assertEquals('Test Category Section Name', $ProductSectionTransDTO->getName());
@@ -193,7 +193,7 @@ class CategoryProductEditTest extends KernelTestCase
         /** @var CategoryProductOffersDTO $CategoryProductOffersDTO */
         $CategoryProductOffersDTO = $CategoryProductDTO->getOffer();
 
-        /** @var ProductOffersTransDTO $ProductOffersTransDTO */
+        /** @var CategoryProductOffersTransDTO $ProductOffersTransDTO */
         foreach($CategoryProductOffersDTO->getTranslate() as $ProductOffersTransDTO)
         {
             self::assertEquals('Test Category Offer Name', $ProductOffersTransDTO->getName());

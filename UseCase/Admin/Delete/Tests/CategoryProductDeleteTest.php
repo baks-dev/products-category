@@ -45,6 +45,7 @@ use Symfony\Component\DependencyInjection\Attribute\When;
  *
  * @depends BaksDev\Products\Category\UseCase\Admin\NewEdit\Tests\CategoryProductNewTest::class
  * @depends BaksDev\Products\Category\UseCase\Admin\NewEdit\Tests\CategoryProductEditTest::class
+ * @depends BaksDev\Products\Category\Controller\Admin\Tests\DeleteControllerTest::class
  */
 #[When(env: 'test')]
 class CategoryProductDeleteTest extends KernelTestCase

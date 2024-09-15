@@ -18,6 +18,7 @@
 
 namespace BaksDev\Products\Category\Controller\Admin\Tests;
 
+use BaksDev\Products\Category\Security\VoterNew;
 use BaksDev\Users\User\Tests\TestUserAccount;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
@@ -28,9 +29,9 @@ final class NewControllerTest extends WebTestCase
 {
     private const URL = '/admin/product/category/new';
 
-    private const ROLE = 'ROLE_PRODUCT_CATEGORY_NEW';
-
-    /** Доступ по роли  */
+    /**
+     * Доступ по роли ROLE_PRODUCT_CATEGORY_NEW
+     */
     public function testRoleSuccessful(): void
     {
         self::ensureKernelShutdown();
@@ -38,10 +39,10 @@ final class NewControllerTest extends WebTestCase
 
         foreach(TestUserAccount::getDevice() as $device)
         {
+            // ROLE_PRODUCT_CATEGORY_NEW
+            $usr = TestUserAccount::getModer(VoterNew::getVoter());
+
             $client->setServerParameter('HTTP_USER_AGENT', $device);
-
-            $usr = TestUserAccount::getModer(self::ROLE);
-
             $client->loginUser($usr, 'user');
             $client->request('GET', self::URL);
 
@@ -51,7 +52,9 @@ final class NewControllerTest extends WebTestCase
         self::assertTrue(true);
     }
 
-    /** Доступ по роли ROLE_ADMIN */
+    /**
+     * Доступ по роли ROLE_ADMIN
+     */
     public function testRoleAdminSuccessful(): void
     {
         self::ensureKernelShutdown();
@@ -59,10 +62,9 @@ final class NewControllerTest extends WebTestCase
 
         foreach(TestUserAccount::getDevice() as $device)
         {
-            $client->setServerParameter('HTTP_USER_AGENT', $device);
-
             $usr = TestUserAccount::getAdmin();
 
+            $client->setServerParameter('HTTP_USER_AGENT', $device);
             $client->loginUser($usr, 'user');
             $client->request('GET', self::URL);
 
@@ -72,7 +74,9 @@ final class NewControllerTest extends WebTestCase
         self::assertTrue(true);
     }
 
-    /** Доступ по роли ROLE_USER */
+    /**
+     * Доступ по роли ROLE_USER
+     */
     public function testRoleUserFiled(): void
     {
         self::ensureKernelShutdown();
@@ -80,9 +84,9 @@ final class NewControllerTest extends WebTestCase
 
         foreach(TestUserAccount::getDevice() as $device)
         {
-            $client->setServerParameter('HTTP_USER_AGENT', $device);
-
             $usr = TestUserAccount::getUsr();
+
+            $client->setServerParameter('HTTP_USER_AGENT', $device);
             $client->loginUser($usr, 'user');
             $client->request('GET', self::URL);
 
@@ -92,7 +96,9 @@ final class NewControllerTest extends WebTestCase
         self::assertTrue(true);
     }
 
-    /** Доступ по без роли */
+    /**
+     * Доступ по без роли
+     */
     public function testGuestFiled(): void
     {
         self::ensureKernelShutdown();
@@ -101,7 +107,6 @@ final class NewControllerTest extends WebTestCase
         foreach(TestUserAccount::getDevice() as $device)
         {
             $client->setServerParameter('HTTP_USER_AGENT', $device);
-
             $client->request('GET', self::URL);
 
             // Full authentication is required to access this resource

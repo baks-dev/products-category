@@ -28,11 +28,11 @@ use BaksDev\Products\Category\Entity\Event\CategoryProductEventInterface;
 use BaksDev\Products\Category\Type\Event\CategoryProductEventUid;
 use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Cover\CategoryProductCoverDTO;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Info\ProductInfoDTO;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Landing\ProductLandingCollectionDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Info\CategoryProductInfoDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Landing\CategoryProductLandingCollectionDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\CategoryProductOffersDTO;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\ProductSectionCollectionDTO;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Seo\ProductSeoCollectionDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\CategoryProductSectionCollectionDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Seo\CategoryProductSeoCollectionDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Trans\CategoryProductTransDTO;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -66,7 +66,7 @@ final class CategoryProductDTO implements CategoryProductEventInterface
 
     /** Торговые предложения */
     #[Assert\Valid]
-    private ?CategoryProductOffersDTO $offer = null;
+    private ?CategoryProductOffersDTO $offer;
 
     /** Настройки SEO категории */
     #[Assert\Valid]
@@ -78,7 +78,7 @@ final class CategoryProductDTO implements CategoryProductEventInterface
 
     /** Неизменяемые свойства категории */
     #[Assert\Valid]
-    private ProductInfoDTO $info;
+    private CategoryProductInfoDTO $info;
 
     /**  Модификатор события  */
     #[Assert\Valid]
@@ -96,7 +96,7 @@ final class CategoryProductDTO implements CategoryProductEventInterface
         $this->parent = $parent;
 
         $this->cover = new CategoryProductCoverDTO();
-        $this->info = new ProductInfoDTO();
+        $this->info = new CategoryProductInfoDTO();
         $this->modify = new Modify\CategoryProductModifyDTO();
 
         $this->translate = new ArrayCollection();
@@ -142,13 +142,13 @@ final class CategoryProductDTO implements CategoryProductEventInterface
 
     /** Неизменяемые свойства категории INFO */
 
-    public function getInfo(): ProductInfoDTO
+    public function getInfo(): CategoryProductInfoDTO
     {
         return $this->info;
     }
 
 
-    public function setInfo(ProductInfoDTO $info): void
+    public function setInfo(CategoryProductInfoDTO $info): void
     {
         $this->info = $info;
     }
@@ -196,7 +196,7 @@ final class CategoryProductDTO implements CategoryProductEventInterface
         /* Вычисляем расхождение и добавляем неопределенные локали */
         foreach(Locale::diffLocale($this->landing) as $locale)
         {
-            $CategoryLandingDTO = new ProductLandingCollectionDTO();
+            $CategoryLandingDTO = new CategoryProductLandingCollectionDTO();
             $CategoryLandingDTO->setLocal($locale);
             $this->addLanding($CategoryLandingDTO);
         }
@@ -204,7 +204,7 @@ final class CategoryProductDTO implements CategoryProductEventInterface
         return $this->landing;
     }
 
-    public function addLanding(ProductLandingCollectionDTO $landing): void
+    public function addLanding(CategoryProductLandingCollectionDTO $landing): void
     {
         if(empty($landing->getLocal()->getLocalValue()))
         {
@@ -217,7 +217,7 @@ final class CategoryProductDTO implements CategoryProductEventInterface
         }
     }
 
-    public function removeLanding(ProductLandingCollectionDTO $landing): void
+    public function removeLanding(CategoryProductLandingCollectionDTO $landing): void
     {
         $this->landing->removeElement($landing);
     }
@@ -232,7 +232,7 @@ final class CategoryProductDTO implements CategoryProductEventInterface
         /* Вычисляем расхождение и добавляем неопределенные локали */
         foreach(Locale::diffLocale($this->seo) as $locale)
         {
-            $CategorySeoDTO = new ProductSeoCollectionDTO();
+            $CategorySeoDTO = new CategoryProductSeoCollectionDTO();
             $CategorySeoDTO->setLocal($locale);
             $this->addSeo($CategorySeoDTO);
         }
@@ -240,7 +240,7 @@ final class CategoryProductDTO implements CategoryProductEventInterface
         return $this->seo;
     }
 
-    public function addSeo(ProductSeoCollectionDTO $seo): void
+    public function addSeo(CategoryProductSeoCollectionDTO $seo): void
     {
         if(empty($seo->getLocal()->getLocalValue()))
         {
@@ -253,7 +253,7 @@ final class CategoryProductDTO implements CategoryProductEventInterface
         }
     }
 
-    public function removeSeo(ProductSeoCollectionDTO $seo): void
+    public function removeSeo(CategoryProductSeoCollectionDTO $seo): void
     {
         $this->seo->removeElement($seo);
     }
@@ -266,7 +266,7 @@ final class CategoryProductDTO implements CategoryProductEventInterface
         return $this->section;
     }
 
-    public function addSection(ProductSectionCollectionDTO $section): void
+    public function addSection(CategoryProductSectionCollectionDTO $section): void
     {
         if(!$this->section->contains($section))
         {
@@ -274,7 +274,7 @@ final class CategoryProductDTO implements CategoryProductEventInterface
         }
     }
 
-    public function removeSection(ProductSectionCollectionDTO $section): void
+    public function removeSection(CategoryProductSectionCollectionDTO $section): void
     {
         $this->section->removeElement($section);
     }
@@ -287,10 +287,21 @@ final class CategoryProductDTO implements CategoryProductEventInterface
         return $this->offer;
     }
 
-    public function setOffer(CategoryProductOffersDTO $offer): void
+    public function setOffer(?CategoryProductOffersDTO $offer): void
     {
         $this->offer = $offer;
     }
+
+    public function resetOffer(): void
+    {
+        $this->offer->resetVariation();
+
+        if($this->offer->isOffer() === false)
+        {
+            $this->offer = null;
+        }
+    }
+
 
     /**  Модификатор события  */
 
