@@ -27,7 +27,6 @@ namespace BaksDev\Products\Category\UseCase\Admin\Delete\Tests;
 
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Products\Category\Entity\CategoryProduct;
-use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 use BaksDev\Products\Category\Repository\CategoryProductCurrentEvent\CategoryProductCurrentEventInterface;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Products\Category\UseCase\Admin\Delete\DeleteCategoryProductDTO;
@@ -35,7 +34,6 @@ use BaksDev\Products\Category\UseCase\Admin\Delete\DeleteProductCategoryHandler;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductHandler;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Tests\CategoryProductEditTest;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Tests\CategoryProductNewTest;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
@@ -52,28 +50,7 @@ class CategoryProductDeleteTest extends KernelTestCase
 {
     public static function tearDownAfterClass(): void
     {
-        /** @var EntityManagerInterface $em */
-        $em = self::getContainer()->get(EntityManagerInterface::class);
-
-        $main = $em->getRepository(CategoryProduct::class)
-            ->findOneBy(['id' => CategoryProductUid::TEST]);
-
-        if($main)
-        {
-            $em->remove($main);
-        }
-
-
-        $event = $em->getRepository(CategoryProductEvent::class)
-            ->findBy(['category' => CategoryProductUid::TEST]);
-
-        foreach($event as $remove)
-        {
-            $em->remove($remove);
-        }
-
-        $em->flush();
-        $em->clear();
+        CategoryProductNewTest::setUpBeforeClass();
     }
 
     public function testUseCase(): void
@@ -82,7 +59,6 @@ class CategoryProductDeleteTest extends KernelTestCase
         $CategoryProductCurrentEvent = self::getContainer()->get(CategoryProductCurrentEventInterface::class);
         $CategoryProductEvent = $CategoryProductCurrentEvent->forMain(CategoryProductUid::TEST)->find();
         self::assertNotNull($CategoryProductEvent);
-
 
         /** @see CategoryProductDeleteDTO */
         $CategoryProductDeleteDTO = new DeleteCategoryProductDTO();
