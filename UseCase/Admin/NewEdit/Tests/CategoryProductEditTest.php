@@ -206,16 +206,16 @@ class CategoryProductEditTest extends KernelTestCase
 
         self::assertTrue($CategoryProductOffersDTO->isOffer());
 
-        self::assertFalse($CategoryProductOffersDTO->getPrice());
-        $CategoryProductOffersDTO->setPrice(true);
+        self::assertTrue($CategoryProductOffersDTO->getPrice());
+        $CategoryProductOffersDTO->setPrice(false);
 
-        self::assertFalse($CategoryProductOffersDTO->getImage());
+        self::assertTrue($CategoryProductOffersDTO->getImage());
         $CategoryProductOffersDTO->setImage(true);
 
         self::assertFalse($CategoryProductOffersDTO->isPostfix());
         $CategoryProductOffersDTO->setPostfix(true);
 
-        self::assertFalse($CategoryProductOffersDTO->getQuantitative());
+        self::assertTrue($CategoryProductOffersDTO->getQuantitative());
         $CategoryProductOffersDTO->setQuantitative(true);
 
         self::assertTrue($CategoryProductOffersDTO->getReference()->getType() === 'input');
@@ -240,16 +240,16 @@ class CategoryProductEditTest extends KernelTestCase
 
         self::assertTrue($CategoryProductVariationDTO->isVariation());
 
-        self::assertFalse($CategoryProductVariationDTO->getPrice());
+        self::assertTrue($CategoryProductVariationDTO->getPrice());
         $CategoryProductVariationDTO->setPrice(true);
 
-        self::assertFalse($CategoryProductVariationDTO->getImage());
+        self::assertTrue($CategoryProductVariationDTO->getImage());
         $CategoryProductVariationDTO->setImage(true);
 
         self::assertFalse($CategoryProductVariationDTO->isPostfix());
         $CategoryProductVariationDTO->setPostfix(true);
 
-        self::assertFalse($CategoryProductVariationDTO->getQuantitative());
+        self::assertTrue($CategoryProductVariationDTO->getQuantitative());
         $CategoryProductVariationDTO->setQuantitative(true);
 
         self::assertTrue($CategoryProductVariationDTO->getReference()->getType() === 'input');
