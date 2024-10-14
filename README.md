@@ -26,8 +26,6 @@ $ sudo mkdir <path_to_project>/public/upload/product_category_cover
 $ sudo sudo chmod 773 <path_to_project>/public/upload/product_category_cover
 ``` 
 
-
-
 Изменения в схеме базы данных с помощью миграции
 
 ``` bash
@@ -40,7 +38,6 @@ $ php bin/console doctrine:migrations:migrate
 ``` bash
 $ php bin/phpunit --group=products-category
 ```
-
 
 ## Лицензия ![License](https://img.shields.io/badge/MIT-green)
 
