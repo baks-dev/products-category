@@ -18,6 +18,7 @@
 
 namespace BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice;
 
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
 use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
@@ -27,12 +28,16 @@ use BaksDev\Products\Category\Entity\Section\Field\Trans\CategoryProductSectionF
 use BaksDev\Products\Category\Entity\Section\Trans\CategoryProductSectionTrans;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
+use Generator;
 
 final class PropertyFieldsCategoryChoiceRepository implements PropertyFieldsCategoryChoiceInterface
 {
     private ?CategoryProductUid $category = null;
 
-    public function __construct(private readonly ORMQueryBuilder $ORMQueryBuilder) {}
+    public function __construct(
+        private readonly ORMQueryBuilder $ORMQueryBuilder,
+        private readonly DBALQueryBuilder $DBALQueryBuilder
+    ) {}
 
     public function category(CategoryProduct|CategoryProductUid|string $category): self
     {
@@ -61,7 +66,8 @@ final class PropertyFieldsCategoryChoiceRepository implements PropertyFieldsCate
             'NEW %s(
               field.const,
               field.id,
-              field_trans.name
+              field_trans.name,
+              field.type
           )',
             CategoryProductSectionFieldUid::class,
         );
@@ -120,5 +126,75 @@ final class PropertyFieldsCategoryChoiceRepository implements PropertyFieldsCate
         $qb->addOrderBy('field.sort', 'ASC');
 
         return $qb->getQuery()->getResult();
+    }
+
+
+    /**
+     * Метод возвращает список всех свойств
+     */
+    public function newPropertyFieldsCollection(): Generator|false
+    {
+        $dbal = $this->DBALQueryBuilder
+            ->createQueryBuilder(self::class)
+            ->bindLocal();
+
+        $dbal->from(CategoryProduct::class, 'category');
+
+        if($this->category)
+        {
+            $dbal
+                ->where('category.id = :category')
+                ->setParameter('category', $this->category, CategoryProductUid::TYPE);
+        }
+
+        $dbal->join(
+            'category',
+            CategoryProductEvent::class,
+            'category_event',
+            'category_event.id = category.event',
+        );
+
+        /* Секции свойств */
+        $dbal->join(
+            'category_event',
+            CategoryProductSection::class,
+            'section',
+            'section.event = category_event.id',
+        );
+
+        /* Перевод секции */
+        $dbal->join(
+            'section',
+            CategoryProductSectionTrans::class,
+            'section_trans',
+            'section_trans.section = section.id AND section_trans.local = :local',
+        );
+
+        /* Перевод полей */
+        $dbal->join(
+            'section',
+            CategoryProductSectionField::class,
+            'field',
+            'field.section = section.id',
+        );
+
+        $dbal->join(
+            'field',
+            CategoryProductSectionFieldTrans::class,
+            'field_trans',
+            'field_trans.field = field.id AND field_trans.local = :local',
+        );
+
+        $dbal->orderBy('section.sort', 'ASC');
+        $dbal->addOrderBy('field.sort', 'ASC');
+
+
+        /** Параметры конструктора объекта гидрации */
+        $dbal->select('field.const AS value');
+        $dbal->addSelect('field.id AS const');
+        $dbal->addSelect('field_trans.name AS attr');
+        $dbal->addSelect('field.type AS property');
+
+        return $dbal->fetchAllHydrate(CategoryProductSectionFieldUid::class);
     }
 }

@@ -23,7 +23,6 @@
 
 namespace BaksDev\Products\Category\Type\Section\Field\Id;
 
-use App\Kernel;
 use BaksDev\Core\Type\UidType\Uid;
 use Symfony\Component\Uid\AbstractUid;
 
@@ -33,21 +32,14 @@ final class CategoryProductSectionFieldUid extends Uid
 
     public const TYPE = 'product_category_section_field';
 
-    private mixed $attr;
-
-    private mixed $const;
-
-
     public function __construct(
         AbstractUid|self|string|null $value = null,
-        mixed $const = null,
-        mixed $attr = null
-    )
-    {
+        private readonly mixed $const = null,
+        private readonly mixed $attr = null,
+        private readonly mixed $property = null,
+    ) {
         parent::__construct($value);
 
-        $this->attr = $attr;
-        $this->const = $const;
     }
 
     /**
@@ -64,6 +56,14 @@ final class CategoryProductSectionFieldUid extends Uid
     public function getAttr(): mixed
     {
         return $this->attr;
+    }
+
+    /**
+     * Property
+     */
+    public function getProperty(): mixed
+    {
+        return $this->property;
     }
 
 }

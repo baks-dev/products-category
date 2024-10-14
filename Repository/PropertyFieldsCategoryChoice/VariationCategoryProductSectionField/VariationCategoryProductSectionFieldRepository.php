@@ -80,6 +80,7 @@ final class VariationCategoryProductSectionFieldRepository implements VariationC
         $dbal->select('category_variation.id AS value');
         $dbal->addSelect('category_variation.offer AS const');
         $dbal->addSelect('category_variation_trans.name AS attr');
+        $dbal->addSelect('category_variation.reference AS property');
 
         return $dbal->fetchHydrate(CategoryProductSectionFieldUid::class); // ->getOneOrNullResult();
     }

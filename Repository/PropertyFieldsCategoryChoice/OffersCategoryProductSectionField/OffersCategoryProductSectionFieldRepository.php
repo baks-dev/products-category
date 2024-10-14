@@ -92,6 +92,7 @@ final class OffersCategoryProductSectionFieldRepository implements OffersCategor
         $dbal->select('category_offers.id AS value');
         $dbal->addSelect('category.event AS const');
         $dbal->addSelect('category_offers_tarns.name AS attr');
+        $dbal->addSelect('category_offers.reference AS property');
 
         return $dbal->fetchHydrate(CategoryProductSectionFieldUid::class);
     }

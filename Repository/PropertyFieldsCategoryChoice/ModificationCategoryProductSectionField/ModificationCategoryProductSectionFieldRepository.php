@@ -84,6 +84,7 @@ final class ModificationCategoryProductSectionFieldRepository implements Modific
         $dbal->select('category_modification.id AS value');
         $dbal->addSelect('category_modification.variation AS const');
         $dbal->addSelect('category_modification_trans.name AS attr');
+        $dbal->addSelect('category_modification.reference AS property');
 
         return $dbal->fetchHydrate(CategoryProductSectionFieldUid::class);
     }
