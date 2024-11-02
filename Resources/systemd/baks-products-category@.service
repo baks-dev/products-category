@@ -10,7 +10,7 @@
 # systemctl stop baks-products-category@1.service
 
 [Unit]
-Description=Symfony messenger products-category %i
+Description=products-category
 StartLimitBurst=5
 StartLimitIntervalSec=0
 
