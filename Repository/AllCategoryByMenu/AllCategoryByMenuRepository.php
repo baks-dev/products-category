@@ -31,10 +31,6 @@ use BaksDev\Products\Category\Entity\Cover\CategoryProductCover;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 use BaksDev\Products\Category\Entity\Info\CategoryProductInfo;
 use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
-use BaksDev\Products\Product\Entity\Category\ProductCategory;
-use BaksDev\Products\Product\Entity\Info\ProductInfo;
-use BaksDev\Products\Product\Entity\Product;
-use BaksDev\Products\Product\Entity\Trans\ProductTrans;
 
 final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
 {
@@ -140,7 +136,6 @@ final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
             'parent_category_trans.event = parent_category_event.id  AND parent_category_trans.local = :local'
         );
 
-
         $dbal->addSelect(
             "JSON_AGG
 		( DISTINCT
@@ -149,77 +144,28 @@ final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
 				(
 					'0', parent_category_event.sort,
 					
-					'child_category_url', parent_category_info.url,
-					'child_category_counter', parent_category_info.counter,
+					'parent_category_url', parent_category_info.url,
+					'parent_category_counter', parent_category_info.counter,
 					
-					'child_category_cover_name', 
+					'parent_category_cover_name', 
 					CASE 
 					    WHEN parent_category_cover.name IS NOT NULL 
 					    THEN CONCAT ( '/upload/".$dbal->table(CategoryProductCover::class)."' , '/', parent_category_cover.name)
 					    ELSE NULL
 					END,
 					
-					'child_category_cover_ext', parent_category_cover.ext,
-					'child_category_cover_cdn', parent_category_cover.cdn,
+					'parent_category_cover_ext', parent_category_cover.ext,
+					'parent_category_cover_cdn', parent_category_cover.cdn,
 		
-					'child_category_event', parent_category_event.id,
-					'child_category_name', parent_category_trans.name,
-					'child_category_description', parent_category_trans.description
+					'parent_category_event', parent_category_event.id,
+					'parent_category_name', parent_category_trans.name
 				)
 		)
-			AS child_category"
+			AS parent_category"
         );
-
-
-        $dbal->leftJoin(
-            'category',
-            ProductCategory::class,
-            'product_category',
-            '(product_category.category = category.id OR product_category.category = parent_category_event.category) AND product_category.root = true'
-        );
-
-
-        $dbal->leftJoin(
-            'product_category',
-            Product::class,
-            'product',
-            'product.event = product_category.event'
-        );
-
-
-        $dbal
-            ->leftJoin(
-                'product',
-                ProductInfo::class,
-                'product_info',
-                'product_info.product = product.id'
-            );
-
-        $dbal
-            ->leftJoin(
-                'product',
-                ProductTrans::class,
-                'product_trans',
-                'product_trans.event = product.event AND product_trans.local = :local'
-            );
-
-
-        $dbal->addSelect(
-            "JSON_AGG
-                        ( DISTINCT
-        
-                                JSONB_BUILD_OBJECT
-                                (
-                                    '0', product_info.sort,
-                                    'product_name', product_trans.name,
-                                    'product_url', product_info.url
-                                )
-                        )
-                        AS products"
-        );
-
 
         $dbal->orderBy('category_event.sort', 'ASC');
+
 
         $dbal->allGroupByExclude();
 
