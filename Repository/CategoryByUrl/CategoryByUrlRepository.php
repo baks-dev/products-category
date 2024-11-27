@@ -44,6 +44,7 @@ final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
      */
     public function findByUrl(string $url): array|false
     {
+
         $dbal = $this
             ->DBALQueryBuilder->createQueryBuilder(self::class)
             ->bindLocal();
@@ -56,7 +57,6 @@ final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
             ->where('info.url = :url')
             ->andWhere('info.active = true')
             ->setParameter('url', $url);
-
 
         $dbal
             ->addSelect('product_category.id AS category_id')
@@ -98,8 +98,7 @@ final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
             );
 
 
-        /* КОРНЕВОЙ РАЗДЕЛ */
-
+        /** КОРНЕВОЙ РАЗДЕЛ */
         $dbal
             ->leftJoin(
                 'product_category_event',
@@ -128,9 +127,7 @@ final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
             );
 
 
-        /* ВЛОЖЕННЫЕ РАЗДЕЛЫ */
-
-
+        /** ВЛОЖЕННЫЕ РАЗДЕЛЫ */
         $dbal->leftJoin(
             'product_category',
             CategoryProductEvent::class,
@@ -188,6 +185,26 @@ final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
 				)
 		)
 			AS parent_category"
+        );
+
+        /** Обложка категории */
+        $dbal->addSelect('category_cover.ext AS category_cover_ext');
+        $dbal->addSelect('category_cover.cdn AS category_cover_cdn');
+        $dbal->leftJoin(
+            'product_category',
+            CategoryProductCover::class,
+            'category_cover',
+            'category_cover.event = product_category.event',
+        );
+
+        $dbal->addSelect(
+            "
+			CASE
+			   WHEN category_cover.name IS NOT NULL THEN
+					CONCAT ( '/upload/".$dbal->table(CategoryProductCover::class)."' , '/', category_cover.name)
+			   ELSE NULL
+			END AS category_cover_path
+		"
         );
 
         $dbal->allGroupByExclude();
