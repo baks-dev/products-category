@@ -1,5 +1,5 @@
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -739,3 +739,46 @@ document.querySelectorAll('.change-postfix').forEach(function(postfix)
         });
     });
 });
+
+
+/** Добавить контактный телефон */
+
+document.querySelectorAll('#category_product_form-add').forEach(function(item)
+{
+    item.addEventListener('click', addDomain);
+});
+
+function addDomain()
+{
+
+    /* Получаем прототип формы */
+    let newForm = this.dataset.prototype;
+    let index = this.dataset.index * 1;
+    let collection = this.dataset.collection;
+
+    newForm = newForm.replace(/__category_domain__/g, index)
+
+    let div = document.createElement('div');
+    div.innerHTML = newForm;
+    div.id = 'item_category_product_form_domain_' + index;
+    div.classList.add('mb-3');
+
+    let $collection = document.getElementById(collection);
+    $collection.append(div);
+
+    /* Удаляем контактный номер телефона */
+    (div.querySelector('.del-item-domain'))?.addEventListener('click', deletePhone);
+
+    this.dataset.index = (index + 1).toString();
+
+}
+
+document.querySelectorAll('.del-item-domain').forEach(function(item)
+{
+    item.addEventListener('click', deletePhone);
+});
+
+function deletePhone()
+{
+    document.getElementById(this.dataset.delete).remove();
+}

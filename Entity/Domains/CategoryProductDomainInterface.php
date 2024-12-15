@@ -21,15 +21,9 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Products\Category\Type\Event;
+namespace BaksDev\Products\Category\Entity\Domains;
 
-use BaksDev\Core\Type\UidType\Uid;
-use Symfony\Component\Uid\AbstractUid;
-
-final class CategoryProductEventUid extends Uid
+interface CategoryProductDomainInterface
 {
-    public const string TEST = '0188a99c-6e42-7a3c-9a23-203490f93342';
-
-    public const string TYPE = 'product_category_event';
-
+    public function getDomain(): ?string;
 }

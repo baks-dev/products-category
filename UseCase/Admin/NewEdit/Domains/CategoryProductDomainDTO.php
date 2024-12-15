@@ -21,15 +21,35 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Products\Category\Type\Event;
+declare(strict_types=1);
 
-use BaksDev\Core\Type\UidType\Uid;
-use Symfony\Component\Uid\AbstractUid;
+namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Domains;
 
-final class CategoryProductEventUid extends Uid
+use BaksDev\Products\Category\Entity\Domains\CategoryProductDomainInterface;
+use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/** @see CategoryProductDomain */
+final class CategoryProductDomainDTO implements CategoryProductDomainInterface
 {
-    public const string TEST = '0188a99c-6e42-7a3c-9a23-203490f93342';
+    /** Объявляем свойства идентификаторов Readonly для маппера */
 
-    public const string TYPE = 'product_category_event';
+    private CategoryProductUid $main;
 
+    private CategoryProductEvent $event;
+
+    #[Assert\NotBlank]
+    private ?string $domain = null;
+
+    public function getDomain(): ?string
+    {
+        return $this->domain;
+    }
+
+    public function setDomain(?string $domain): self
+    {
+        $this->domain = $domain;
+        return $this;
+    }
 }

@@ -21,15 +21,25 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Products\Category\Type\Event;
+declare(strict_types=1);
 
-use BaksDev\Core\Type\UidType\Uid;
-use Symfony\Component\Uid\AbstractUid;
+namespace BaksDev\Products\Category\Messenger\Products;
 
-final class CategoryProductEventUid extends Uid
+
+use BaksDev\Products\Category\Repository\MenuPublicCategory\MenuPublicCategoryInterface;
+use BaksDev\Products\Product\Messenger\ProductMessage;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+
+#[AsMessageHandler(priority: -100)]
+final readonly class ProductsMessageHandler
 {
-    public const string TEST = '0188a99c-6e42-7a3c-9a23-203490f93342';
+    public function __construct(private MenuPublicCategoryInterface $MenuPublicCategory) {}
 
-    public const string TYPE = 'product_category_event';
-
+    /**
+     * Метод прогревает запрос публичного меню
+     */
+    public function __invoke(ProductMessage $message): void
+    {
+        $this->MenuPublicCategory->findAll();
+    }
 }

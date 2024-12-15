@@ -21,15 +21,31 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Products\Category\Type\Event;
+declare(strict_types=1);
 
-use BaksDev\Core\Type\UidType\Uid;
-use Symfony\Component\Uid\AbstractUid;
+namespace BaksDev\Products\Category\Listeners\Event;
 
-final class CategoryProductEventUid extends Uid
+use BaksDev\Products\Category\Repository\MenuPublicCategory\MenuPublicCategoryInterface;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Twig\Environment;
+
+#[AsEventListener(event: ControllerEvent::class)]
+final class PublicCatalogMenuListener
 {
-    public const string TEST = '0188a99c-6e42-7a3c-9a23-203490f93342';
+    private $twig;
 
-    public const string TYPE = 'product_category_event';
+    private MenuPublicCategoryInterface $category;
 
+    public function __construct(Environment $twig, MenuPublicCategoryInterface $category)
+    {
+        $this->twig = $twig;
+        $this->category = $category;
+    }
+
+    /** Создает в меню раздел с категориями продукции */
+    public function onKernelController(ControllerEvent $event)
+    {
+        $this->twig->addGlobal('baks_public_menu', $this->category->findAll());
+    }
 }

@@ -1,17 +1,17 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -56,6 +56,11 @@ final class CategoryProductDTO implements CategoryProductEventInterface
     #[Assert\Valid]
     private ArrayCollection $translate;
 
+    /** Настройки локали категории */
+    #[Assert\Valid]
+    private ArrayCollection $domain;
+
+
     /** Секции свойств продукта категории */
     #[Assert\Valid]
     private ArrayCollection $section;
@@ -98,12 +103,14 @@ final class CategoryProductDTO implements CategoryProductEventInterface
         $this->cover = new CategoryProductCoverDTO();
         $this->info = new CategoryProductInfoDTO();
         $this->modify = new Modify\CategoryProductModifyDTO();
+        $this->offer = new Offers\CategoryProductOffersDTO();
 
         $this->translate = new ArrayCollection();
         $this->landing = new ArrayCollection();
         $this->section = new ArrayCollection();
-        $this->offer = new Offers\CategoryProductOffersDTO();
         $this->seo = new ArrayCollection();
+        $this->domain = new ArrayCollection();
+
     }
 
     /** Идентификатор события */
@@ -340,6 +347,34 @@ final class CategoryProductDTO implements CategoryProductEventInterface
     public function setCover(?CategoryProductCoverDTO $cover): void
     {
         $this->cover = $cover;
+    }
+
+    /**
+     * Domain
+     */
+    public function getDomain(): ArrayCollection
+    {
+        return $this->domain;
+    }
+
+    public function setDomain(ArrayCollection $domain): self
+    {
+        $this->domain = $domain;
+        return $this;
+    }
+
+    public function addDomain(Domains\CategoryProductDomainDTO $domain): self
+    {
+        $filter = $this->domain->filter(function(Domains\CategoryProductDomainDTO $element) use ($domain) {
+            return $domain->getDomain() === $element->getDomain();
+        });
+
+        if($filter->isEmpty())
+        {
+            $this->domain->add($domain);
+        }
+
+        return $this;
     }
 
 }
