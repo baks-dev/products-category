@@ -79,7 +79,6 @@
 
     {% endif %}
 
-
 {% endmacro %}
 
  {# Перейти в каталог главной категории #}
@@ -89,11 +88,23 @@
             class="text-decoration-none h6 m-0 mb-2"
             href="{{ path('products-product:user.catalog.category', {'category': url}) }}"
     >
-        ВСЕ {{ title| upper }}
+        {{ title| upper }}
     </a>
 
 {% endmacro %}
 
+{% macro item_category_more(title, url) %}
+    <hr class="w-100 text-light m-0"/>
+
+    <div>
+        <a
+                class="text-decoration-none h6 m-0 mb-2"
+                href="{{ path('products-product:user.catalog.category', {'category': url}) }}"
+        >
+            Еще больше {{ title|capitalize }} в каталоге
+        </a>
+    </div>
+{% endmacro %}
 
 <nav class="container dropdown" id="dropdownMainMenuNav">
     <ul class="nav nav-pills justify-content-center gap-4 mb-3 fs-6">
@@ -107,7 +118,7 @@
                     <path fill-rule="evenodd"
                           d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"></path>
                 </svg>
-                Каталог
+                НОВЫЙ Каталог
             </button>
 
             {# Реализация меню каталога #}
@@ -151,8 +162,10 @@
                     <div class="col-9">
                         <div class="tab-content mb-3" id="nav-tabContent">
 
+
                             {% for i in baks_public_menu %}
 
+                                {% set more = false %}
                                 {% set image_path = '/assets/img/blank.svg' %}
 
                                 <div class="tab-pane row row-cols-3 fade {{ loop.index == 1 ? 'show active' : '' }} g-4 m-0"
@@ -190,7 +203,7 @@
 
                                             {% if i.child_category_three is null and i.child_products is not null %}
 
-                                                {% for child_three in i.child_products|json_decode|filter(prod =>  prod.category == child.child_category_event) %}
+                                                {% for child_three in i.child_products|json_decode|filter(prod =>  prod.category == child.child_category_event)|slice(0, 5) %}
                                                     {% set category_threes = category_threes|merge([child_three]) %}
                                                 {% endfor %}
 
@@ -210,7 +223,11 @@
 
                                         {% if i.products is not null %}
 
-                                            {% for product in i.products|json_decode|filter(prod =>  prod.url is not null) %}
+                                            {% set for_products = i.products|json_decode|filter(prod =>  prod.url is not null) %}
+
+                                            {% set more = for_products|length > 9 %}
+
+                                            {% for product in for_products|slice(0, 9) %}
 
                                                 {% set image_path =  cdn_image_path(product.image, product.ext, product.cdn) %}
 
@@ -230,6 +247,13 @@
                                         {% endif %}
 
                                     {% endif %}
+
+
+                                    {% if more %}
+                                        {# Ссылка на категорию в блоке с элементами #}
+                                        {{ macros.item_category_more(i.category_name, i.category_url) }}
+                                    {% endif %}
+
                                 </div>
                             {% endfor %}
 
@@ -284,6 +308,7 @@
 
     </ul>
 </nav>
+
 
 <script async
         nonce="{{ csp_nonce() }}"
