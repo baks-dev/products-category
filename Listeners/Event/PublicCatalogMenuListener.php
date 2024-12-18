@@ -46,6 +46,7 @@ final class PublicCatalogMenuListener
     /** Создает в меню раздел с категориями продукции */
     public function onKernelController(ControllerEvent $event)
     {
+        // TODO добавить проверку контроллера
         $this->twig->addGlobal('baks_public_menu', $this->category->findAll());
     }
 }

@@ -37,7 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /* CategoryProductDomain */
 
 #[ORM\Entity]
-#[ORM\Table(name: 'category_product_domain')]
+#[ORM\Table(name: 'product_category_domain')]
 class CategoryProductDomain extends EntityReadonly
 {
     /**
