@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -31,22 +31,26 @@ use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Twig\Environment;
 
 #[AsEventListener(event: ControllerEvent::class)]
-final class PublicCatalogMenuListener
+final readonly class PublicCatalogMenuListener
 {
-    private $twig;
-
-    private MenuPublicCategoryInterface $category;
-
-    public function __construct(Environment $twig, MenuPublicCategoryInterface $category)
-    {
-        $this->twig = $twig;
-        $this->category = $category;
-    }
+    public function __construct(
+        private Environment $twig,
+        private MenuPublicCategoryInterface $category
+    ) {}
 
     /** Создает в меню раздел с категориями продукции */
     public function onKernelController(ControllerEvent $event)
     {
-        // TODO добавить проверку контроллера
+        if($event->getRequest()->isXmlHttpRequest())
+        {
+            return;
+        }
+
+        if(str_contains($event->getRequest()->getRequestUri(), 'admin'))
+        {
+            return;
+        }
+
         $this->twig->addGlobal('baks_public_menu', $this->category->findAll());
     }
 }
