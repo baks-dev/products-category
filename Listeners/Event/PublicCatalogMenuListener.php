@@ -39,7 +39,7 @@ final readonly class PublicCatalogMenuListener
     ) {}
 
     /** Создает в меню раздел с категориями продукции */
-    public function onKernelController(ControllerEvent $event)
+    public function onKernelController(ControllerEvent $event): void
     {
         if($event->getRequest()->isXmlHttpRequest())
         {
@@ -53,4 +53,5 @@ final readonly class PublicCatalogMenuListener
 
         $this->twig->addGlobal('baks_public_menu', $this->category->findAll());
     }
+
 }
