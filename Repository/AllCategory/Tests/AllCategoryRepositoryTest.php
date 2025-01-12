@@ -1,17 +1,17 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
- *
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,10 +25,8 @@ declare(strict_types=1);
 
 namespace BaksDev\Products\Category\Repository\AllCategory\Tests;
 
-use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
 use BaksDev\Products\Category\Repository\AllCategory\AllCategoryInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
@@ -52,18 +50,31 @@ class AllCategoryRepositoryTest extends KernelTestCase
         $repository = self::$repository;
         $result = $repository->getRecursive();
 
-        self::assertIsArray($result);
-        self::assertNotEmpty($result);
+        $array_keys = [
+            "id",
+            "event",
+            "sort",
+            "parent",
+            "category_url",
+            "category_name",
+            "category_cover_image",
+            "category_cover_cdn",
+            "category_cover_ext",
+            "groups",
+            "level",
+        ];
 
-        $data = current($result);
+        $current = current($result);
 
-        self::assertTrue(array_key_exists('id', $data));
-        self::assertTrue(array_key_exists('event', $data));
-        self::assertTrue(array_key_exists('parent', $data));
-        self::assertTrue(array_key_exists('category_name', $data));
-        self::assertTrue(array_key_exists('category_cover_image', $data));
-        self::assertTrue(array_key_exists('category_cover_cdn', $data));
-        self::assertTrue(array_key_exists('category_cover_ext', $data));
+        foreach($current as $key => $value)
+        {
+            self::assertTrue(in_array($key, $array_keys), sprintf('Появился новый ключ %s', $key));
+        }
+
+        foreach($array_keys as $key)
+        {
+            self::assertTrue(array_key_exists($key, $current));
+        }
 
     }
 
@@ -79,18 +90,30 @@ class AllCategoryRepositoryTest extends KernelTestCase
         self::assertIsArray($result->getData());
         self::assertNotEmpty($result->getData());
 
-        $data = current($result->getData());
+        $array_keys = [
+            "id",
+            "event",
+            "category_sort",
+            "category_parent",
+            "category_cover_name",
+            "category_cover_ext",
+            "category_cover_cdn",
+            "category_name",
+            "category_description",
+            "category_child_count",
 
-        self::assertTrue(array_key_exists('id', $data));
-        self::assertTrue(array_key_exists('event', $data));
-        self::assertTrue(array_key_exists('category_sort', $data));
-        self::assertTrue(array_key_exists('category_parent', $data));
-        self::assertTrue(array_key_exists('category_cover_name', $data));
-        self::assertTrue(array_key_exists('category_cover_ext', $data));
-        self::assertTrue(array_key_exists('category_cover_cdn', $data));
-        self::assertTrue(array_key_exists('category_name', $data));
-        self::assertTrue(array_key_exists('category_description', $data));
-        self::assertTrue(array_key_exists('category_child_count', $data));
+        ];
 
+        $current = current($result->getData());
+
+        foreach($current as $key => $value)
+        {
+            self::assertTrue(in_array($key, $array_keys), sprintf('Появился новый ключ %s', $key));
+        }
+
+        foreach($array_keys as $key)
+        {
+            self::assertTrue(array_key_exists($key, $current));
+        }
     }
 }

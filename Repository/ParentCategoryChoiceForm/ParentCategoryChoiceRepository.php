@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -66,7 +66,9 @@ final readonly class ParentCategoryChoiceRepository implements ParentCategoryCho
                 'category_trans.event = category.event AND category_trans.local = :local'
             );
 
-        $result = $dbal->findAllRecursive(['parent' => 'id']);
+        $result = $dbal
+            ->enableCache('products-category')
+            ->findAllRecursive(['parent' => 'id']);
 
         if(false === $result)
         {
@@ -75,7 +77,7 @@ final readonly class ParentCategoryChoiceRepository implements ParentCategoryCho
 
         foreach($result as $item)
         {
-            yield new ParentCategoryProductUid($item['id'], $item['name'], $item['parent']);
+            yield new ParentCategoryProductUid($item['id'], $item['name'], $item['level']);
         }
     }
 

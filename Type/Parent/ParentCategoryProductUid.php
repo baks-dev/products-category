@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -35,18 +35,18 @@ class ParentCategoryProductUid extends Uid
 
     private ?string $option;
 
-    private bool $parent;
+    private int $level;
 
     public function __construct(
         AbstractUid|self|string|null $value = null,
         mixed $option = null,
-        mixed $parent = false
+        mixed $level = 1
     )
     {
         parent::__construct($value);
 
         $this->option = $option;
-        $this->parent = (bool) $parent;
+        $this->level = $level;
     }
 
     public function getOption(): ?string
@@ -54,9 +54,9 @@ class ParentCategoryProductUid extends Uid
         return $this->option;
     }
 
-    public function isParent(): bool
+    public function getLevel(): int
     {
-        return $this->parent;
+        return $this->level;
     }
 
 }

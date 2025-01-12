@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,7 @@ use BaksDev\Core\Services\Paginator\PaginatorInterface;
 use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Cover\CategoryProductCover;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
+use BaksDev\Products\Category\Entity\Info\CategoryProductInfo;
 use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
 
@@ -163,10 +164,11 @@ final class AllCategoryRepository implements AllCategoryInterface
 
     }
 
-
     public function getRecursive(): ?array
     {
-        $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class)->bindLocal();
+        $dbal = $this->DBALQueryBuilder
+            ->createQueryBuilder(self::class)
+            ->bindLocal();
 
         // Категория
         $dbal
@@ -182,6 +184,17 @@ final class AllCategoryRepository implements AllCategoryInterface
                 CategoryProductEvent::class,
                 'category_event',
                 'category_event.id = category.event'
+            );
+
+        $dbal
+            ->addSelect('category_info.url AS category_url')
+            ->join(
+                'category_event',
+                CategoryProductInfo::class,
+                'category_info',
+                '
+                    category_info.event = category.event AND 
+                    category_info.active IS TRUE'
             );
 
         $dbal
@@ -205,7 +218,10 @@ final class AllCategoryRepository implements AllCategoryInterface
                 'category_cover.event = category.event'
             );
 
-        return $dbal->findAllRecursive(['parent' => 'id']);
+
+        return $dbal
+            ->enableCache('products-category', 86400)
+            ->findAllRecursive(['parent' => 'id']);
 
 
     }

@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -70,7 +70,7 @@ final class CategoryProductForm extends AbstractType
                     return $type?->getValue();
                 },
                 'choice_label' => function(ParentCategoryProductUid $type) {
-                    return ($type->isParent() ? ' - ' : '').$type->getOption();
+                    return ($type->getLevel() ? str_repeat(' - ', $type->getLevel() - 1) : '').$type->getOption();
                 },
             ]
         );
