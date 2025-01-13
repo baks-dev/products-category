@@ -567,7 +567,7 @@ final readonly class MenuPublicCategoryRepository implements MenuPublicCategoryI
                         'child_category_name', parent_category_trans.name,
                         'child_category_description', parent_category_trans.description
                     )
-            ) FILTER (WHERE parent_category_info.url IS NOT NULL) 
+            ) FILTER (WHERE parent_category_info.url IS NOT NULL AND parent_category_info.active = true) 
 			AS child_category"
         );
 
@@ -797,7 +797,7 @@ final readonly class MenuPublicCategoryRepository implements MenuPublicCategoryI
 					'child_category_description', parent_category_trans_three.description
 
 				)
-		) FILTER (WHERE parent_category_info_three.url IS NOT NULL AND product_three.id IS NOT NULL 
+		) FILTER (WHERE parent_category_info_three.url IS NOT NULL AND parent_category_info_three.active = true AND product_three.id IS NOT NULL 
 		
 		
 		 AND 
@@ -819,7 +819,7 @@ final readonly class MenuPublicCategoryRepository implements MenuPublicCategoryI
 
         /** Присваиваем кеш c namespace products-product, т.к. меню завязано на продуктах */
         return $dbal
-            ->enableCache('products-product', refresh: false)
+            ->enableCache('products-category', refresh: false)
             ->fetchAllAssociativeIndexed();
 
     }
