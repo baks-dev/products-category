@@ -43,12 +43,11 @@ class AllCategoryRepositoryTest extends KernelTestCase
         self::$repository = self::getContainer()->get(AllCategoryInterface::class);
     }
 
-
     public function testGetRecursive(): void
     {
         /** @var AllCategoryInterface $AllCategoryInterface */
-        $repository = self::$repository;
-        $result = $repository->getRecursive();
+        $AllCategoryInterface = self::$repository;
+        $result = $AllCategoryInterface->getRecursive();
 
         $array_keys = [
             "id",
@@ -78,12 +77,41 @@ class AllCategoryRepositoryTest extends KernelTestCase
 
     }
 
+    public function testGetOnlyChildren(): void
+    {
+        /** @var AllCategoryInterface $AllCategoryInterface */
+        $AllCategoryInterface = self::$repository;
+        $allCategories = $AllCategoryInterface->getRecursive();
+        $children = $AllCategoryInterface->getOnlyChildren();
+
+        $previous = null;
+
+        foreach($allCategories as $currentCategory)
+        {
+            if(null !== $previous)
+            {
+                //  если текущая категория ссылается на предыдущую - то предыдущая - PARENT, текущая - CHILD
+                if($currentCategory['parent'] === $previous['id'])
+                {
+                    $parent = $previous;
+
+                    // проверка, что в категориях с children нет parents
+                    self::assertFalse(in_array($parent, $children, true));
+                }
+            }
+
+            $previous = $currentCategory;
+        }
+
+        self::assertTrue(true);
+    }
+
 
     public function testFetchProductParentAllAssociativeTest()
     {
         /** @var AllCategoryInterface $AllCategoryInterface */
-        $repository = self::$repository;
-        $result = $repository->fetchProductParentAllAssociative();
+        $AllCategoryInterface = self::$repository;
+        $result = $AllCategoryInterface->fetchProductParentAllAssociative();
 
         self::assertInstanceOf(PaginatorInterface::class, $result);
 

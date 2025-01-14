@@ -1,6 +1,6 @@
 # BaksDev Product Category
 
-[![Version](https://img.shields.io/badge/version-7.1.34-blue)](https://github.com/baks-dev/products-category/releases)
+[![Version](https://img.shields.io/badge/version-7.1.35-blue)](https://github.com/baks-dev/products-category/releases)
 ![php 8.3+](https://img.shields.io/badge/php-min%208.3-red.svg)
 
 Модуль категорий продукции
