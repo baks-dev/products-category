@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -164,7 +164,8 @@ final class AllCategoryRepository implements AllCategoryInterface
 
     }
 
-    public function getRecursive(): ?array
+
+    public function getRecursive(): array|false
     {
         $dbal = $this->DBALQueryBuilder
             ->createQueryBuilder(self::class)
@@ -222,7 +223,34 @@ final class AllCategoryRepository implements AllCategoryInterface
         return $dbal
             ->enableCache('products-category', 86400)
             ->findAllRecursive(['parent' => 'id']);
+    }
 
+    /** Фильтрация категорий, у которых могут быть продукты */
+    public function getOnlyChildren(): array
+    {
+        $result = $this->getRecursive();
 
+        if(false === $result)
+        {
+            return [];
+        }
+
+        $previous = null;
+
+        foreach($result as $key => $currentCategory)
+        {
+            if(null !== $previous)
+            {
+                // если у текущей категории родитель это предыдущий элемент - удаляем его
+                if($currentCategory['parent'] === $previous['id'])
+                {
+                    unset($result[$key - 1]);
+                }
+            }
+
+            $previous = $currentCategory;
+        }
+
+        return $result;
     }
 }
