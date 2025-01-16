@@ -70,7 +70,7 @@ final class CategoryProductForm extends AbstractType
                     return $type?->getValue();
                 },
                 'choice_label' => function(ParentCategoryProductUid $type) {
-                    return ($type->getLevel() ? str_repeat(' - ', $type->getLevel() - 1) : '').$type->getOption();
+                    return (is_int($type->getLevel()) ? str_repeat(' - ', $type->getLevel() - 1) : '').$type->getOption();
                 },
             ]
         );
