@@ -38,8 +38,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'product_category')]
 class CategoryProduct
 {
-    public const TABLE = 'product_category';
-
     /** ID */
     #[ORM\Id]
     #[ORM\Column(type: CategoryProductUid::TYPE)]

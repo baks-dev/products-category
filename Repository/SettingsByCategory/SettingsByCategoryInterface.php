@@ -1,17 +1,17 @@
 <?php
 /*
  *  Copyright 2025.  Baks.dev <admin@baks.dev>
- *  
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,42 +21,17 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Products\Category\Entity;
+namespace BaksDev\Products\Category\Repository\SettingsByCategory;
 
-use BaksDev\Products\Category\Type\Settings\CategoryProductSettingsIdentifier;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 
-/* Настройки сущности Category */
-
-#[ORM\Entity]
-#[ORM\Table(name: 'product_category_settings')]
-class CategoryProductSettings
+interface SettingsByCategoryInterface
 {
-	/** ID */
-	#[ORM\Id]
-	#[ORM\Column(type: CategoryProductSettingsIdentifier::TYPE)]
-	private CategoryProductSettingsIdentifier $id;
-	
-	/** Очищать корзину старше n дней */
-	#[ORM\Column(type: Types::SMALLINT, length: 3, nullable: false)]
-	private int $truncate = 365;
-	
-	
-	/** Очищать события старше n дней */
-	#[ORM\Column(type: Types::SMALLINT, length: 3, nullable: false)]
-	private int $history = 365;
-	
-	public function __construct()
-	{
-		$this->id = new CategoryProductSettingsIdentifier();
-	}
-	
-	//
-	//    public function setSettings(int $settingsTruncate, int $settingsHistory) : void
-	//    {
-	//        $this->truncate = $settingsTruncate;
-	//        $this->history = $settingsHistory;
-	//    }
-	//
+    public function category(CategoryProduct|CategoryProductUid|string $category): self;
+
+    /**
+     * Метод возвращает настройки торговых предложений
+     */
+    public function find(): array|bool;
 }

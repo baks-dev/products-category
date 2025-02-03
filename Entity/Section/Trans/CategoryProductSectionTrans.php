@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -37,8 +37,6 @@ use InvalidArgumentException;
 #[ORM\Table(name: 'product_category_section_trans')]
 class CategoryProductSectionTrans extends EntityState
 {
-    public const TABLE = 'product_category_section_trans';
-
     /** Связь на секцию */
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: CategoryProductSection::class, inversedBy: "translate")]

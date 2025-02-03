@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -41,8 +41,6 @@ use InvalidArgumentException;
 #[ORM\Index(columns: ['name'])]
 class CategoryProductModificationTrans extends EntityState
 {
-    public const TABLE = 'product_category_modification_trans';
-
     /** Связь на событие */
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: CategoryProductModification::class, inversedBy: "translate")]
