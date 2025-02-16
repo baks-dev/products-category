@@ -1,5 +1,5 @@
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -149,6 +149,9 @@ if($blockCollection)
         /* Увеличиваем data-index на 1 после вставки новой коллекции */
         this.dataset.index = (index + 1).toString();
 
+        /* применяем select2 к выпадающему списку */
+        new NiceSelect(div.querySelector('#category_product_form_section_' + index + '_field_0_type'), {searchable: true});
+
     });
 }
 
@@ -251,6 +254,9 @@ function createSectionField(section)
         deleteField(div);
 
         $btnAddFields.dataset.index = (index * 1 + 1).toString();
+
+        /* применяем select2 к выпадающему списку */
+        new NiceSelect(div.querySelector('#category_product_form_section_' + section_id + '_field_' + index + '_type'), {searchable: true});
 
         //div.innerHTML = newForm;
         //$blockCollection.append(div);

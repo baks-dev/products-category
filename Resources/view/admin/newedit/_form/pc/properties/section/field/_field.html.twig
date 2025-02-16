@@ -22,7 +22,7 @@
 				{{ form_row(field.sort, { label : 'sort'|trans({}, 'core') }) }}
 			</div>
 			<div class="w-100">
-				{{ form_row(field.type, { label : 'Тип поля', placeholder: 'Выберите поле из списка' })  }}
+				{{ form_row(field.type, { label : 'Тип поля', placeholder: 'Выберите поле из списка', attr: { 'data-select' : 'select2' } }) }}
 				
 			</div>
 			{{ form_row(field.required, { label : 'Обязательное' }) | raw }}
