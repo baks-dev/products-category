@@ -817,6 +817,8 @@ final readonly class MenuPublicCategoryRepository implements MenuPublicCategoryI
 
         $dbal->allGroupByExclude();
 
+        $dbal->setMaxResults(1000);
+
         /** Присваиваем кеш c namespace products-product, т.к. меню завязано на продуктах */
         return $dbal
             ->enableCache('products-category', refresh: false)
