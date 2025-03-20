@@ -67,7 +67,7 @@ class CategoryProductInfo extends EntityState
      * Количество по умолчанию (предзаполняет форму)
      */
     #[ORM\Column(type: Types::SMALLINT, options: ['default' => 1])]
-    private int $default = 1;
+    private int $input = 1;
 
     /**
      * Порог наличия продукции (default 10)
@@ -75,6 +75,13 @@ class CategoryProductInfo extends EntityState
      */
     #[ORM\Column(type: Types::SMALLINT, options: ['default' => 10])]
     private int $threshold = 10;
+
+    /**
+     * Отобразить карточку как модель
+     */
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $model = false;
+
 
     public function __construct(CategoryProductEvent $event)
     {
