@@ -1,5 +1,10 @@
 {% trans_default_domain 'admin.products.category' %}
 
+{{ form_row(form.offer.card, {
+	label : 'Свойство группировки карточки'|trans,
+	attr : { class : 'change-card' } } ) }}
+
+<hr>
 
 {{ form_row(form.offer.postfix, {
 	label : 'Торговое предложение с постфиксом'|trans,
@@ -8,9 +13,6 @@
 {# Настройки локали торгового предложения #}
 
 {{ include(_self|replace({ "_offer.html.twig": "_offer.trans.html.twig" })) }}
-
-
-
 
 {{ form_row(form.offer.image, {  label : 'Возможность загрузки пользовательского изображение'|trans } ) }}
 

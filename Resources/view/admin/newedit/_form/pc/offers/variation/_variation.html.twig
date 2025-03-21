@@ -5,6 +5,12 @@
     attr : { class : 'change-postfix' }
 } ) }}
 
+<hr>
+
+{{ form_row(form.offer.variation.card, {
+    label : 'Свойство группировки карточки'|trans,
+    attr : { class : 'change-card' } } ) }}
+
 {# Настройки локали  #}
 {{ include(_self|replace({ "_variation.html.twig": "_variation.trans.html.twig" })) }}
 

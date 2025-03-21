@@ -1,5 +1,11 @@
 {% trans_default_domain 'admin.products.category' %}
 
+{{ form_row(form.offer.variation.modification.card, {
+	label : 'Свойство группировки карточки'|trans,
+	attr : { class : 'change-card' } } ) }}
+
+<hr>
+
 {{ form_row(form.offer.variation.modification.postfix, {
 	label : 'Модификации с постфиксом'|trans,
 	attr : { class : 'change-postfix' }
@@ -9,7 +15,6 @@
 {{ include(_self|replace({ "_modification.html.twig": "_modification.trans.html.twig" })) }}
 
 {{ form_row(form.offer.variation.modification.image, {  label : 'Возможность загрузки пользовательского изображение'|trans } ) }}
-
 
 {{ form_row(form.offer.variation.modification.article, {  label : 'Модификации с Артикулом'|trans } ) }}
 
