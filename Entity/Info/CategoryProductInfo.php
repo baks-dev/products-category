@@ -29,6 +29,7 @@ use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /* Неизменяемые данные Категории */
 
@@ -60,12 +61,14 @@ class CategoryProductInfo extends EntityState
     /**
      * Минимальное количество в заказе ниже которого запрещается оформить заказ
      */
+    #[Assert\Range(min: 1)]
     #[ORM\Column(type: Types::SMALLINT, options: ['default' => 1])]
     private int $minimal = 1;
 
     /**
      * Количество по умолчанию (предзаполняет форму)
      */
+    #[Assert\Range(min: 1)]
     #[ORM\Column(type: Types::SMALLINT, options: ['default' => 1])]
     private int $input = 1;
 
@@ -73,6 +76,7 @@ class CategoryProductInfo extends EntityState
      * Порог наличия продукции (default 10)
      * @example «более 10» | «менее 10»
      */
+    #[Assert\Range(min: 1)]
     #[ORM\Column(type: Types::SMALLINT, options: ['default' => 10])]
     private int $threshold = 10;
 
