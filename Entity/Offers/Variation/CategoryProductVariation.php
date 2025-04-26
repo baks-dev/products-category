@@ -53,7 +53,7 @@ class CategoryProductVariation extends EntityState
     private CategoryProductOffers $offer;
 
     /** Перевод */
-    #[ORM\OneToMany(targetEntity: Trans\CategoryProductVariationTrans::class, mappedBy: 'variation', cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: Trans\CategoryProductVariationTrans::class, mappedBy: 'variation', cascade: ['all'], fetch: 'EAGER')]
     private Collection $translate;
 
     /** Справочник */
@@ -85,7 +85,7 @@ class CategoryProductVariation extends EntityState
     private bool $card = true;
 
     /** Модификации в множественном варианте */
-    #[ORM\OneToOne(targetEntity: CategoryProductModification::class, mappedBy: 'variation', cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: CategoryProductModification::class, mappedBy: 'variation', cascade: ['all'], fetch: 'EAGER')]
     private ?CategoryProductModification $modification;
 
 

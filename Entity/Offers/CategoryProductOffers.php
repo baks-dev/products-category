@@ -41,8 +41,6 @@ use InvalidArgumentException;
 #[ORM\Table(name: 'product_category_offers')]
 class CategoryProductOffers extends EntityState
 {
-    public const TABLE = 'product_category_offers';
-
     /** ID */
     #[ORM\Id]
     #[ORM\Column(type: CategoryProductOffersUid::TYPE)]
@@ -54,7 +52,7 @@ class CategoryProductOffers extends EntityState
     private ?CategoryProductEvent $event;
 
     /** Перевод */
-    #[ORM\OneToMany(targetEntity: Trans\CategoryProductOffersTrans::class, mappedBy: 'offer', cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: Trans\CategoryProductOffersTrans::class, mappedBy: 'offer', cascade: ['all'], fetch: 'EAGER')]
     private Collection $translate;
 
     /** Справочник */
@@ -86,7 +84,7 @@ class CategoryProductOffers extends EntityState
     private bool $card = true;
 
     /** Множественные варианты в торговом предложении */
-    #[ORM\OneToOne(targetEntity: CategoryProductVariation::class, mappedBy: 'offer', cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: CategoryProductVariation::class, mappedBy: 'offer', cascade: ['all'], fetch: 'EAGER')]
     private ?CategoryProductVariation $variation;
 
     public function __construct(CategoryProductEvent $event)

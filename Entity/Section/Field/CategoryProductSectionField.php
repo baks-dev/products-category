@@ -53,7 +53,7 @@ class CategoryProductSectionField extends EntityState
     private CategoryProductSectionFieldUid $const;
 
     /** Перевод */
-    #[ORM\OneToMany(targetEntity: Trans\CategoryProductSectionFieldTrans::class, mappedBy: 'field', cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: Trans\CategoryProductSectionFieldTrans::class, mappedBy: 'field', cascade: ['all'], fetch: 'EAGER')]
     private Collection $translate;
 
     /** Тип поля (input, select, textarea ....)  */

@@ -1,17 +1,17 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,13 +26,11 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\Repository\VariationFieldsCategoryChoice;
 
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
-use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
 use BaksDev\Products\Category\Entity\Offers\Variation\CategoryProductVariation;
 use BaksDev\Products\Category\Entity\Offers\Variation\Trans\CategoryProductVariationTrans;
 use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
 use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class VariationFieldsCategoryChoiceRepository implements VariationFieldsCategoryChoiceInterface
 {
@@ -78,9 +76,9 @@ final class VariationFieldsCategoryChoiceRepository implements VariationFieldsCa
             $qb
                 ->where('offer.id = :offer')
                 ->setParameter(
-                    'offer',
-                    $this->offer,
-                    CategoryProductOffersUid::TYPE
+                    key: 'offer',
+                    value: $this->offer,
+                    type: CategoryProductOffersUid::TYPE
                 );
         }
 
@@ -99,8 +97,7 @@ final class VariationFieldsCategoryChoiceRepository implements VariationFieldsCa
             'trans.variation = variation.id AND trans.local = :local'
         );
 
-        /* Кешируем результат ORM */
-        return $qb->enableCache('products-category', 86400)->getOneOrNullResult();
+        return $qb->getOneOrNullResult();
 
     }
 }

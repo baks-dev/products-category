@@ -51,7 +51,7 @@ class CategoryProductModification extends EntityState
     private CategoryProductVariation $variation;
 
     /** Перевод */
-    #[ORM\OneToMany(targetEntity: Trans\CategoryProductModificationTrans::class, mappedBy: 'modification', cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: Trans\CategoryProductModificationTrans::class, mappedBy: 'modification', cascade: ['all'], fetch: 'EAGER')]
     private Collection $translate;
 
     /** Справочник */

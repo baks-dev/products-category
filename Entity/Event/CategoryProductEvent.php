@@ -70,41 +70,41 @@ class CategoryProductEvent extends EntityState
     private int $sort = 500;
 
     /** Перевод */
-    #[ORM\OneToMany(targetEntity: CategoryProductDomain::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: CategoryProductDomain::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private Collection $domain;
 
 
     /** Перевод */
-    #[ORM\OneToMany(targetEntity: CategoryProductTrans::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: CategoryProductTrans::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private Collection $translate;
 
     /** Модификатор */
-    #[ORM\OneToOne(targetEntity: CategoryProductModify::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: CategoryProductModify::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private CategoryProductModify $modify;
 
     /** Info */
-    #[ORM\OneToOne(targetEntity: CategoryProductInfo::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: CategoryProductInfo::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private ?CategoryProductInfo $info;
 
     /** Cover */
-    #[ORM\OneToOne(targetEntity: CategoryProductCover::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: CategoryProductCover::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private ?CategoryProductCover $cover = null;
 
     /**  Настройки SEO информации  */
-    #[ORM\OneToMany(targetEntity: CategoryProductSeo::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: CategoryProductSeo::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private Collection $seo;
 
     /** Секции для свойств продукта */
-    #[ORM\OneToMany(targetEntity: CategoryProductSection::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: CategoryProductSection::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     #[ORM\OrderBy(['sort' => 'ASC'])]
     private Collection $section;
 
     /** Посадочные блоки */
-    #[ORM\OneToMany(targetEntity: CategoryProductLanding::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: CategoryProductLanding::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private Collection $landing;
 
     /** Торговые предложения */
-    #[ORM\OneToOne(targetEntity: CategoryProductOffers::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: CategoryProductOffers::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private ?CategoryProductOffers $offer;
 
 

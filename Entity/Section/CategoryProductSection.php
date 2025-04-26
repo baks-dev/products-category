@@ -48,11 +48,11 @@ class CategoryProductSection extends EntityState
     private ?CategoryProductEvent $event;
 
     /** Перевод */
-    #[ORM\OneToMany(targetEntity: Trans\CategoryProductSectionTrans::class, mappedBy: 'section', cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: Trans\CategoryProductSectionTrans::class, mappedBy: 'section', cascade: ['all'], fetch: 'EAGER')]
     private Collection $translate;
 
     /** Поля секции */
-    #[ORM\OneToMany(targetEntity: Field\CategoryProductSectionField::class, mappedBy: 'section', cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: Field\CategoryProductSectionField::class, mappedBy: 'section', cascade: ['all'], fetch: 'EAGER')]
     #[ORM\OrderBy(['sort' => 'ASC'])]
     private Collection $field;
 

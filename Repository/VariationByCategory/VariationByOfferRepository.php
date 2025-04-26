@@ -1,17 +1,17 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -29,14 +29,12 @@ use BaksDev\Core\Doctrine\ORMQueryBuilder;
 use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
 use BaksDev\Products\Category\Entity\Offers\Variation\CategoryProductVariation;
 use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
-use Doctrine\ORM\EntityManagerInterface;
 
 final class VariationByOfferRepository implements VariationByOfferInterface
 {
     private ?CategoryProductOffersUid $offer = null;
 
     public function __construct(private readonly ORMQueryBuilder $ORMQueryBuilder) {}
-
 
     public function offer(CategoryProductOffers|CategoryProductOffersUid|string $offer): self
     {
@@ -59,7 +57,6 @@ final class VariationByOfferRepository implements VariationByOfferInterface
      */
     public function findCategoryProductVariation(): ?CategoryProductVariation
     {
-
         $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class);
 
         $qb->from(CategoryProductOffers::class, 'offer');
@@ -69,9 +66,9 @@ final class VariationByOfferRepository implements VariationByOfferInterface
             $qb
                 ->where('offer.id = :offer')
                 ->setParameter(
-                    'offer',
-                    $this->offer,
-                    CategoryProductOffersUid::TYPE
+                    key: 'offer',
+                    value: $this->offer,
+                    type: CategoryProductOffersUid::TYPE
                 );
         }
         $qb
@@ -84,6 +81,6 @@ final class VariationByOfferRepository implements VariationByOfferInterface
             );
 
 
-        return $qb->enableCache('products-category')->getOneOrNullResult();
+        return $qb->getOneOrNullResult();
     }
 }
