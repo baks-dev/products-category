@@ -51,8 +51,8 @@ final readonly class PublicCatalogMenuListener
             return;
         }
 
-        $this->twig->addGlobal('baks_public_menu', $this->category->findAll());
-        //$this->twig->addGlobal('baks_public_menu', []);
+        //$this->twig->addGlobal('baks_public_menu', $this->category->findAll());
+        $this->twig->addGlobal('baks_public_menu', []);
     }
 
 }
