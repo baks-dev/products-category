@@ -14,7 +14,7 @@
             {# {{ include(_self|replace({ "navbar.html.twig": "img-without-category.html.twig" })) }} #}
 
             {% set product_path =  path(
-                items[0].is_offer == true ? 'products-product:user.model' : 'products-product:user.detail',
+                items[0].is_offer == true ? 'products-product:public.model' : 'products-product:public.detail',
                 {
                     'category': url,
                     'url': items[0].url
@@ -51,7 +51,7 @@
 
         <div class="col d-flex gap-2 border-start">
 
-            {% set category_path = path('products-product:user.catalog.category', { 'category': url }) %}
+            {% set category_path = path('products-product:public.catalog.category', { 'category': url }) %}
 
             <a href="{{ category_path }}">
                 <div
@@ -87,7 +87,7 @@
 
     <a
             class="text-decoration-none h6 m-0 mb-2"
-            href="{{ path('products-product:user.catalog.category', {'category': url}) }}"
+            href="{{ path('products-product:public.catalog.category', {'category': url}) }}"
     >
         ВСЕ {{ title| upper }}
     </a>
@@ -140,7 +140,7 @@
                         <div class="list-group">
                             <a class="list-group-item list-group-item-action rounded-1 border-0 text-primary"
 
-                               href="{{ path('products-product:user.catalog.index') }}"
+                               href="{{ path('products-product:public.catalog.index') }}"
                             ><strong>Весь каталог</strong>
                             </a>
                         </div>

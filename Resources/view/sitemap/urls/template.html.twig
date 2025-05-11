@@ -3,7 +3,7 @@
     {# Категори продукции #}
     {% for url in urls %}
         <url>
-            <loc>{{ absolute_url(path('products-product:user.catalog.category', { category: url.category_url } )) }}</loc>
+            <loc>{{ absolute_url(path('products-product:public.catalog.category', { category: url.category_url } )) }}</loc>
         </url>
     {% endfor %}
 </urlset>
