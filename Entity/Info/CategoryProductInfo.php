@@ -81,6 +81,7 @@ class CategoryProductInfo extends EntityState
     private int $threshold = 10;
 
     /**
+     * @todo: вроде не используется
      * Отобразить карточку как модель
      */
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
