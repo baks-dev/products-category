@@ -34,7 +34,9 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('baks.menu.admin')]
 final class Role implements RoleInterface, MenuAdminInterface
 {
-    public const ROLE = 'ROLE_PRODUCT_CATEGORY';
+    public const string ROLE = 'ROLE_PRODUCT_CATEGORY';
+
+    public const string KEY = 'eqqPzadYBC';
 
     public function getRole(): string
     {
@@ -49,6 +51,14 @@ final class Role implements RoleInterface, MenuAdminInterface
     public function getPath(): string
     {
         return 'products-category:admin.index';
+    }
+
+    /**
+     * Метод возвращает ключ раздела (для меню телеграм)
+     */
+    public function getPathKey(): string
+    {
+        return self::KEY;
     }
 
     /** Метод возвращает секцию, в которую помещается ссылка на раздел */
