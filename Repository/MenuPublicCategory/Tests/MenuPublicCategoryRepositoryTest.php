@@ -45,6 +45,7 @@ class MenuPublicCategoryRepositoryTest extends KernelTestCase
         $MenuPublicCategory = self::getContainer()->get(MenuPublicCategoryInterface::class);
 
         $result = $MenuPublicCategory->findAll();
+
         //dd($result);
 
         self::assertTrue(true);

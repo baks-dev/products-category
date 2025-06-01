@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -23,23 +23,31 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Products\Category\Messenger\Products;
+namespace BaksDev\Products\Category\Repository\MenuPublicCategory\MenuPublicCategoryResult;
 
+use ArrayObject;
+use Symfony\Component\Validator\Constraints as Assert;
 
-use BaksDev\Products\Category\Repository\MenuPublicCategory\MenuPublicCategoryInterface;
-use BaksDev\Products\Product\Messenger\ProductMessage;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-
-#[AsMessageHandler(priority: -100)]
-final readonly class ProductsMessageHandler
+/** @see MenuPublicCategoryResult */
+final class MenuPublicCategoryResult extends ArrayObject
 {
-    public function __construct(private MenuPublicCategoryInterface $MenuPublicCategory) {}
-
-    /**
-     * Метод прогревает запрос публичного меню
-     */
-    public function __invoke(ProductMessage $message): void
+    public function __construct(object|array $array = [])
     {
-        $this->MenuPublicCategory->findAll();
+        foreach($array as $category)
+        {
+            $this->offsetSet($category['id'], new MenuPublicCategoryDTO(...$category));
+
+            /**
+             * Добавляем в родительскую категорию идентификатор потомка
+             */
+            if(isset($category['parent']) && $this->offsetExists($category['parent']))
+            {
+                /** @var MenuPublicCategoryDTO $parent */
+                $parent = $this->offsetGet($category['parent']);
+                $parent->addChildValue($category['id']);
+            }
+        }
+
+        parent::__construct();
     }
 }

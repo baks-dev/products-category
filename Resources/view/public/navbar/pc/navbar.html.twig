@@ -117,18 +117,27 @@
                     <div class="col-2">
                         <div class="list-group" id="list-tab" role="tablist">
 
+                            {# @var category \BaksDev\Products\Category\Repository\MenuPublicCategory\MenuPublicCategoryResult\MenuPublicCategoryDTO #}
+
                             {% if baks_public_menu is defined and baks_public_menu|length > 1 %}
 
-                                {% for i in baks_public_menu %}
+                                {% for category in baks_public_menu|filter(v => v.existsProduct is true) %}
 
-                                    {% if i.products is not null or i.child_category is not null %}
+                                    <a class="list-group-item list-group-item-action rounded-1 border-0 mb-1 {{ loop.index == 1 ? 'active' : '' }}"
+                                       id="list-{{ loop.index }}-list" data-bs-toggle="list"
+                                       href="#list-{{ loop.index }}" role="tab"
+                                       aria-controls="list-{{ loop.index }}">
+                                        <strong>{{ category.categoryName }}</strong>
+                                    </a>
+
+                                    {# {% if i.products is not null or i.child_category is not null %}
 
                                         <a class="list-group-item list-group-item-action rounded-1 border-0 mb-1 {{ loop.index == 1 ? 'active' : '' }}"
                                            id="list-{{ loop.index }}-list" data-bs-toggle="list"
                                            href="#list-{{ loop.index }}" role="tab"
                                            aria-controls="list-{{ loop.index }}"><strong>{{ i.category_name }}</strong>
                                         </a>
-                                    {% endif %}
+                                    {% endif %} #}
 
                                     {# move #}
                                 {% endfor %}
@@ -139,7 +148,6 @@
 
                         <div class="list-group">
                             <a class="list-group-item list-group-item-action rounded-1 border-0 text-primary"
-
                                href="{{ path('products-product:public.catalog.index') }}"
                             ><strong>Весь каталог</strong>
                             </a>
@@ -151,85 +159,90 @@
                     <div class="col-9">
                         <div class="tab-content mb-3" id="nav-tabContent">
 
-                            {% for i in baks_public_menu %}
+                            {# @var product \BaksDev\Products\Category\Repository\MenuPublicCategory\MenuPublicCategoryResult\MenuPublicProductDTO #}
 
-                                {% set image_path = '/assets/img/blank.svg' %}
+
+                            {% for category in baks_public_menu|filter(v => v.existsProduct is true) %}
+
+
+
+                                {# {% set image_path = '/assets/img/blank.svg' %} #}
 
                                 <div class="tab-pane row row-cols-3 fade {{ loop.index == 1 ? 'show active' : '' }} g-4 m-0"
                                      id="list-{{ loop.index }}" role="tabpanel"
                                      aria-labelledby="list-{{ loop.index }}-list">
 
-                                    {# Ссылка на категорию в блоке с элементами #}
-                                    {{ macros.item_category(i.category_name, i.category_url) }}
+                                    {#                                    #}{# Ссылка на категорию в блоке с элементами #}
+                                    {#                                    {{ macros.item_category(i.category_name, i.category_url) }} #}
+
+
+                                    <a
+                                            class="text-decoration-none h6 m-0 mb-2"
+                                            href="{{ path('products-product:public.catalog.category', {'category': category.categoryUrl}) }}"
+                                    >
+                                        Лучшие предложения {{ category.categoryName| upper }}
+                                    </a>
+
 
                                     <hr class="w-100 text-light m-0"/>
 
+                                    {% for product in category.products %}
 
-                                    {# child_category #}
-                                    {% if i.child_category is not null %}
+                                        <div class="col d-flex gap-2 border-start">
 
-                                        {% set product = false %}
+                                            {# {{ include(_self|replace({ "navbar.html.twig": "img-without-category.html.twig" })) }} #}
 
-                                        {% for child in i.child_category|json_decode %}
+                                            {% set product_path =  path(
+                                                'products-product:public.model',
+                                                {
+                                                    'category': category.categoryUrl,
+                                                    'url': product.productUrl
+                                                }
+                                            ) %}
 
-                                            {% if child.child_category_cover_ext is defined and child.child_category_cover_ext is not null %}
-                                                {% set image_path =  cdn_image_path(child.child_category_cover_name, child.child_category_cover_ext, child.child_category_cover_cdn) %}
-                                            {% endif %}
+                                            {# Обложка #}
+                                            <a href="{{ product_path }}">
+                                                <div class="rounded-4 icon bg-contain lazy"
+                                                     style="width: 60px; height: 60px;"
+                                                     data-bg="{{ cdn_image_path(product.productImage, product.productImageExt, product.productImageCdn) }}"
+                                                     alt="{{ product.productName }}">
+                                                </div>
+                                            </a>
 
-                                            {% set category_threes = [] %}
+                                            <div>
 
-                                            {# child_category_three #}
-                                            {% if i.child_category_three is not null %}
+                                                {# Если у корневой категории только продукция без вложенных категорий #}
+                                                <h5 class="fs-6 fw-bold" style="max-width: 190px;">
+                                                    <a
+                                                            class="text-dark text-decoration-none text-truncate d-block"
+                                                            href="{{ product_path }}"
+                                                    >
+                                                        {{ product.productName }}
+                                                    </a>
+                                                </h5>
 
-                                                {% for child_three in i.child_category_three|json_decode|filter(cat =>  cat.category == child.child_category_event) %}
-                                                    {% set category_threes = category_threes|merge([child_three]) %}
-                                                {% endfor %}
+                                                <a
+                                                        class="btn btn-sm btn-outline-primary border-0"
+                                                        href="{{ product_path }}"
+                                                >
+                                                    от {{ money(product.productPrice, product.productCurrency) }}
+                                                </a>
+                                            </div>
+                                        </div>
 
-                                            {% endif %}
+                                    {% endfor %}
 
+                                    <hr class="w-100 text-light mb-0"/>
 
-                                            {% if i.child_category_three is null and i.child_products is not null %}
+                                    <div class="w-100 text-end">
+                                        <a
+                                                class="text-decoration-none h6 m-0 mb-2 text-nowrap"
+                                                href="{{ path('products-product:public.catalog.category', {'category': category.categoryUrl}) }}"
+                                        >
+                                            посмотреть все предложения каталога {{ category.categoryName| upper }}
+                                        </a>
+                                    </div>
 
-                                                {% for child_three in i.child_products|json_decode|filter(prod =>  prod.category == child.child_category_event) %}
-                                                    {% set category_threes = category_threes|merge([child_three]) %}
-                                                {% endfor %}
-
-                                                {% set product = true %}
-
-                                            {% endif %}
-
-
-                                            {# Передаем значения в макрос для рендеринга элементов меню #}
-                                            {{ macros.item_card(image_path, child.child_category_name , child.category_url, category_threes, product) }}
-
-                                            {% set prod = false %}
-
-                                        {% endfor %}
-
-                                    {% else %}
-
-                                        {% if i.products is not null %}
-
-                                            {% for product in i.products|json_decode|filter(prod =>  prod.url is not null) %}
-
-                                                {% set image_path =  cdn_image_path(product.image, product.ext, product.cdn) %}
-
-                                                {# Передаем значения в макрос для рендеринга элементов меню #}
-                                                {{ macros.item_card(image_path, product.name , product.category_url, [
-                                                    {
-                                                        'name': '<span class="btn btn-sm btn-outline-primary border-0">'~(product.is_offer ? 'от '~money(product.price) : 'Купить')~'</span>',
-                                                        'url': product.url,
-                                                        'category_url': product.category_url,
-                                                        'is_offer': product.is_offer
-                                                    }
-
-                                                ], true, true) }}
-
-                                            {% endfor %}
-
-                                        {% endif %}
-
-                                    {% endif %}
                                 </div>
                             {% endfor %}
 
@@ -237,7 +250,6 @@
                     </div>
                 </div>
             </div>
-
 
         </li>
 
