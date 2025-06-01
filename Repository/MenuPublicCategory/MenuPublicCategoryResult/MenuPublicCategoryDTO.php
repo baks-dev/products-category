@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\Repository\MenuPublicCategory\MenuPublicCategoryResult;
 
 use ArrayObject;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Products\Product\Repository\Cards\ModelsOrProductsByCategory\ModelOrProductByCategoryResult;
 use Generator;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -34,7 +36,7 @@ final class MenuPublicCategoryDTO
 {
     private ArrayObject $child;
 
-    private Generator $products;
+    private Generator|false $products;
 
     public function __construct(
         private readonly mixed $id, // " => "01876af0-ddfc-70c3-ab25-5f85f55a9907"
@@ -71,7 +73,13 @@ final class MenuPublicCategoryDTO
 
     public function getAllCategoryIdentifier(): array
     {
-        return $this->child->getArrayCopy();
+        return
+            array_map(
+                callback: static function(string $uuid) {
+                    return new CategoryProductUid($uuid);
+                },
+                array: $this->child->getArrayCopy(),
+            );
     }
 
     public function getCategoryUrl(): string
@@ -105,18 +113,23 @@ final class MenuPublicCategoryDTO
     }
 
 
-    public function setProducts(Generator $MenuPublicProductDTO): void
+    public function setProducts(Generator|false $ModelOrProductByCategoryResult): void
     {
-        $this->products = $MenuPublicProductDTO;
+        $this->products = $ModelOrProductByCategoryResult;
     }
 
     public function isExistsProduct(): bool
     {
+        if(false === $this->products)
+        {
+            return false;
+        }
+
         return $this->products->valid() === true;
     }
 
-    /** @return Generator{int, MenuPublicProductDTO} */
-    public function getProducts(): Generator
+    /** @return Generator{int, ModelOrProductByCategoryResult}|false */
+    public function getProducts(): Generator|false
     {
         return $this->products;
     }

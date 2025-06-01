@@ -98,6 +98,9 @@
 <nav class="container dropdown" id="dropdownMainMenuNav">
     <ul class="nav nav-pills justify-content-center gap-4 mb-3 fs-6">
 
+
+        {# Реализация меню каталога #}
+
         <li class="nav-item ">
             <button class="btn btn-primary dropdown-toggle d-flex align-items-center gap-1 py-1 px-3"
                     id="dropdownMainMenuBtn"
@@ -110,18 +113,18 @@
                 Каталог
             </button>
 
-            {# Реализация меню каталога #}
+
             <div class="dropdown-menu catalog-menu {% if lgScreen %}catalog-menu-lg{% endif %} rounded-4 shadow-lg border-0 px-5 py-3"
                  id="dropdownMainMenu" aria-labelledby="dropdownMainMenu">
                 <div class="row">
-                    <div class="col-2">
+                    <div class="col-3">
                         <div class="list-group" id="list-tab" role="tablist">
 
                             {# @var category \BaksDev\Products\Category\Repository\MenuPublicCategory\MenuPublicCategoryResult\MenuPublicCategoryDTO #}
 
                             {% if baks_public_menu is defined and baks_public_menu|length > 1 %}
 
-                                {% for category in baks_public_menu|filter(v => v.existsProduct is true) %}
+                                {% for category in baks_public_menu|filter(v => v.existsProduct is true and v.level == 1) %}
 
                                     <a class="list-group-item list-group-item-action rounded-1 border-0 mb-1 {{ loop.index == 1 ? 'active' : '' }}"
                                        id="list-{{ loop.index }}-list" data-bs-toggle="list"
@@ -156,25 +159,19 @@
 
                     <div class="col-1"></div>
 
-                    <div class="col-9">
+                    <div class="col-8">
                         <div class="tab-content mb-3" id="nav-tabContent">
 
-                            {# @var product \BaksDev\Products\Category\Repository\MenuPublicCategory\MenuPublicCategoryResult\MenuPublicProductDTO #}
+                            {# @var product \BaksDev\Products\Product\Repository\Cards\ModelsOrProductsByCategory\ModelOrProductByCategoryResult #}
 
 
                             {% for category in baks_public_menu|filter(v => v.existsProduct is true) %}
 
 
 
-                                {# {% set image_path = '/assets/img/blank.svg' %} #}
-
-                                <div class="tab-pane row row-cols-3 fade {{ loop.index == 1 ? 'show active' : '' }} g-4 m-0"
+                                <div class="tab-pane row row-cols-2 fade {{ loop.index == 1 ? 'show active' : '' }} g-4 m-0"
                                      id="list-{{ loop.index }}" role="tabpanel"
                                      aria-labelledby="list-{{ loop.index }}-list">
-
-                                    {#                                    #}{# Ссылка на категорию в блоке с элементами #}
-                                    {#                                    {{ macros.item_category(i.category_name, i.category_url) }} #}
-
 
                                     <a
                                             class="text-decoration-none h6 m-0 mb-2"
@@ -190,7 +187,6 @@
 
                                         <div class="col d-flex gap-2 border-start">
 
-                                            {# {{ include(_self|replace({ "navbar.html.twig": "img-without-category.html.twig" })) }} #}
 
                                             {% set product_path =  path(
                                                 'products-product:public.model',
@@ -200,11 +196,14 @@
                                                 }
                                             ) %}
 
+                                            {% set cover = product.productRootImages %}
+
                                             {# Обложка #}
+
                                             <a href="{{ product_path }}">
                                                 <div class="rounded-4 icon bg-contain lazy"
                                                      style="width: 60px; height: 60px;"
-                                                     data-bg="{{ cdn_image_path(product.productImage, product.productImageExt, product.productImageCdn) }}"
+                                                     data-bg="{{ cdn_image_path(cover.img, cover.img_ext, cover.img_cdn) }}"
                                                      alt="{{ product.productName }}">
                                                 </div>
                                             </a>
@@ -212,7 +211,7 @@
                                             <div>
 
                                                 {# Если у корневой категории только продукция без вложенных категорий #}
-                                                <h5 class="fs-6 fw-bold" style="max-width: 190px;">
+                                                <h5 class="fs-6 fw-bold" style="max-width: 350px;">
                                                     <a
                                                             class="text-dark text-decoration-none text-truncate d-block"
                                                             href="{{ product_path }}"
