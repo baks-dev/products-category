@@ -27,6 +27,12 @@ use BaksDev\Products\Category\Repository\MenuPublicCategory\MenuPublicCategoryRe
 
 interface MenuPublicCategoryInterface
 {
+
+    /**
+     * Метод позволяет указать количество товаров в категории
+     */
+    public function maxResult(int $max): self;
+
     /**
      * Метод возвращает все категории меню
      * TRUE - если по категории требуется найти всю продукцию

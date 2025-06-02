@@ -33,16 +33,27 @@ use BaksDev\Products\Category\Entity\Info\CategoryProductInfo;
 use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 use BaksDev\Products\Category\Repository\MenuPublicCategory\MenuPublicCategoryResult\MenuPublicCategoryDTO;
 use BaksDev\Products\Category\Repository\MenuPublicCategory\MenuPublicCategoryResult\MenuPublicCategoryResult;
-use BaksDev\Products\Category\Repository\MenuPublicCategory\MenuPublicCategoryResult\MenuPublicProductDTO;
 use BaksDev\Products\Product\Repository\Cards\ModelsByCategory\ModelsByCategoryInterface;
 
 
-final readonly class MenuPublicCategoryRepository implements MenuPublicCategoryInterface
+final  class MenuPublicCategoryRepository implements MenuPublicCategoryInterface
 {
+    private int $max = 6;
+
     public function __construct(
-        private DBALQueryBuilder $DBALQueryBuilder,
-        private ModelsByCategoryInterface $ModelsByCategoryInterface,
+        private readonly DBALQueryBuilder $DBALQueryBuilder,
+        private readonly ModelsByCategoryInterface $ModelsByCategoryInterface,
     ) {}
+
+    /**
+     * Метод позволяет указать количество товаров в категории
+     */
+    public function maxResult(int $max): self
+    {
+        $this->max = $max;
+
+        return $this;
+    }
 
     /**
      * Метод возвращает все категории меню
@@ -130,7 +141,7 @@ final readonly class MenuPublicCategoryRepository implements MenuPublicCategoryI
         {
             $ModelOrProductByCategoryResult = $this->ModelsByCategoryInterface
                 ->inCategories($category->getAllCategoryIdentifier())
-                ->maxResult(6)
+                ->maxResult($this->max)
                 ->findAll();
 
             $category->setProducts($ModelOrProductByCategoryResult);
