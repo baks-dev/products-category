@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -36,15 +36,19 @@ final class CategoryProductUid extends Uid
 
     private mixed $attr;
 
+    private ?string $params;
+
     public function __construct(
         AbstractUid|self|string|null $value = null,
         mixed $options = null,
-        mixed $attr = null
+        mixed $attr = null,
+        ?string $param = null
     )
     {
         parent::__construct($value);
         $this->options = $options;
         $this->attr = $attr;
+        $this->params = $param;
     }
 
     public function getOptions(): mixed
@@ -56,4 +60,20 @@ final class CategoryProductUid extends Uid
     {
         return $this->attr;
     }
+
+    public function getParam(): ?string
+    {
+        if(empty($this->params))
+        {
+            return null;
+        }
+
+        if(false === json_validate($this->params, 512, false))
+        {
+            return null;
+        }
+
+        return json_decode($this->params, 512, JSON_THROW_ON_ERROR);
+    }
+
 }
