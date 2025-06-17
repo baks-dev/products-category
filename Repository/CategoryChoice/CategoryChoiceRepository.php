@@ -201,6 +201,15 @@ final class CategoryChoiceRepository implements CategoryChoiceInterface
         /** Свойства конструктора объекта гидрации */
         $dbal->select('category.id AS value');
         $dbal->addSelect('trans.name AS options');
+        $dbal->addSelect(
+            "JSON_AGG
+            (
+                JSONB_BUILD_OBJECT
+                (
+                    'category_url', info.url 
+                )
+            ) AS params"
+        );
 
         return $dbal
             ->enableCache('products-category', 86400)

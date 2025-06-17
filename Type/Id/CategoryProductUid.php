@@ -42,13 +42,13 @@ final class CategoryProductUid extends Uid
         AbstractUid|self|string|null $value = null,
         mixed $options = null,
         mixed $attr = null,
-        ?string $param = null
+        ?string $params = null
     )
     {
         parent::__construct($value);
         $this->options = $options;
         $this->attr = $attr;
-        $this->params = $param;
+        $this->params = $params;
     }
 
     public function getOptions(): mixed
@@ -75,5 +75,4 @@ final class CategoryProductUid extends Uid
 
         return json_decode($this->params, 512, JSON_THROW_ON_ERROR);
     }
-
 }
