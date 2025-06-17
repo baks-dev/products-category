@@ -61,7 +61,7 @@ final class CategoryProductUid extends Uid
         return $this->attr;
     }
 
-    public function getParam(): ?string
+    public function getParams(): ?string
     {
         if(empty($this->params))
         {
