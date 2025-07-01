@@ -41,10 +41,6 @@ admin:
           postfix: 'Название постфикса модификации'
         postfix: 'Название постфикса множественного варианта'
       delete: 'Вы уверены, что желаете удалить категорию'
-      restrictions:
-        minimal: 'Minimum order quantity below which it is prohibited to place an order'
-        input: 'Default quantity'
-        threshold: 'Product availability threshold'
     header:
       main: 'Основные настройки раздела'
       local: 'Настройки локали'
