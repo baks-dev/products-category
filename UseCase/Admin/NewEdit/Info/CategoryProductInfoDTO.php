@@ -38,6 +38,56 @@ final class CategoryProductInfoDTO implements CategoryProductInfoInterface
     /** Статус активности раздела */
     private bool $active = false;
 
+
+    /** Минимальное количество в заказе ниже которого запрещается оформить заказ */
+    #[Assert\NotBlank]
+    private int $minimal = 1;
+
+    /** Количество по умолчанию (предзаполняет форму) */
+    #[Assert\NotBlank]
+    private int $input = 1;
+
+    /** Порог наличия продукции (default 10) @example «более 10» | «менее 10» */
+    #[Assert\NotBlank]
+    private int $threshold = 10;
+
+    public function getMinimal(): int
+    {
+        return $this->minimal;
+    }
+
+    public function setMinimal(int $minimal): self
+    {
+        $this->minimal = $minimal;
+
+        return $this;
+    }
+
+    public function getInput(): int
+    {
+        return $this->input;
+    }
+
+    public function setInput(int $input): self
+    {
+        $this->input = $input;
+
+        return $this;
+    }
+
+    public function getThreshold(): int
+    {
+        return $this->threshold;
+    }
+
+    public function setThreshold(int $threshold): self
+    {
+        $this->threshold = $threshold;
+
+        return $this;
+    }
+
+
     /** Семантическая ссылка на раздел */
 
     public function getUrl(): ?string

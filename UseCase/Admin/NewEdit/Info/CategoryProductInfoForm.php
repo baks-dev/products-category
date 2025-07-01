@@ -25,11 +25,10 @@ namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Info;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class CategoryProductInfoForm extends AbstractType
 {
@@ -40,6 +39,15 @@ final class CategoryProductInfoForm extends AbstractType
 
         /** Статус активности раздела */
         $builder->add('active', CheckboxType::class, ['required' => false]);
+
+        /** Минимальное количество в заказе ниже которого запрещается оформить заказ */
+        $builder->add('minimal', IntegerType::class);
+
+        /** Количество по умолчанию (предзаполняет форму) */
+        $builder->add('input', IntegerType::class);
+
+        /** Порог наличия продукции (default 10) @example «более 10» | «менее 10» */
+        $builder->add('threshold', IntegerType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
