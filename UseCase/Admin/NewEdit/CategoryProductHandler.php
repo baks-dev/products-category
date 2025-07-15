@@ -99,6 +99,7 @@ final class CategoryProductHandler extends AbstractHandler
         /* Отправляем событие в шину  */
         $this->messageDispatch
             ->addClearCacheOther('products-product')
+            ->addClearCacheOther('avito-board')
             ->dispatch(
             message: new ProductCategoryMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
             transport: 'products-category'
