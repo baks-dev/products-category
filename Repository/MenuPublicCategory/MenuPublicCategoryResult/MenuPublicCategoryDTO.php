@@ -128,7 +128,7 @@ final class MenuPublicCategoryDTO
         return $this->products->valid() === true;
     }
 
-    /** @return Generator{int, ModelOrProductByCategoryResult}|false */
+    /** @return Generator<int, ModelOrProductByCategoryResult>|false */
     public function getProducts(): Generator|false
     {
         return $this->products;
