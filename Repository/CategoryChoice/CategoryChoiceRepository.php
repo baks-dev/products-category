@@ -19,6 +19,7 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
+ *
  */
 
 namespace BaksDev\Products\Category\Repository\CategoryChoice;
@@ -175,21 +176,19 @@ final class CategoryChoiceRepository implements CategoryChoiceInterface
 
         $dbal->from(CategoryProduct::class, 'category');
 
-        /* Категория с определенным идентификатором */
+        /** Категория с определенным идентификатором */
         $dbal
             ->where('category.id = :category')
             ->setParameter('category', $this->category, CategoryProductUid::TYPE);
 
-        /* Выбираем только активные */
-        if($this->active)
-        {
-            $dbal->join(
-                'category',
-                CategoryProductInfo::class,
-                'info',
-                'info.event = category.event AND info.active = true',
-            );
-        }
+        $dbal->join(
+            'category',
+            CategoryProductInfo::class,
+            'info',
+            'info.event = category.event'
+            .($this->active ? ' AND info.active = true' : '')
+            ,
+        );
 
         $dbal->leftJoin(
             'category',
@@ -206,10 +205,12 @@ final class CategoryChoiceRepository implements CategoryChoiceInterface
             (
                 JSONB_BUILD_OBJECT
                 (
-                    'category_url', info.url 
+                    'category_url', info.url
                 )
             ) AS params"
         );
+
+        $dbal->allGroupByExclude();
 
         return $dbal
             ->enableCache('products-category', 86400)
