@@ -28,13 +28,11 @@ namespace BaksDev\Products\Category\Repository\MenuPublicCategory\Tests;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Products\Category\Repository\MenuPublicCategory\MenuPublicCategoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-
-/**
- * @group products-category
- */
+#[Group('products-category')]
 #[When(env: 'test')]
 class MenuPublicCategoryRepositoryTest extends KernelTestCase
 {

@@ -27,12 +27,11 @@ namespace BaksDev\Products\Category\Repository\AllCategory\Tests;
 
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
 use BaksDev\Products\Category\Repository\AllCategory\AllCategoryInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group products-category
- */
+#[Group('products-category')]
 #[When(env: 'test')]
 class AllCategoryRepositoryTest extends KernelTestCase
 {

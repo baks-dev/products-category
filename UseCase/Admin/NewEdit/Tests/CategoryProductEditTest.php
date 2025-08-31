@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -44,18 +44,16 @@ use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\Trans\CategoryProduc
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Seo\CategoryProductSeoCollectionDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Trans\CategoryProductTransDTO;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group category-product
- * @group category-product-usecase
- *
- * @depends BaksDev\Products\Category\UseCase\Admin\NewEdit\Tests\CategoryProductNewTest::class
- */
+#[Group('products-category')]
 #[When(env: 'test')]
 class CategoryProductEditTest extends KernelTestCase
 {
+    #[DependsOnClass(CategoryProductNewTest::class)]
     public function testUseCase(): void
     {
         /** @var CategoryProductCurrentEventInterface $CategoryProductCurrentEvent */

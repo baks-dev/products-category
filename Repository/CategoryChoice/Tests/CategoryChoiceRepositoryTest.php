@@ -19,18 +19,16 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- *
  */
 
 namespace BaksDev\Products\Category\Repository\CategoryChoice\Tests;
 
 use BaksDev\Products\Category\Repository\CategoryChoice\CategoryChoiceInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group products-category
- */
+#[Group('products-category')]
 #[When(env: 'test')]
 class CategoryChoiceRepositoryTest extends KernelTestCase
 {

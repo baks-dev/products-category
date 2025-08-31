@@ -1,17 +1,17 @@
 <?php
 /*
  *  Copyright 2025.  Baks.dev <admin@baks.dev>
- *
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,14 +25,14 @@ namespace BaksDev\Products\Category\Controller\Admin\Tests;
 
 use BaksDev\Products\Category\Security\VoterDelete;
 use BaksDev\Products\Category\Type\Event\CategoryProductEventUid;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Tests\CategoryProductNewTest;
 use BaksDev\Users\User\Tests\TestUserAccount;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group products-category
- * @depends BaksDev\Products\Category\UseCase\Admin\NewEdit\Tests\CategoryProductNewTest::class
- */
+#[Group('products-category')]
 #[When(env: 'test')]
 final class DeleteControllerTest extends WebTestCase
 {
@@ -41,6 +41,7 @@ final class DeleteControllerTest extends WebTestCase
     /**
      * Доступ по роли ROLE_PRODUCT_CATEGORY_DELETE
      */
+    #[DependsOnClass(CategoryProductNewTest::class)]
     public function testRoleSuccessful(): void
     {
         self::ensureKernelShutdown();
@@ -61,6 +62,7 @@ final class DeleteControllerTest extends WebTestCase
     /**
      * Доступ по роли ROLE_ADMIN
      */
+    #[DependsOnClass(CategoryProductNewTest::class)]
     public function testRoleAdminSuccessful(): void
     {
         self::ensureKernelShutdown();
@@ -81,6 +83,7 @@ final class DeleteControllerTest extends WebTestCase
     /**
      * Доступ по роли ROLE_USER
      */
+    #[DependsOnClass(CategoryProductNewTest::class)]
     public function testRoleUserDeny(): void
     {
         self::ensureKernelShutdown();
@@ -102,6 +105,7 @@ final class DeleteControllerTest extends WebTestCase
     /**
      * Доступ по без роли
      */
+    #[DependsOnClass(CategoryProductNewTest::class)]
     public function testGuestFiled(): void
     {
 
