@@ -1,7 +1,7 @@
 <?php
 /*
  *  Copyright 2025.  Baks.dev <admin@baks.dev>
- *  
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
@@ -45,6 +45,9 @@ final class CategoryProductInfoForm extends AbstractType
 
         /** Количество по умолчанию (предзаполняет форму) */
         $builder->add('input', IntegerType::class);
+
+        /** Шаг увеличения/уменьшения кол-ва в форме оформления заказа */
+        $builder->add('step', IntegerType::class, ['required' => true]);
 
         /** Порог наличия продукции (default 10) @example «более 10» | «менее 10» */
         $builder->add('threshold', IntegerType::class);

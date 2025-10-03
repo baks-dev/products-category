@@ -73,6 +73,13 @@ class CategoryProductInfo extends EntityState
     private int $input = 1;
 
     /**
+     * Шаг увеличения/уменьшения кол-ва в форме оформления заказа
+     */
+    #[Assert\Range(min: 1)]
+    #[ORM\Column(type: Types::SMALLINT, options: ['default' => 1])]
+    private int $step = 1;
+
+    /**
      * Порог наличия продукции (default 10)
      * @example «более 10» | «менее 10»
      */
