@@ -33,6 +33,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
 #[Group('products-category')]
+#[Group('products-category-usecase')]
 #[When(env: 'test')]
 final class DeleteControllerTest extends WebTestCase
 {

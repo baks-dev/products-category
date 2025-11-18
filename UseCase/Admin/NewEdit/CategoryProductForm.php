@@ -21,12 +21,22 @@
  *  THE SOFTWARE.
  */
 
+declare(strict_types=1);
+
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit;
 
 use BaksDev\Products\Category\Repository\ParentCategoryChoiceForm\ParentCategoryChoiceInterface;
 use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Cover\CategoryProductCoverForm;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Currency\CategoryProductCurrencyForm;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Domains\CategoryProductDomainForm;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Info\CategoryProductInfoForm;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Landing\CategoryProductLandingCollectionForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\CategoryProductOffersDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\CategoryProductOffersForm;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\CategoryProductSectionCollectionForm;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Seo\CategoryProductSeoCollectionForm;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Trans\CategoryProductTransForm;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -52,10 +62,10 @@ final class CategoryProductForm extends AbstractType
         $builder->add('sort', IntegerType::class);
 
         /** Обложка категории */
-        $builder->add('cover', NewEdit\Cover\CategoryProductCoverForm::class);
+        $builder->add('cover', CategoryProductCoverForm::class);
 
         /** Неизменяемые свойства категории */
-        $builder->add('info', NewEdit\Info\CategoryProductInfoForm::class);
+        $builder->add('info', CategoryProductInfoForm::class);
 
 
         /** Идентификатор родительской категории */
@@ -76,7 +86,7 @@ final class CategoryProductForm extends AbstractType
         );
 
         $builder->add('domain', CollectionType::class, [
-            'entry_type' => NewEdit\Domains\CategoryProductDomainForm::class,
+            'entry_type' => CategoryProductDomainForm::class,
             'entry_options' => ['label' => false],
             'label' => false,
             'by_reference' => false,
@@ -88,7 +98,7 @@ final class CategoryProductForm extends AbstractType
 
         /** Настройки локали категории */
         $builder->add('translate', CollectionType::class, [
-            'entry_type' => NewEdit\Trans\CategoryProductTransForm::class,
+            'entry_type' => CategoryProductTransForm::class,
             'entry_options' => ['label' => false],
             'label' => false,
             'by_reference' => false,
@@ -99,7 +109,7 @@ final class CategoryProductForm extends AbstractType
 
         /** Настройки SEO категории */
         $builder->add('seo', CollectionType::class, [
-            'entry_type' => NewEdit\Seo\CategoryProductSeoCollectionForm::class,
+            'entry_type' => CategoryProductSeoCollectionForm::class,
             'entry_options' => ['label' => false],
             'label' => false,
             'by_reference' => false,
@@ -110,7 +120,7 @@ final class CategoryProductForm extends AbstractType
 
         /** Посадочные блоки */
         $builder->add('landing', CollectionType::class, [
-            'entry_type' => NewEdit\Landing\CategoryProductLandingCollectionForm::class,
+            'entry_type' => CategoryProductLandingCollectionForm::class,
             'entry_options' => ['label' => false],
             'label' => false,
             'by_reference' => false,
@@ -121,7 +131,7 @@ final class CategoryProductForm extends AbstractType
 
         /** Секции свойств продукта категории */
         $builder->add('section', CollectionType::class, [
-            'entry_type' => NewEdit\Section\CategoryProductSectionCollectionForm::class,
+            'entry_type' => CategoryProductSectionCollectionForm::class,
             'entry_options' => ['label' => false],
             'label' => false,
             'by_reference' => false,
@@ -130,17 +140,8 @@ final class CategoryProductForm extends AbstractType
             'prototype_name' => '__category_section__',
         ]);
 
-        /** Торговые предложения */
-
-        /*$builder->add('offer', CollectionType::class, [
-            'entry_type' => NewEdit\Offers\ProductCategoryOffersForm::class,
-            'entry_options' => ['label' => false],
-            'label' => false,
-            'by_reference' => false,
-            'allow_delete' => true,
-            'allow_add' => true,
-            'prototype_name' => '__category_offer__'
-        ]);*/
+        /** Секция настройки автоматического рассчета цены */
+       $builder->add('currency', CategoryProductCurrencyForm::class, ['label' => false]);
 
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event): void {
@@ -157,7 +158,7 @@ final class CategoryProductForm extends AbstractType
 
 
         /** Товары в категории с торговым предложением */
-        $builder->add('offer', NewEdit\Offers\CategoryProductOffersForm::class, ['label' => false]);
+        $builder->add('offer', CategoryProductOffersForm::class, ['label' => false]);
 
 
         /* Сохранить ******************************************************/

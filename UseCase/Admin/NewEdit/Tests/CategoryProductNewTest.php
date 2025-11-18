@@ -32,6 +32,7 @@ use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductHandler;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Currency\CategoryProductCurrencyDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Landing\CategoryProductLandingCollectionDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\CategoryProductOffersDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\Trans\CategoryProductOffersTransDTO;
@@ -46,13 +47,16 @@ use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\Trans\CategoryProduc
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Seo\CategoryProductSeoCollectionDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Trans\CategoryProductTransDTO;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\DependsOnClass;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
 #[Group('products-category')]
+#[Group('products-category-usecase')]
+#[Group('products-product-repository')]
 #[When(env: 'test')]
-class CategoryProductNewTest extends KernelTestCase
+final class CategoryProductNewTest extends KernelTestCase
 {
     public static function setUpBeforeClass(): void
     {
@@ -84,13 +88,13 @@ class CategoryProductNewTest extends KernelTestCase
     public function testUseCase(): void
     {
         /** @see CategoryProductDTO */
-        $CategoryProductDTO = new CategoryProductDTO();
+        $categoryProductDTO = new CategoryProductDTO();
 
 
-        $CategoryProductDTO->setSort(123);
-        self::assertEquals('123', $CategoryProductDTO->getSort());
+        $categoryProductDTO->setSort(123);
+        self::assertEquals('123', $categoryProductDTO->getSort());
 
-        $ProductInfoDTO = $CategoryProductDTO->getInfo();
+        $ProductInfoDTO = $categoryProductDTO->getInfo();
 
 
         $ProductInfoDTO->setActive(true);
@@ -103,10 +107,10 @@ class CategoryProductNewTest extends KernelTestCase
         self::assertEquals('test_category_url', $ProductInfoDTO->getUrl());
 
 
-        $CategoryProductDTO->getLanding();
+        $categoryProductDTO->getLanding();
 
         /** @var CategoryProductLandingCollectionDTO $ProductLandingCollectionDTO */
-        foreach($CategoryProductDTO->getLanding() as $ProductLandingCollectionDTO)
+        foreach($categoryProductDTO->getLanding() as $ProductLandingCollectionDTO)
         {
             $ProductLandingCollectionDTO->setHeader('Test Landing Header');
             self::assertEquals('Test Landing Header', $ProductLandingCollectionDTO->getHeader());
@@ -117,7 +121,7 @@ class CategoryProductNewTest extends KernelTestCase
 
 
         /** @var CategoryProductSeoCollectionDTO $ProductSeoCollectionDTO */
-        foreach($CategoryProductDTO->getSeo() as $ProductSeoCollectionDTO)
+        foreach($categoryProductDTO->getSeo() as $ProductSeoCollectionDTO)
         {
             $ProductSeoCollectionDTO->setTitle('Test Category Seo Title');
             self::assertEquals('Test Category Seo Title', $ProductSeoCollectionDTO->getTitle());
@@ -134,8 +138,8 @@ class CategoryProductNewTest extends KernelTestCase
         /** @var CategoryProductSectionCollectionDTO $ProductSectionCollectionDTO */
 
         $ProductSectionCollectionDTO = new CategoryProductSectionCollectionDTO();
-        $CategoryProductDTO->addSection($ProductSectionCollectionDTO);
-        self::assertCount(1, $CategoryProductDTO->getSection());
+        $categoryProductDTO->addSection($ProductSectionCollectionDTO);
+        self::assertCount(1, $categoryProductDTO->getSection());
 
 
         $ProductSectionFieldCollectionDTO = new CategoryProductSectionFieldCollectionDTO();
@@ -202,7 +206,7 @@ class CategoryProductNewTest extends KernelTestCase
 
 
         /** @var CategoryProductTransDTO $CategoryProductTransDTO */
-        foreach($CategoryProductDTO->getTranslate() as $CategoryProductTransDTO)
+        foreach($categoryProductDTO->getTranslate() as $CategoryProductTransDTO)
         {
             $CategoryProductTransDTO->setName('Test Category Name');
             self::assertEquals('Test Category Name', $CategoryProductTransDTO->getName());
@@ -213,7 +217,7 @@ class CategoryProductNewTest extends KernelTestCase
 
 
         /** @var CategoryProductOffersDTO $CategoryProductOffersDTO */
-        $CategoryProductOffersDTO = $CategoryProductDTO->getOffer();
+        $CategoryProductOffersDTO = $categoryProductDTO->getOffer();
 
         /** @var CategoryProductOffersTransDTO $ProductOffersTransDTO */
         foreach($CategoryProductOffersDTO->getTranslate() as $ProductOffersTransDTO)
@@ -371,14 +375,20 @@ class CategoryProductNewTest extends KernelTestCase
         self::assertSame($InputField, $CategoryProductModificationDTO->getReference());
 
 
+        $categoryProductCurrencyDTO = new CategoryProductCurrencyDTO();
+        $categoryProductDTO->setCurrency($categoryProductCurrencyDTO);
+        $categoryProductCurrencyDTO
+            ->setOpt(10)
+            ->setPrice(20);
+
+
         /** @var CategoryProductHandler $CategoryProductHandler */
         $CategoryProductHandler = self::getContainer()->get(CategoryProductHandler::class);
-        $handle = $CategoryProductHandler->handle($CategoryProductDTO);
+        $handle = $CategoryProductHandler->handle($categoryProductDTO);
 
         self::assertTrue(($handle instanceof CategoryProduct), $handle.': Ошибка CategoryProduct');
 
     }
-
 
     public function testComplete(): void
     {

@@ -41,6 +41,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
 #[Group('products-category')]
+#[Group('products-category-usecase')]
 #[When(env: 'test')]
 class CategoryProductDeleteTest extends KernelTestCase
 {
@@ -87,6 +88,5 @@ class CategoryProductDeleteTest extends KernelTestCase
             ->setParameter('id', CategoryProductUid::TEST);
 
         self::assertFalse($dbal->fetchExist());
-
     }
 }

@@ -34,6 +34,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /** @see CategoryProductSectionField */
 final class CategoryProductSectionFieldCollectionDTO implements CategoryProductSectionFieldInterface
 {
+    private CategoryProductSectionFieldUid $id;
+
     #[Assert\Uuid]
     private ?CategoryProductSectionFieldUid $const = null;
 

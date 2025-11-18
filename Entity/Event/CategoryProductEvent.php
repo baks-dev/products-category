@@ -1,5 +1,4 @@
 <?php
-
 /*
  *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
@@ -21,6 +20,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+declare(strict_types=1);
 
 namespace BaksDev\Products\Category\Entity\Event;
 
@@ -28,6 +28,7 @@ use BaksDev\Core\Entity\EntityState;
 use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Cover\CategoryProductCover;
+use BaksDev\Products\Category\Entity\Currency\CategoryProductCurrency;
 use BaksDev\Products\Category\Entity\Domains\CategoryProductDomain;
 use BaksDev\Products\Category\Entity\Info\CategoryProductInfo;
 use BaksDev\Products\Category\Entity\Landing\CategoryProductLanding;
@@ -45,7 +46,6 @@ use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 
 /* События Category */
-
 #[ORM\Entity]
 #[ORM\Table(name: 'product_category_event')]
 #[ORM\Index(columns: ['category'])]
@@ -107,6 +107,10 @@ class CategoryProductEvent extends EntityState
     #[ORM\OneToOne(targetEntity: CategoryProductOffers::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private ?CategoryProductOffers $offer;
 
+    /** Автоматический рассчет стоимости в валютах */
+    #[ORM\OneToOne(targetEntity: CategoryProductCurrency::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
+    private ?CategoryProductCurrency $currency;
+
 
     public function __construct(?ParentCategoryProductUid $parent = null)
     {
@@ -116,10 +120,9 @@ class CategoryProductEvent extends EntityState
         $this->parent = $parent;
     }
 
-
     public function __toString(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function getMain(): CategoryProductUid
