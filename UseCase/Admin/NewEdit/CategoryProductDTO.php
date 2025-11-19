@@ -21,6 +21,8 @@
  *  THE SOFTWARE.
  */
 
+declare(strict_types=1);
+
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit;
 
 use BaksDev\Core\Type\Locale\Locale;
@@ -28,8 +30,11 @@ use BaksDev\Products\Category\Entity\Event\CategoryProductEventInterface;
 use BaksDev\Products\Category\Type\Event\CategoryProductEventUid;
 use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Cover\CategoryProductCoverDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Currency\CategoryProductCurrencyDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Domains\CategoryProductDomainDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Info\CategoryProductInfoDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Landing\CategoryProductLandingCollectionDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Modify\CategoryProductModifyDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\CategoryProductOffersDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\CategoryProductSectionCollectionDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Seo\CategoryProductSeoCollectionDTO;
@@ -87,23 +92,21 @@ final class CategoryProductDTO implements CategoryProductEventInterface
 
     /**  Модификатор события  */
     #[Assert\Valid]
-    private readonly Modify\CategoryProductModifyDTO $modify;
+    private readonly CategoryProductModifyDTO $modify;
+
+    /** Настройка автоматического рассчета цены */
+    #[Assert\Valid]
+    private CategoryProductCurrencyDTO $currency;
 
 
-    public function __construct(
-        ?ParentCategoryProductUid $parent = null,
-        //CategoryEvent $event = null,
-
-        // bool $active = true,
-        // string $url = null,
-    )
+    public function __construct(?ParentCategoryProductUid $parent = null)
     {
         $this->parent = $parent;
 
         $this->cover = new CategoryProductCoverDTO();
         $this->info = new CategoryProductInfoDTO();
-        $this->modify = new Modify\CategoryProductModifyDTO();
-        $this->offer = new Offers\CategoryProductOffersDTO();
+        $this->modify = new CategoryProductModifyDTO();
+        $this->offer = new CategoryProductOffersDTO();
 
         $this->translate = new ArrayCollection();
         $this->landing = new ArrayCollection();
@@ -312,29 +315,10 @@ final class CategoryProductDTO implements CategoryProductEventInterface
 
     /**  Модификатор события  */
 
-    public function getModify(): Modify\CategoryProductModifyDTO
+    public function getModify(): CategoryProductModifyDTO
     {
         return $this->modify;
     }
-
-
-    /*public function getOffer() : ArrayCollection
-    {
-        return $this->offer;
-    }
-
-    public function addOffer(ProductCategoryOffersDTO $offer) : void
-    {
-        if(!$this->offer->contains($offer))
-        {
-            $this->offer->add($offer);
-        }
-    }
-
-    public function removeOffer(ProductCategoryOffersDTO $offer) : void
-    {
-        $this->offer->removeElement($offer);
-    }*/
 
 
     /** Обложка категории */
@@ -363,9 +347,9 @@ final class CategoryProductDTO implements CategoryProductEventInterface
         return $this;
     }
 
-    public function addDomain(Domains\CategoryProductDomainDTO $domain): self
+    public function addDomain(CategoryProductDomainDTO $domain): self
     {
-        $filter = $this->domain->filter(function(Domains\CategoryProductDomainDTO $element) use ($domain) {
+        $filter = $this->domain->filter(function(CategoryProductDomainDTO $element) use ($domain) {
             return $domain->getDomain() === $element->getDomain();
         });
 
@@ -377,4 +361,14 @@ final class CategoryProductDTO implements CategoryProductEventInterface
         return $this;
     }
 
+    public function getCurrency(): CategoryProductCurrencyDTO
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency(CategoryProductCurrencyDTO $currency): self
+    {
+        $this->currency = $currency;
+        return $this;
+    }
 }

@@ -54,13 +54,10 @@ admin:
       field: 'Поля секции'
       delete: 'Удалить категорию'
       restrictions: 'Ограничения по количеству товаров'
+      currency: 'Автоматический рассчет цены'
     btn:
       section:
         delete: 'Удалить секцию'
-
-
-
-
 
   success:
     new: 'Категория успешно добавлена'
@@ -72,125 +69,3 @@ admin:
     new: '%s: Ошибка при добавлении категории'
     update: '%s: Ошибка при обновлении категории'
     delete: '%s: Ошибка при удалении категории'
-
-
-
-#
-#
-#
-#
-#
-#  category:
-#    title: Категории продуктов
-#    new:
-#      title: Добавить категорию
-#      success: Категория успешно добавлена
-#    form:
-#      locale:
-#        label: Настройки локали
-#      name: Название категории
-#      desc: Краткое описание категории
-#    edit:
-#      title: Редактировать категорию
-#    update:
-#      success: Категория успешно обновлена
-#    column:
-#      name: Название категории
-#    recyclebin:
-#      event:
-#        title: Состояние категории на
-#    delete:
-#      success: Категория успешно удалена
-#    restore:
-#      success: Категория успешно восстановлена
-#    remove:
-#      success: Категория успешно удалена из корзины
-#
-#    settings:
-#      header: Настройки категорий продуктов
-#      truncate:
-#        label: Очищать корзину старше n дней
-#      history:
-#        label: Очищать историю изменений старше n дней
-#    delete:
-#      header: Удалить категорию
-#      h4: "Вы уверены, что желаете удалить категорию"
-#    remove:
-#      header: Удалить из корзины категорию
-#      h4: "Вы уверены в том, что желаете безвозвратно удалить из корзины категорию"
-#    parent:
-#      label: Родительский раздел
-#    url:
-#      label: Символьный код категории
-#    select:
-#      parent:
-#        placeholder: Верхний уровень
-#    restore:
-#      header: Восстановить из корзины категорию
-#      h4: "Вы уверены в том, что желаете восстановить категорию"
-#  product:
-#    categoty:
-#      form:
-#        name: Название раздела
-#        desc: Краткое описание
-#    section:
-#      form:
-#        name: Название секции
-#        desc: Краткое описание
-#    field:
-#      form:
-#        name: Название свойства
-#        desc: Краткое описание
-#    offers:
-#      form:
-#        name: Название торгового предложения
-#        desc: Краткое описание
-#  level:
-#    remove:
-#      danger: Ошибка при удалении категории
-#  products:
-#    category:
-#      parent:
-#        label: Корневая категория
-#      forms:
-#        active: Раздел активен
-#        parent:
-#          cat: Корневая директория
-#
-#form:
-#  section:
-#    btn:
-#      delete: Удалить секцию
-#    header:
-#      product:
-#        properties: Секция свойств продукта
-#  title:
-#    basic:
-#      section:
-#        settings: Основные настройки раздела
-#  main:
-#    title:
-#      locale:
-#        settings: Настройки локали
-#      seo:
-#        information:
-#          settings: Настройки SEO информации
-#  tabs:
-#    title:
-#      section: Раздел
-#      product:
-#        properties: Свойства продукта
-#      trade:
-#        offers: Торговые предложения
-#      landing:
-#        blocks: Посадочные блоки
-#product:
-#  category:
-#    form:
-#      cover:
-#        accepted: "Принимаются только файлы изображений .png, .jpg и .jpeg"
-#error:
-#  category:
-#    upload:
-#      cover: Ошибка загрузки файла
-#

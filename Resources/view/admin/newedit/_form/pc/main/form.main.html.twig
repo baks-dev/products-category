@@ -75,6 +75,7 @@
         </div>
 
     </div>
+
     <div class="d-flex flex-column gap-2 w-50 ">
         <div class="card w-100 border-light">
 
@@ -164,6 +165,34 @@
 
             </div>
 
+        </div>
+
+        <div class="card w-100 border-light">
+            <div class="card-header border-light bg-body">
+                <div class="card-title">
+                    <h4>
+                        {# Настройки рассчета цены  #}
+                        {{ 'admin.form.header.currency'|trans }}
+                    </h4>
+                </div>
+                <div class="card-body pb-0">
+                    {{ form_row(
+                        form.currency.opt,
+                        {
+                            label: 'Процент повышения автоматически рассчитываемой оптовой цены относительно себестоимости',
+                            attr: { min: 0, max: 100 }
+                        })
+                    }}
+
+                    {{ form_row(
+                        form.currency.price,
+                        {
+                            label: 'Процент повышения автоматически рассчитываемой розничной цены относительно себестоимости',
+                            attr: { min: 0, max: 100 }
+                        }
+                    ) }}
+                </div>
+            </div>
         </div>
     </div>
 

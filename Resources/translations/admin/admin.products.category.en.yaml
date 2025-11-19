@@ -52,6 +52,8 @@ admin:
       section: 'Секция свойств продукта'
       field: 'Поля секции'
       delete: 'Удалить категорию'
+      currency: 'Automatic price count'
+
     btn:
       section:
         delete: 'Удалить секцию'
