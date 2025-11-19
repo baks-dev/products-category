@@ -141,7 +141,7 @@ final class CategoryProductForm extends AbstractType
         ]);
 
         /** Секция настройки автоматического рассчета цены */
-       $builder->add('currency', CategoryProductCurrencyForm::class, ['label' => false]);
+        $builder->add('currency', CategoryProductCurrencyForm::class, ['label' => false]);
 
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event): void {
