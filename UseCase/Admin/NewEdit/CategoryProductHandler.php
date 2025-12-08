@@ -29,48 +29,19 @@ use BaksDev\Core\Entity\AbstractHandler;
 use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 use BaksDev\Products\Category\Messenger\ProductCategoryMessage;
-use DomainException;
 
 final class CategoryProductHandler extends AbstractHandler
 {
     public function handle(CategoryProductDTO $command): string|CategoryProduct
     {
 
-        //        if($command->getOffer()?->isOffer())
-        //        {
-        //            $offer = $command->getOffer();
-        //
-        //            if($offer?->getVariation()->isVariation())
-        //            {
-        //                $variation = $offer?->getVariation();
-        //
-        //                if($variation->getModification()->isModification())
-        //                {
-        //
-        //
-        //                }
-        //
-        //            }
-        //
-        //        }
-
         /** Делаем сброс иерархии настроек торговых предложений  */
         $command->resetOffer();
 
         /** Валидация DTO  */
-        $this->validatorCollection->add($command);
-
-        $this->main = new CategoryProduct();
-        $this->event = new CategoryProductEvent();
-
-        try
-        {
-            $command->getEvent() ? $this->preUpdate($command, false) : $this->prePersist($command);
-        }
-        catch(DomainException $errorUniqid)
-        {
-            return $errorUniqid->getMessage();
-        }
+        $this
+            ->setCommand($command)
+            ->preEventPersistOrUpdate(CategoryProduct::class, CategoryProductEvent::class);
 
 
         /** Загружаем файл обложки раздела */
