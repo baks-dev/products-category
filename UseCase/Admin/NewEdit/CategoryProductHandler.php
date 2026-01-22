@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -26,23 +26,22 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit;
 
 use BaksDev\Core\Entity\AbstractHandler;
-use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
-use BaksDev\Products\Category\Messenger\ProductCategoryMessage;
 
 final class CategoryProductHandler extends AbstractHandler
 {
-    public function handle(CategoryProductDTO $command): string|CategoryProduct
+    public function handle(CategoryProductDTO $command): string|bool
     {
-
         /** Делаем сброс иерархии настроек торговых предложений  */
         $command->resetOffer();
+
+        //$this->main = new CategoryProduct();
+        //$this->event = new CategoryProductEvent();
 
         /** Валидация DTO  */
         $this
             ->setCommand($command)
-            ->preEventPersistOrUpdate(CategoryProduct::class, CategoryProductEvent::class);
-
+            ->prePersistOrUpdate(CategoryProductEvent::class, ['id' => $command->getEvent()]);
 
         /** Загружаем файл обложки раздела */
 
@@ -57,27 +56,20 @@ final class CategoryProductHandler extends AbstractHandler
             }
         }
 
-
         /** Валидация всех объектов */
         if($this->validatorCollection->isInvalid())
         {
             return $this->validatorCollection->getErrorUniqid();
         }
 
-
         $this->flush();
 
         /* Отправляем событие в шину  */
         $this->messageDispatch
+            ->addClearCacheOther('products-category')
             ->addClearCacheOther('products-product')
-            ->addClearCacheOther('avito-board')
-            ->dispatch(
-            message: new ProductCategoryMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
-            transport: 'products-category'
-        );
+            ->addClearCacheOther('avito-board');
 
-        return $this->main;
+        return true;
     }
-
-
 }
