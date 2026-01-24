@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit;
 
 use BaksDev\Core\Entity\AbstractHandler;
+use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 
 final class CategoryProductHandler extends AbstractHandler
@@ -38,10 +39,15 @@ final class CategoryProductHandler extends AbstractHandler
         //$this->main = new CategoryProduct();
         //$this->event = new CategoryProductEvent();
 
+
         /** Валидация DTO  */
         $this
             ->setCommand($command)
-            ->prePersistOrUpdate(CategoryProductEvent::class, ['id' => $command->getEvent()]);
+            ->prePersistOrUpdate(
+                entity: CategoryProductEvent::class,
+                criteria: ['id' => $command->getEvent()],
+                main: CategoryProduct::class,
+            );
 
         /** Загружаем файл обложки раздела */
 

@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -265,7 +265,6 @@ final class CategoryProductNewTest extends KernelTestCase
         self::assertTrue($CategoryProductOffersDTO->getQuantitative());
 
 
-
         $CategoryProductOffersDTO->setReference($InputField = new InputField('input'));
         self::assertSame($InputField, $CategoryProductOffersDTO->getReference());
 
@@ -381,12 +380,11 @@ final class CategoryProductNewTest extends KernelTestCase
             ->setOpt(10)
             ->setPrice(20);
 
-
         /** @var CategoryProductHandler $CategoryProductHandler */
         $CategoryProductHandler = self::getContainer()->get(CategoryProductHandler::class);
         $handle = $CategoryProductHandler->handle($categoryProductDTO);
 
-        self::assertTrue(($handle instanceof CategoryProduct), $handle.': Ошибка CategoryProduct');
+        self::assertTrue($handle, 'Ошибка CategoryProduct');
 
     }
 
