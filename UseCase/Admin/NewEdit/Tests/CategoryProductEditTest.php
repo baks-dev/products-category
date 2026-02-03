@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Tests;
 
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
-use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Repository\CategoryProductCurrentEvent\CategoryProductCurrentEventInterface;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductDTO;
@@ -295,6 +294,6 @@ class CategoryProductEditTest extends KernelTestCase
         $CategoryProductHandler = self::getContainer()->get(CategoryProductHandler::class);
         $handle = $CategoryProductHandler->handle($categoryProductDTO);
 
-        self::assertTrue(($handle instanceof CategoryProduct), $handle.': Ошибка CategoryProduct');
+        self::assertTrue($handle, 'Ошибка CategoryProduct');
     }
 }
