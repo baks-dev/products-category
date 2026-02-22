@@ -50,7 +50,6 @@ final class EditController extends AbstractController
         /** @var CategoryProductDTO $ProductCategoryDTO */
         $ProductCategoryDTO = $Event->getDto(CategoryProductDTO::class);
 
-
         // Форма добавления
         $form = $this->createForm(CategoryProductForm::class, $ProductCategoryDTO);
         $form->handleRequest($request);

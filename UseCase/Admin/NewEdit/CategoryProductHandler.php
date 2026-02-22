@@ -36,10 +36,6 @@ final class CategoryProductHandler extends AbstractHandler
         /** Делаем сброс иерархии настроек торговых предложений  */
         $command->resetOffer();
 
-        //$this->main = new CategoryProduct();
-        //$this->event = new CategoryProductEvent();
-
-
         /** Валидация DTO  */
         $this
             ->setCommand($command)
