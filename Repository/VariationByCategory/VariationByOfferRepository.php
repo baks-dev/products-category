@@ -68,7 +68,7 @@ final class VariationByOfferRepository implements VariationByOfferInterface
                 ->setParameter(
                     key: 'offer',
                     value: $this->offer,
-                    type: CategoryProductOffersUid::TYPE
+                    type: CategoryProductOffersUid::TYPE,
                 );
         }
         $qb
@@ -77,7 +77,7 @@ final class VariationByOfferRepository implements VariationByOfferInterface
                 CategoryProductVariation::class,
                 'variation',
                 'WITH',
-                'variation.offer = offer.id'
+                'variation.offer = offer.id',
             );
 
 

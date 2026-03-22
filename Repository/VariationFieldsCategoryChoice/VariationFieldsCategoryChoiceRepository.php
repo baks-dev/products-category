@@ -63,7 +63,7 @@ final class VariationFieldsCategoryChoiceRepository implements VariationFieldsCa
 
         $select = sprintf(
             'new %s(variation.id, trans.name, variation.reference)',
-            CategoryProductVariationUid::class
+            CategoryProductVariationUid::class,
         );
 
         $qb->select($select);
@@ -78,7 +78,7 @@ final class VariationFieldsCategoryChoiceRepository implements VariationFieldsCa
                 ->setParameter(
                     key: 'offer',
                     value: $this->offer,
-                    type: CategoryProductOffersUid::TYPE
+                    type: CategoryProductOffersUid::TYPE,
                 );
         }
 
@@ -87,14 +87,14 @@ final class VariationFieldsCategoryChoiceRepository implements VariationFieldsCa
             CategoryProductVariation::class,
             'variation',
             'WITH',
-            'variation.offer = offer.id'
+            'variation.offer = offer.id',
         );
 
         $qb->leftJoin(
             CategoryProductVariationTrans::class,
             'trans',
             'WITH',
-            'trans.variation = variation.id AND trans.local = :local'
+            'trans.variation = variation.id AND trans.local = :local',
         );
 
         return $qb->getOneOrNullResult();

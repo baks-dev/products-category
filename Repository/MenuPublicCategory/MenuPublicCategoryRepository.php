@@ -46,16 +46,6 @@ final  class MenuPublicCategoryRepository implements MenuPublicCategoryInterface
     ) {}
 
     /**
-     * Метод позволяет указать количество товаров в категории
-     */
-    public function maxResult(int $max): self
-    {
-        $this->max = $max;
-
-        return $this;
-    }
-
-    /**
      * Метод возвращает все категории меню
      */
     public function findAll(bool $products = false): MenuPublicCategoryResult|bool
@@ -172,5 +162,15 @@ final  class MenuPublicCategoryRepository implements MenuPublicCategoryInterface
         //
         //        }
 
+    }
+
+    /**
+     * Метод позволяет указать количество товаров в категории
+     */
+    public function maxResult(int $max): self
+    {
+        $this->max = $max;
+
+        return $this;
     }
 }

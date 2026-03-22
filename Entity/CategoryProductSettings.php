@@ -33,30 +33,30 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'product_category_settings')]
 class CategoryProductSettings
 {
-	/** ID */
-	#[ORM\Id]
-	#[ORM\Column(type: CategoryProductSettingsIdentifier::TYPE)]
-	private CategoryProductSettingsIdentifier $id;
-	
-	/** Очищать корзину старше n дней */
-	#[ORM\Column(type: Types::SMALLINT, length: 3, nullable: false)]
-	private int $truncate = 365;
-	
-	
-	/** Очищать события старше n дней */
-	#[ORM\Column(type: Types::SMALLINT, length: 3, nullable: false)]
-	private int $history = 365;
-	
-	public function __construct()
-	{
-		$this->id = new CategoryProductSettingsIdentifier();
-	}
-	
-	//
-	//    public function setSettings(int $settingsTruncate, int $settingsHistory) : void
-	//    {
-	//        $this->truncate = $settingsTruncate;
-	//        $this->history = $settingsHistory;
-	//    }
-	//
+    /** ID */
+    #[ORM\Id]
+    #[ORM\Column(type: CategoryProductSettingsIdentifier::TYPE)]
+    private CategoryProductSettingsIdentifier $id;
+
+    /** Очищать корзину старше n дней */
+    #[ORM\Column(type: Types::SMALLINT, length: 3, nullable: false)]
+    private int $truncate = 365;
+
+
+    /** Очищать события старше n дней */
+    #[ORM\Column(type: Types::SMALLINT, length: 3, nullable: false)]
+    private int $history = 365;
+
+    public function __construct()
+    {
+        $this->id = new CategoryProductSettingsIdentifier();
+    }
+
+    //
+    //    public function setSettings(int $settingsTruncate, int $settingsHistory) : void
+    //    {
+    //        $this->truncate = $settingsTruncate;
+    //        $this->history = $settingsHistory;
+    //    }
+    //
 }

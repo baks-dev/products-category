@@ -25,7 +25,7 @@ namespace BaksDev\Products\Category\Repository\AllCategoryByMenu;
 
 interface AllCategoryByMenuInterface
 {
-	/** Метод возвращает все категории и их вложенные для двухуровневого меню */
-	
-	public function findAll() : array;
+    /** Метод возвращает все категории и их вложенные для двухуровневого меню */
+
+    public function findAll(): array;
 }

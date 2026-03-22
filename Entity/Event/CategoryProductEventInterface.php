@@ -28,8 +28,8 @@ use BaksDev\Products\Category\Type\Event\CategoryProductEventUid;
 
 interface CategoryProductEventInterface
 {
-	public function getEvent() : ?CategoryProductEventUid;
-	
-	//public function setId(ProductCategoryEventUid $id) : void;
-	//public function getParent() : ?ParentCategoryUid;
+    public function getEvent(): ?CategoryProductEventUid;
+
+    //public function setId(ProductCategoryEventUid $id) : void;
+    //public function getParent() : ?ParentCategoryUid;
 }

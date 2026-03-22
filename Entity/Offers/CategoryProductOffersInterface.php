@@ -25,6 +25,6 @@ namespace BaksDev\Products\Category\Entity\Offers;
 
 interface CategoryProductOffersInterface
 {
-	/** Товары  категории с торговым предложением */
-	public function isOffer() : bool;
+    /** Товары  категории с торговым предложением */
+    public function isOffer(): bool;
 }

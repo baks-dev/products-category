@@ -63,7 +63,7 @@ final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
                 'info',
                 CategoryProduct::class,
                 'product_category',
-                'product_category.event = info.event'
+                'product_category.event = info.event',
             );
 
 
@@ -73,7 +73,7 @@ final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
                 'product_category',
                 CategoryProductEvent::class,
                 'product_category_event',
-                'product_category_event.id = product_category.event'
+                'product_category_event.id = product_category.event',
             );
 
         $dbal
@@ -82,7 +82,7 @@ final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
                 'product_category',
                 CategoryProductTrans::class,
                 'product_category_trans',
-                'product_category_trans.event = product_category_event.id  AND product_category_trans.local = :local'
+                'product_category_trans.event = product_category_event.id  AND product_category_trans.local = :local',
             );
 
 
@@ -93,7 +93,7 @@ final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
                 'product_category',
                 CategoryProductLanding::class,
                 'product_category_landing',
-                'product_category_landing.event = product_category_event.id  AND product_category_landing.local = :local'
+                'product_category_landing.event = product_category_event.id  AND product_category_landing.local = :local',
             );
 
 
@@ -103,7 +103,7 @@ final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
                 'product_category_event',
                 CategoryProduct::class,
                 'parent_product_category',
-                'parent_product_category.id = product_category_event.parent'
+                'parent_product_category.id = product_category_event.parent',
             );
 
         $dbal
@@ -112,7 +112,7 @@ final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
                 'parent_product_category',
                 CategoryProductTrans::class,
                 'parent_product_category_trans',
-                'parent_product_category_trans.event = parent_product_category.event AND parent_product_category_trans.local = :local'
+                'parent_product_category_trans.event = parent_product_category.event AND parent_product_category_trans.local = :local',
             );
 
         $dbal
@@ -122,7 +122,7 @@ final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
                 'parent_product_category',
                 CategoryProductInfo::class,
                 'parent_product_category_info',
-                'parent_product_category_info.event = parent_product_category.event '
+                'parent_product_category_info.event = parent_product_category.event ',
             );
 
 
@@ -131,21 +131,21 @@ final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
             'product_category',
             CategoryProductEvent::class,
             'parent_category_event',
-            'parent_category_event.parent = product_category.id'
+            'parent_category_event.parent = product_category.id',
         );
 
         $dbal->leftJoin(
             'parent_category_event',
             CategoryProductInfo::class,
             'parent_category_info',
-            'parent_category_info.event = parent_category_event.id'
+            'parent_category_info.event = parent_category_event.id',
         );
 
         $dbal->leftJoin(
             'parent_category_event',
             CategoryProductCover::class,
             'parent_category_cover',
-            'parent_category_cover.event = parent_category_event.id'
+            'parent_category_cover.event = parent_category_event.id',
         );
 
 
@@ -154,7 +154,7 @@ final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
             'parent_category_event',
             CategoryProductTrans::class,
             'parent_category_trans',
-            'parent_category_trans.event = parent_category_event.id  AND parent_category_trans.local = :local'
+            'parent_category_trans.event = parent_category_event.id  AND parent_category_trans.local = :local',
         );
 
 
@@ -183,7 +183,7 @@ final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
 					'parent_category_name', parent_category_trans.name
 				)
 		)
-			AS parent_category"
+			AS parent_category",
         );
 
         /** Обложка категории */

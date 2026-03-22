@@ -71,7 +71,7 @@ final class CategoryVariationFormRepository implements CategoryVariationFormInte
             variation.postfix,
             variation_trans.postfix
         )',
-            CategoryVariationFormDTO::class
+            CategoryVariationFormDTO::class,
         );
 
         $orm->select($select);
@@ -86,7 +86,7 @@ final class CategoryVariationFormRepository implements CategoryVariationFormInte
                 ->setParameter(
                     key: 'offer',
                     value: $this->offer,
-                    type: CategoryProductOffersUid::TYPE
+                    type: CategoryProductOffersUid::TYPE,
                 );
         }
 
@@ -94,14 +94,14 @@ final class CategoryVariationFormRepository implements CategoryVariationFormInte
             CategoryProductOffers::class,
             'offer',
             'WITH',
-            'offer.id = variation.offer'
+            'offer.id = variation.offer',
         );
 
         $orm->join(
             CategoryProduct::class,
             'category',
             'WITH',
-            'category.event = offer.event'
+            'category.event = offer.event',
         );
 
 
@@ -109,7 +109,7 @@ final class CategoryVariationFormRepository implements CategoryVariationFormInte
             CategoryProductVariationTrans::class,
             'variation_trans',
             'WITH',
-            'variation_trans.variation = variation.id AND variation_trans.local = :local'
+            'variation_trans.variation = variation.id AND variation_trans.local = :local',
         );
 
 

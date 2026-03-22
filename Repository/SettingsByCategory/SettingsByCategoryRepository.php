@@ -36,9 +36,9 @@ use InvalidArgumentException;
 
 final class SettingsByCategoryRepository implements SettingsByCategoryInterface
 {
-    public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
-
     private CategoryProductUid|false $category = false;
+
+    public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
 
     public function category(CategoryProduct|CategoryProductUid|string $category): self
     {
@@ -85,7 +85,7 @@ final class SettingsByCategoryRepository implements SettingsByCategoryInterface
                 'category',
                 CategoryProductOffers::class,
                 'offer',
-                'offer.event = category.event'
+                'offer.event = category.event',
             );
 
         $dbal
@@ -98,7 +98,7 @@ final class SettingsByCategoryRepository implements SettingsByCategoryInterface
                 'offer',
                 CategoryProductVariation::class,
                 'variation',
-                'variation.offer = offer.id'
+                'variation.offer = offer.id',
             );
 
         $dbal
@@ -111,7 +111,7 @@ final class SettingsByCategoryRepository implements SettingsByCategoryInterface
                 'variation',
                 CategoryProductModification::class,
                 'modification',
-                'modification.variation = variation.id'
+                'modification.variation = variation.id',
             );
 
         return $dbal

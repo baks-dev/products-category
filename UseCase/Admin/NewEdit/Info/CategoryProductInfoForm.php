@@ -58,7 +58,7 @@ final class CategoryProductInfoForm extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class' => CategoryProductInfoDTO::class,
-            ]
+            ],
         );
     }
 

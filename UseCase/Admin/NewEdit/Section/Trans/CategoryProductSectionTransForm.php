@@ -47,8 +47,8 @@ final class CategoryProductSectionTransForm extends AbstractType
                 function($price) {
 
                     return new Locale($price);
-                }
-            )
+                },
+            ),
         );
 
         /** Название секции */

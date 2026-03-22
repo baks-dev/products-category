@@ -33,15 +33,6 @@ final class MenuGroupProducts implements MenuAdminSectionGroupCollectionInterfac
 {
     public const string GROUP = 'products';
 
-
-    /**
-     * Возвращает значение (value)
-     */
-    public function getValue(): string
-    {
-        return self::GROUP;
-    }
-
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -56,5 +47,13 @@ final class MenuGroupProducts implements MenuAdminSectionGroupCollectionInterfac
     public static function equals(string $group): bool
     {
         return self::GROUP === mb_strtolower($group);
+    }
+
+    /**
+     * Возвращает значение (value)
+     */
+    public function getValue(): string
+    {
+        return self::GROUP;
     }
 }

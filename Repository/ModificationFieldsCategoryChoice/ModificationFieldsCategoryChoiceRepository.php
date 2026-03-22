@@ -63,7 +63,7 @@ final class ModificationFieldsCategoryChoiceRepository implements ModificationFi
 
         $select = sprintf(
             'new %s(modification.id, trans.name, modification.reference)',
-            CategoryProductModificationUid::class
+            CategoryProductModificationUid::class,
         );
 
         $orm->select($select);
@@ -77,7 +77,7 @@ final class ModificationFieldsCategoryChoiceRepository implements ModificationFi
                 ->setParameter(
                     key: 'variation',
                     value: $this->variation,
-                    type: CategoryProductVariationUid::TYPE
+                    type: CategoryProductVariationUid::TYPE,
                 );
         }
 
@@ -86,14 +86,14 @@ final class ModificationFieldsCategoryChoiceRepository implements ModificationFi
             CategoryProductModification::class,
             'modification',
             'WITH',
-            'modification.variation = variation.id'
+            'modification.variation = variation.id',
         );
 
         $orm->leftJoin(
             CategoryProductModificationTrans::class,
             'trans',
             'WITH',
-            'trans.modification = modification.id AND trans.local = :local'
+            'trans.modification = modification.id AND trans.local = :local',
         );
 
         return $orm->getOneOrNullResult();

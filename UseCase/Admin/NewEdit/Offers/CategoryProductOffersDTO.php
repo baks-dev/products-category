@@ -237,6 +237,11 @@ final class CategoryProductOffersDTO implements CategoryProductOffersInterface
         return $this->offer;
     }
 
+    public function setOffer(bool $offer): void
+    {
+        $this->offer = $offer;
+    }
+
     public function resetVariation(): void
     {
         $this->variation->resetModification();
@@ -246,13 +251,6 @@ final class CategoryProductOffersDTO implements CategoryProductOffersInterface
             $this->variation = null;
         }
     }
-
-
-    public function setOffer(bool $offer): void
-    {
-        $this->offer = $offer;
-    }
-
 
     public function isPostfix(): bool
     {

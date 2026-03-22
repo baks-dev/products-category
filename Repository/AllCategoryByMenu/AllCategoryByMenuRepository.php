@@ -74,7 +74,7 @@ final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
                 'category',
                 CategoryProductEvent::class,
                 'category_event',
-                'category_event.id = category.event AND category_event.parent IS NULL'
+                'category_event.id = category.event AND category_event.parent IS NULL',
             );
 
         $dbal
@@ -97,7 +97,7 @@ final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
 					CONCAT ( '/upload/".$dbal->table(CategoryProductCover::class)."' , '/', category_cover.name)
 			   		ELSE NULL
 			END AS category_cover_dir
-		"
+		",
             );
 
         $dbal
@@ -105,7 +105,7 @@ final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
                 'category_event',
                 CategoryProductCover::class,
                 'category_cover',
-                'category_cover.event = category_event.id'
+                'category_cover.event = category_event.id',
             );
 
         /* Перевод категории */
@@ -116,7 +116,7 @@ final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
                 'category_event',
                 CategoryProductTrans::class,
                 'category_trans',
-                'category_trans.event = category_event.id AND category_trans.local = :local'
+                'category_trans.event = category_event.id AND category_trans.local = :local',
             );
 
         /* ВЛОЖЕННЫЕ РАЗДЕЛЫ */
@@ -126,21 +126,21 @@ final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
             'category',
             CategoryProductEvent::class,
             'parent_category_event',
-            'parent_category_event.parent = category.id'
+            'parent_category_event.parent = category.id',
         );
 
         $dbal->leftJoin(
             'parent_category_event',
             CategoryProductInfo::class,
             'parent_category_info',
-            'parent_category_info.event = parent_category_event.id'
+            'parent_category_info.event = parent_category_event.id',
         );
 
         $dbal->leftJoin(
             'parent_category_event',
             CategoryProductCover::class,
             'parent_category_cover',
-            'parent_category_cover.event = parent_category_event.id'
+            'parent_category_cover.event = parent_category_event.id',
         );
 
         // $dbal->addSelect('parent_category_trans.name AS parent_category_name');
@@ -148,7 +148,7 @@ final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
             'parent_category_event',
             CategoryProductTrans::class,
             'parent_category_trans',
-            'parent_category_trans.event = parent_category_event.id  AND parent_category_trans.local = :local'
+            'parent_category_trans.event = parent_category_event.id  AND parent_category_trans.local = :local',
         );
 
         $dbal->addSelect(
@@ -176,7 +176,7 @@ final class AllCategoryByMenuRepository implements AllCategoryByMenuInterface
 					'parent_category_name', parent_category_trans.name
 				)
 		)
-			AS parent_category"
+			AS parent_category",
         );
 
         $dbal->orderBy('category_event.sort', 'ASC');

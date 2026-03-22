@@ -47,8 +47,8 @@ final class CategoryProductSeoCollectionForm extends AbstractType
                 function($price) {
 
                     return new Locale($price);
-                }
-            )
+                },
+            ),
         );
 
         /** Шаблон META TITLE */

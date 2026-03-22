@@ -44,7 +44,8 @@ final class CategoryProductModificationUid extends Uid
         AbstractUid|self|string|null $value = null,
         mixed $option = null,
         mixed $field = null,
-    ) {
+    )
+    {
         parent::__construct($value);
 
         $this->option = $option;

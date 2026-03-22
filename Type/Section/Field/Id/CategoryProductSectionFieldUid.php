@@ -37,7 +37,8 @@ final class CategoryProductSectionFieldUid extends Uid
         private readonly mixed $const = null,
         private readonly mixed $attr = null,
         private readonly mixed $property = null,
-    ) {
+    )
+    {
         parent::__construct($value);
 
     }

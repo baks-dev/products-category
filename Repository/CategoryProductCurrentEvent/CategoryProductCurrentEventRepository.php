@@ -98,7 +98,7 @@ final class CategoryProductCurrentEventRepository implements CategoryProductCurr
                 ->setParameter(
                     key: 'main',
                     value: $this->main,
-                    type: CategoryProductUid::TYPE
+                    type: CategoryProductUid::TYPE,
                 );
         }
 
@@ -110,14 +110,14 @@ final class CategoryProductCurrentEventRepository implements CategoryProductCurr
                 ->setParameter(
                     key: 'event',
                     value: $this->event,
-                    type: CategoryProductEventUid::TYPE
+                    type: CategoryProductEventUid::TYPE,
                 );
 
             $qb->join(
                 CategoryProduct::class,
                 'main',
                 'WITH',
-                'main.id = event.category'
+                'main.id = event.category',
             );
         }
 
@@ -128,7 +128,7 @@ final class CategoryProductCurrentEventRepository implements CategoryProductCurr
                 CategoryProductEvent::class,
                 'current',
                 'WITH',
-                'current.id = main.event'
+                'current.id = main.event',
             );
 
         return $qb->getOneOrNullResult() ?: false;

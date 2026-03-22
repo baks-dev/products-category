@@ -25,7 +25,7 @@ namespace BaksDev\Products\Category\Entity\Landing;
 
 interface CategoryProductLandingInterface
 {
-	/*    public function __construct(Locale $local = null);
-		
-		public function setLocal(string|Locale $local) : void;*/
+    /*    public function __construct(Locale $local = null);
+
+        public function setLocal(string|Locale $local) : void;*/
 }

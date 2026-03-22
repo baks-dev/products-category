@@ -27,7 +27,7 @@ use BaksDev\Core\Type\Locale\Locale;
 
 interface CategoryProductModificationTransInterface
 {
-	public function getLocal() : Locale;
-	
-	public function getName() : ?string;
+    public function getLocal(): Locale;
+
+    public function getName(): ?string;
 }

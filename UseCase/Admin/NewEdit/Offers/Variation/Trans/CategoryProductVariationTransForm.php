@@ -48,8 +48,8 @@ final class CategoryProductVariationTransForm extends AbstractType
                 function($price) {
 
                     return new Locale($price);
-                }
-            )
+                },
+            ),
         );
 
         /** Название варианта */

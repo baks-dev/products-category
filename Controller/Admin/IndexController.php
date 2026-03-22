@@ -73,7 +73,7 @@ final class IndexController extends AbstractController
                 'search' => $searchForm->createView(),
                 'parent' => null, // ($cat ? $getParentCategory->get($cat) : null), /* Получаем корневую директорию */
                 'parent_id' => $parent,
-            ]
+            ],
         );
     }
 }

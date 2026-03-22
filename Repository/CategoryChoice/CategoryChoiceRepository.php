@@ -89,7 +89,7 @@ final class CategoryChoiceRepository implements CategoryChoiceInterface
                 'category',
                 CategoryProductEvent::class,
                 'category_event',
-                'category_event.id = category.event'
+                'category_event.id = category.event',
             );
 
         $dbal
@@ -98,7 +98,7 @@ final class CategoryChoiceRepository implements CategoryChoiceInterface
                 'category',
                 CategoryProductTrans::class,
                 'category_trans',
-                'category_trans.event = category.event AND category_trans.local = :local'
+                'category_trans.event = category.event AND category_trans.local = :local',
             );
 
 
@@ -204,7 +204,7 @@ final class CategoryChoiceRepository implements CategoryChoiceInterface
                 (
                     'category_url', info.url
                 )
-            ) AS params"
+            ) AS params",
         );
 
         $dbal->allGroupByExclude();

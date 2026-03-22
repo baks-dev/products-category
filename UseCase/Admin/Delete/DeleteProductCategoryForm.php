@@ -39,7 +39,7 @@ final class DeleteProductCategoryForm extends AbstractType
         $builder->add(
             'delete',
             SubmitType::class,
-            ['label' => 'Delete', 'label_html' => true, 'attr' => ['class' => 'btn-danger']]
+            ['label' => 'Delete', 'label_html' => true, 'attr' => ['class' => 'btn-danger']],
         );
     }
 
@@ -51,7 +51,7 @@ final class DeleteProductCategoryForm extends AbstractType
                 'data_class' => DeleteCategoryProductDTO::class,
                 'method' => 'POST',
                 'attr' => ['class' => 'w-100'],
-            ]
+            ],
         );
     }
 

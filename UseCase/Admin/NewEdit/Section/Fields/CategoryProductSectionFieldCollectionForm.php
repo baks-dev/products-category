@@ -54,7 +54,7 @@ final class CategoryProductSectionFieldCollectionForm extends AbstractType
             [
                 'label' => false,
                 'attr' => ['min' => 0, 'max' => 999],
-            ]
+            ],
         );
 
         /** Настройки локали */
@@ -81,7 +81,7 @@ final class CategoryProductSectionFieldCollectionForm extends AbstractType
                 'choice_label' => function($choice) {
                     return $this->translator->trans('label', domain: $choice->domain());
                 },
-            ]
+            ],
         );
 
         $builder->get('type')->addModelTransformer(
@@ -91,8 +91,8 @@ final class CategoryProductSectionFieldCollectionForm extends AbstractType
                 },
                 function($type) {
                     return $type instanceof FieldsChoiceInterface ? new InputField($type) : null;
-                }
-            )
+                },
+            ),
         );
 
 
@@ -143,7 +143,7 @@ final class CategoryProductSectionFieldCollectionForm extends AbstractType
                 'label_html' => true,
                 'attr' =>
                     ['class' => 'btn btn-sm btn-icon btn-light-danger del-item-field'],
-            ]
+            ],
         );
 
     }
@@ -154,7 +154,7 @@ final class CategoryProductSectionFieldCollectionForm extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class' => CategoryProductSectionFieldCollectionDTO::class,
-            ]
+            ],
         );
     }
 

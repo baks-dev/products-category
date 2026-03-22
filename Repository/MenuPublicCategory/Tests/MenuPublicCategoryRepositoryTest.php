@@ -49,7 +49,6 @@ class MenuPublicCategoryRepositoryTest extends KernelTestCase
         self::assertTrue(true);
 
 
-
     }
 
 }

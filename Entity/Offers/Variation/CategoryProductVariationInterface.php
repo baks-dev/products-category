@@ -25,6 +25,6 @@ namespace BaksDev\Products\Category\Entity\Offers\Variation;
 
 interface CategoryProductVariationInterface
 {
-	/** Торговые предложения в множественными вариантами */
-	public function isVariation() : bool;
+    /** Торговые предложения в множественными вариантами */
+    public function isVariation(): bool;
 }

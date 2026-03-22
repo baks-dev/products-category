@@ -82,7 +82,7 @@ final class CategoryProductForm extends AbstractType
                 'choice_label' => function(ParentCategoryProductUid $type) {
                     return (is_int($type->getLevel()) ? str_repeat(' - ', $type->getLevel() - 1) : '').$type->getOption();
                 },
-            ]
+            ],
         );
 
         $builder->add('domain', CollectionType::class, [
@@ -165,7 +165,7 @@ final class CategoryProductForm extends AbstractType
         $builder->add(
             'Save',
             SubmitType::class,
-            ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-primary']]
+            ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-primary']],
         );
 
     }
@@ -177,7 +177,7 @@ final class CategoryProductForm extends AbstractType
                 'data_class' => CategoryProductDTO::class,
                 'method' => 'POST',
                 'attr' => ['class' => 'w-100'],
-            ]
+            ],
         );
     }
 

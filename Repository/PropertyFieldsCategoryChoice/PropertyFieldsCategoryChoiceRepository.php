@@ -90,7 +90,7 @@ final class PropertyFieldsCategoryChoiceRepository implements PropertyFieldsCate
                 ->setParameter(
                     key: 'category',
                     value: $this->category,
-                    type: CategoryProductUid::TYPE
+                    type: CategoryProductUid::TYPE,
                 );
         }
 

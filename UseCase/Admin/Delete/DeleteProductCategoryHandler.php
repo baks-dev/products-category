@@ -63,7 +63,7 @@ final readonly class DeleteProductCategoryHandler
             $uniqid = uniqid('', false);
             $errorsString = sprintf(
                 'Not found event id in class: %s',
-                $command::class
+                $command::class,
             );
             $this->logger->error($uniqid.': '.$errorsString);
 
@@ -72,7 +72,7 @@ final readonly class DeleteProductCategoryHandler
 
         /* Получаем событие */
         $Event = $this->entityManager->getRepository(CategoryProductEvent::class)->find(
-            $command->getEvent()
+            $command->getEvent(),
         );
 
         if($Event === null)
@@ -81,7 +81,7 @@ final readonly class DeleteProductCategoryHandler
             $errorsString = sprintf(
                 'Not found %s by id: %s',
                 CategoryProductEvent::class,
-                $command->getEvent()
+                $command->getEvent(),
             );
             $this->logger->error($uniqid.': '.$errorsString);
 
@@ -98,7 +98,7 @@ final readonly class DeleteProductCategoryHandler
             $errorsString = sprintf(
                 'Not found %s by event: %s',
                 CategoryProduct::class,
-                $command->getEvent()
+                $command->getEvent(),
             );
             $this->logger->error($uniqid.': '.$errorsString);
 
@@ -118,7 +118,7 @@ final readonly class DeleteProductCategoryHandler
         /* Отправляем событие в шину  */
         $this->messageDispatch->dispatch(
             message: new ProductCategoryMessage($Main->getId(), $Main->getEvent(), $command->getEvent()),
-            transport: 'products-category'
+            transport: 'products-category',
         );
 
         return $Main;

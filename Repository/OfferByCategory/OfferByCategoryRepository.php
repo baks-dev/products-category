@@ -70,7 +70,7 @@ final class OfferByCategoryRepository implements OfferByCategoryInterface
                 ->setParameter(
                     key: 'category',
                     value: $this->category,
-                    type: CategoryProductUid::TYPE
+                    type: CategoryProductUid::TYPE,
                 );
         }
 
@@ -79,7 +79,7 @@ final class OfferByCategoryRepository implements OfferByCategoryInterface
             CategoryProductOffers::class,
             'offer',
             'WITH',
-            'offer.event = category.event'
+            'offer.event = category.event',
         );
 
 

@@ -25,5 +25,5 @@ namespace BaksDev\Products\Category\Entity\Cover;
 
 interface CategoryProductCoverInterface
 {
-	
+
 }

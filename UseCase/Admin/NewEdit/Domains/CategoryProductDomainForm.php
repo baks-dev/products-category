@@ -42,7 +42,7 @@ final class CategoryProductDomainForm extends AbstractType
         $builder->add(
             'delete',
             ButtonType::class,
-            ['label_html' => true]
+            ['label_html' => true],
         );
     }
 

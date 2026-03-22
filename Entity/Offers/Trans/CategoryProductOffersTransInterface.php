@@ -25,5 +25,5 @@ namespace BaksDev\Products\Category\Entity\Offers\Trans;
 
 interface CategoryProductOffersTransInterface
 {
-	
+
 }

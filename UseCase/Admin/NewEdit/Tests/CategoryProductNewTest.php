@@ -252,7 +252,6 @@ final class CategoryProductNewTest extends KernelTestCase
         self::assertTrue($CategoryProductOffersDTO->getImage());
 
 
-
         $CategoryProductOffersDTO->setPostfix(false);
         self::assertFalse($CategoryProductOffersDTO->isPostfix());
         $CategoryProductOffersDTO->setPostfix(true);

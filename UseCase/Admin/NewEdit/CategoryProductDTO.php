@@ -339,20 +339,6 @@ final class CategoryProductDTO implements CategoryProductEventInterface
         $this->cover = $cover;
     }
 
-    /**
-     * Domain
-     */
-    public function getDomain(): ArrayCollection
-    {
-        return $this->domain;
-    }
-
-    public function setDomain(ArrayCollection $domain): self
-    {
-        $this->domain = $domain;
-        return $this;
-    }
-
     public function addDomain(CategoryProductDomainDTO $domain): self
     {
         $filter = $this->domain->filter(function(CategoryProductDomainDTO $element) use ($domain) {
@@ -364,6 +350,20 @@ final class CategoryProductDTO implements CategoryProductEventInterface
             $this->domain->add($domain);
         }
 
+        return $this;
+    }
+
+    /**
+     * Domain
+     */
+    public function getDomain(): ArrayCollection
+    {
+        return $this->domain;
+    }
+
+    public function setDomain(ArrayCollection $domain): self
+    {
+        $this->domain = $domain;
         return $this;
     }
 

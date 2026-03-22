@@ -46,8 +46,8 @@ final class CategoryProductSectionFieldTransForm extends AbstractType
                 function($price) {
 
                     return new Locale($price);
-                }
-            )
+                },
+            ),
         );
 
         /** Название поля */
@@ -62,7 +62,7 @@ final class CategoryProductSectionFieldTransForm extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class' => CategoryProductSectionFieldTransDTO::class,
-            ]
+            ],
         );
     }
 

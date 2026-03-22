@@ -81,6 +81,7 @@ class CategoryProductInfo extends EntityState
 
     /**
      * Порог наличия продукции (default 10)
+     *
      * @example «более 10» | «менее 10»
      */
     #[Assert\Range(min: 1)]

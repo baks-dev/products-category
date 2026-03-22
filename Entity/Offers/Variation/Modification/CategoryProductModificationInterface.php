@@ -25,6 +25,6 @@ namespace BaksDev\Products\Category\Entity\Offers\Variation\Modification;
 
 interface CategoryProductModificationInterface
 {
-	/** Множественный вариант с модификацией */
-	public function isModification() : bool;
+    /** Множественный вариант с модификацией */
+    public function isModification(): bool;
 }

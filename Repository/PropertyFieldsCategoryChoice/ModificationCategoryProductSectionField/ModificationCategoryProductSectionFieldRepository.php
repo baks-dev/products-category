@@ -68,7 +68,7 @@ final class ModificationCategoryProductSectionFieldRepository implements Modific
                 ->setParameter(
                     'variation',
                     $this->variation,
-                    CategoryProductVariationUid::TYPE
+                    CategoryProductVariationUid::TYPE,
                 );
         }
 

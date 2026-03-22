@@ -78,7 +78,7 @@ final class CategoryPropertyByIdRepository implements CategoryPropertyByIdInterf
                 ->setParameter(
                     'category',
                     $this->category,
-                    CategoryProductUid::TYPE
+                    CategoryProductUid::TYPE,
                 );
         }
 
@@ -86,7 +86,7 @@ final class CategoryPropertyByIdRepository implements CategoryPropertyByIdInterf
             'category',
             CategoryProductEvent::class,
             'category_event',
-            'category_event.id = category.event'
+            'category_event.id = category.event',
         );
 
 
@@ -95,7 +95,7 @@ final class CategoryPropertyByIdRepository implements CategoryPropertyByIdInterf
             'category',
             CategoryProductSection::class,
             'section',
-            'section.event = category.event'
+            'section.event = category.event',
         );
 
 
@@ -104,7 +104,7 @@ final class CategoryPropertyByIdRepository implements CategoryPropertyByIdInterf
             'section',
             CategoryProductSectionTrans::class,
             'section_trans',
-            'section_trans.section = section.id AND section_trans.local = :local'
+            'section_trans.section = section.id AND section_trans.local = :local',
         );
 
 
@@ -114,7 +114,7 @@ final class CategoryPropertyByIdRepository implements CategoryPropertyByIdInterf
             'section',
             CategoryProductSectionField::class,
             'field',
-            'field.section = section.id AND field.const IS NOT NULL'
+            'field.section = section.id AND field.const IS NOT NULL',
         );
 
 
@@ -122,7 +122,7 @@ final class CategoryPropertyByIdRepository implements CategoryPropertyByIdInterf
             'field',
             CategoryProductSectionFieldTrans::class,
             'field_trans',
-            'field_trans.field = field.id AND field_trans.local = :local'
+            'field_trans.field = field.id AND field_trans.local = :local',
         );
 
 

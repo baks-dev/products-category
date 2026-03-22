@@ -86,7 +86,7 @@ final class AllCategoryRepository implements AllCategoryInterface
                 CategoryProductEvent::class,
                 'category_event',
                 'category_event.id = category.event AND '.
-                ($parent ? 'category_event.parent = :parent_category' : 'category_event.parent IS NULL')
+                ($parent ? 'category_event.parent = :parent_category' : 'category_event.parent IS NULL'),
             );
 
         // Обложка
@@ -98,7 +98,7 @@ final class AllCategoryRepository implements AllCategoryInterface
                 'category_event',
                 CategoryProductCover::class,
                 'category_cover',
-                'category_cover.event = category_event.id'
+                'category_cover.event = category_event.id',
             );
 
         if($parent)
@@ -117,7 +117,7 @@ final class AllCategoryRepository implements AllCategoryInterface
                 '
                     category_trans.event = category_event.id AND 
                     category_trans.local = :local
-                '
+                ',
             );
 
         /** Количество вложенных категорий */
@@ -142,7 +142,7 @@ final class AllCategoryRepository implements AllCategoryInterface
                 'category_event_count',
                 CategoryProduct::class,
                 'count_cat',
-                'count_cat.id = category_event_count.category AND count_cat.event = category_event_count.id'
+                'count_cat.id = category_event_count.category AND count_cat.event = category_event_count.id',
             );
 
         $dbal->addSelect('('.$dbalCounter->getSQL().') AS category_child_count');
@@ -162,67 +162,6 @@ final class AllCategoryRepository implements AllCategoryInterface
 
         return $this->paginator->fetchAllAssociative($dbal);
 
-    }
-
-
-    public function getRecursive(): array|false
-    {
-        $dbal = $this->DBALQueryBuilder
-            ->createQueryBuilder(self::class)
-            ->bindLocal();
-
-        // Категория
-        $dbal
-            ->select('category.id')
-            ->addSelect('category.event')
-            ->from(CategoryProduct::class, 'category');
-
-        $dbal
-            ->addSelect('category_event.sort')
-            ->addSelect('category_event.parent')
-            ->joinRecursive(
-                'category',
-                CategoryProductEvent::class,
-                'category_event',
-                'category_event.id = category.event'
-            );
-
-        $dbal
-            ->addSelect('category_info.url AS category_url')
-            ->join(
-                'category_event',
-                CategoryProductInfo::class,
-                'category_info',
-                '
-                    category_info.event = category.event AND 
-                    category_info.active IS TRUE'
-            );
-
-        $dbal
-            ->addSelect('category_trans.name AS category_name')
-            ->leftJoin(
-                'category',
-                CategoryProductTrans::class,
-                'category_trans',
-                'category_trans.event = category.event AND category_trans.local = :local'
-            );
-
-
-        $dbal
-            ->addSelect("CONCAT ('/upload/".$dbal->table(CategoryProductCover::class)."' , '/', category_cover.name) AS category_cover_image")
-            ->addSelect('category_cover.cdn AS category_cover_cdn')
-            ->addSelect('category_cover.ext AS category_cover_ext')
-            ->leftJoin(
-                'category',
-                CategoryProductCover::class,
-                'category_cover',
-                'category_cover.event = category.event'
-            );
-
-
-        return $dbal
-            ->enableCache('products-category', 86400)
-            ->findAllRecursive(['parent' => 'id']);
     }
 
     /** Фильтрация категорий, у которых могут быть продукты */
@@ -252,5 +191,65 @@ final class AllCategoryRepository implements AllCategoryInterface
         }
 
         return $result;
+    }
+
+    public function getRecursive(): array|false
+    {
+        $dbal = $this->DBALQueryBuilder
+            ->createQueryBuilder(self::class)
+            ->bindLocal();
+
+        // Категория
+        $dbal
+            ->select('category.id')
+            ->addSelect('category.event')
+            ->from(CategoryProduct::class, 'category');
+
+        $dbal
+            ->addSelect('category_event.sort')
+            ->addSelect('category_event.parent')
+            ->joinRecursive(
+                'category',
+                CategoryProductEvent::class,
+                'category_event',
+                'category_event.id = category.event',
+            );
+
+        $dbal
+            ->addSelect('category_info.url AS category_url')
+            ->join(
+                'category_event',
+                CategoryProductInfo::class,
+                'category_info',
+                '
+                    category_info.event = category.event AND 
+                    category_info.active IS TRUE',
+            );
+
+        $dbal
+            ->addSelect('category_trans.name AS category_name')
+            ->leftJoin(
+                'category',
+                CategoryProductTrans::class,
+                'category_trans',
+                'category_trans.event = category.event AND category_trans.local = :local',
+            );
+
+
+        $dbal
+            ->addSelect("CONCAT ('/upload/".$dbal->table(CategoryProductCover::class)."' , '/', category_cover.name) AS category_cover_image")
+            ->addSelect('category_cover.cdn AS category_cover_cdn')
+            ->addSelect('category_cover.ext AS category_cover_ext')
+            ->leftJoin(
+                'category',
+                CategoryProductCover::class,
+                'category_cover',
+                'category_cover.event = category.event',
+            );
+
+
+        return $dbal
+            ->enableCache('products-category', 86400)
+            ->findAllRecursive(['parent' => 'id']);
     }
 }

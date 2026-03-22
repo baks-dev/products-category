@@ -46,8 +46,8 @@ final class CategoryProductTransForm extends AbstractType
                 function($price) {
 
                     return new Locale($price);
-                }
-            )
+                },
+            ),
         );
 
         /** Название раздела */
@@ -62,7 +62,7 @@ final class CategoryProductTransForm extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class' => CategoryProductTransDTO::class,
-            ]
+            ],
         );
     }
 

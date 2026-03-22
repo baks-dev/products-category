@@ -30,6 +30,6 @@ return static function(TwigConfig $twig) {
 
     $twig->path(
         BaksDevProductsCategoryBundle::PATH.implode(DIRECTORY_SEPARATOR, ['Resources', 'view', '']),
-        'products-category'
+        'products-category',
     );
 };

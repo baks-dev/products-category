@@ -33,23 +33,23 @@ interface AllCategoryInterface
 
     public function search(SearchDTO $search): self;
 
-	/** Возвращает список категорий с ключами:
-	 *
-	 * id - идентификатор <br>
-	 * event - идентификатор события <br>
-	 * category_sort - сортирвка <br>
-	 * category_parent - идентификатор родителя категории <br>
-	 * category_cover_name - название файла обложки  <br>
-	 * category_cover_ext - расширение  файла обложки <br>
-	 * category_cover_cdn - флаг загрузки файла CDN <br>
-	 * category_cover_dir - директория  файла обложки <br>
-	 * category_name - название катеогрии <br>
-	 * category_description - краткое описание обложки <br>
-	 * category_parent_count - количество вложенных категорий <br>
-	 *
-	 */
-	
-	public function fetchProductParentAllAssociative(?ParentCategoryProductUid $parent = null) : PaginatorInterface;
+    /** Возвращает список категорий с ключами:
+     *
+     * id - идентификатор <br>
+     * event - идентификатор события <br>
+     * category_sort - сортирвка <br>
+     * category_parent - идентификатор родителя категории <br>
+     * category_cover_name - название файла обложки  <br>
+     * category_cover_ext - расширение  файла обложки <br>
+     * category_cover_cdn - флаг загрузки файла CDN <br>
+     * category_cover_dir - директория  файла обложки <br>
+     * category_name - название катеогрии <br>
+     * category_description - краткое описание обложки <br>
+     * category_parent_count - количество вложенных категорий <br>
+     *
+     */
+
+    public function fetchProductParentAllAssociative(?ParentCategoryProductUid $parent = null): PaginatorInterface;
 
     public function getRecursive(): array|false;
 

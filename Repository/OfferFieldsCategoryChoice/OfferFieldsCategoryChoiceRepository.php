@@ -77,7 +77,7 @@ final class OfferFieldsCategoryChoiceRepository implements OfferFieldsCategoryCh
                 ->setParameter(
                     key: 'category',
                     value: $this->category,
-                    type: CategoryProductUid::TYPE
+                    type: CategoryProductUid::TYPE,
                 );
         }
 
@@ -85,14 +85,14 @@ final class OfferFieldsCategoryChoiceRepository implements OfferFieldsCategoryCh
             CategoryProductOffers::class,
             'offer',
             'WITH',
-            'offer.event = category.event'
+            'offer.event = category.event',
         );
 
         $orm->leftJoin(
             CategoryProductOffersTrans::class,
             'trans',
             'WITH',
-            'trans.offer = offer.id AND trans.local = :local'
+            'trans.offer = offer.id AND trans.local = :local',
         );
 
         /* Кешируем результат ORM */

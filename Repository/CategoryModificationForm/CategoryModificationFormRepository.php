@@ -76,7 +76,7 @@ final class CategoryModificationFormRepository implements CategoryModificationFo
             modification_trans.postfix
             
         )',
-            CategoryModificationFormDTO::class
+            CategoryModificationFormDTO::class,
         );
 
         $qb->select($select);
@@ -90,7 +90,7 @@ final class CategoryModificationFormRepository implements CategoryModificationFo
                 ->setParameter(
                     key: 'variation',
                     value: $this->variation,
-                    type: CategoryProductVariationUid::TYPE
+                    type: CategoryProductVariationUid::TYPE,
                 );
         }
 
@@ -99,7 +99,7 @@ final class CategoryModificationFormRepository implements CategoryModificationFo
                 CategoryProductVariation::class,
                 'variation',
                 'WITH',
-                'variation.id = modification.variation'
+                'variation.id = modification.variation',
             );
 
         $qb
@@ -107,7 +107,7 @@ final class CategoryModificationFormRepository implements CategoryModificationFo
                 CategoryProductOffers::class,
                 'offer',
                 'WITH',
-                'offer.id = variation.offer'
+                'offer.id = variation.offer',
             );
 
         $qb
@@ -115,7 +115,7 @@ final class CategoryModificationFormRepository implements CategoryModificationFo
                 CategoryProduct::class,
                 'category',
                 'WITH',
-                'category.event = offer.event'
+                'category.event = offer.event',
             );
 
         $qb
@@ -124,7 +124,7 @@ final class CategoryModificationFormRepository implements CategoryModificationFo
                 'modification_trans',
                 'WITH',
                 'modification_trans.modification = modification.id AND 
-                modification_trans.local = :local'
+                modification_trans.local = :local',
             );
 
 

@@ -25,9 +25,9 @@ namespace BaksDev\Products\Category\Entity\Seo;
 
 interface CategoryProductSeoInterface
 {
-	public function getTitle() : ?string;
-	
-	public function getDescription() : ?string;
-	
-	public function getKeywords() : ?string;
+    public function getTitle(): ?string;
+
+    public function getDescription(): ?string;
+
+    public function getKeywords(): ?string;
 }

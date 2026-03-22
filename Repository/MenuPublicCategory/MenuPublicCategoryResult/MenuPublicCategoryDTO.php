@@ -112,12 +112,6 @@ final class MenuPublicCategoryDTO
         return $this->level;
     }
 
-
-    public function setProducts(Generator|false $ModelOrProductByCategoryResult): void
-    {
-        $this->products = $ModelOrProductByCategoryResult;
-    }
-
     public function isExistsProduct(): bool
     {
         if(false === $this->products)
@@ -132,5 +126,10 @@ final class MenuPublicCategoryDTO
     public function getProducts(): Generator|false
     {
         return $this->products;
+    }
+
+    public function setProducts(Generator|false $ModelOrProductByCategoryResult): void
+    {
+        $this->products = $ModelOrProductByCategoryResult;
     }
 }

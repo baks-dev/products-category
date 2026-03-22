@@ -46,6 +46,7 @@ use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 
 /* События Category */
+
 #[ORM\Entity]
 #[ORM\Table(name: 'product_category_event')]
 #[ORM\Index(columns: ['category'])]
@@ -130,12 +131,6 @@ class CategoryProductEvent extends EntityState
         return $this->category;
     }
 
-
-    public function getId(): CategoryProductEventUid
-    {
-        return $this->id;
-    }
-
     public function getNameByLocale(Locale $locale): ?string
     {
         $name = null;
@@ -152,18 +147,20 @@ class CategoryProductEvent extends EntityState
         return $name;
     }
 
-
     public function getCategory(): ?CategoryProductUid
     {
         return $this->category;
     }
-
 
     public function setMain(CategoryProduct|CategoryProductUid $category): void
     {
         $this->category = $category instanceof CategoryProduct ? $category->getId() : $category;
     }
 
+    public function getId(): CategoryProductEventUid
+    {
+        return $this->id;
+    }
 
     public function getDto($dto): mixed
     {

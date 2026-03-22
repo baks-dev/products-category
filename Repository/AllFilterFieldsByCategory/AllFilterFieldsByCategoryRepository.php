@@ -80,7 +80,7 @@ final class AllFilterFieldsByCategoryRepository implements AllFilterFieldsByCate
                 'category',
                 CategoryProductSection::class,
                 'category_section',
-                'category_section.event = category.event'
+                'category_section.event = category.event',
             );
 
         $qb
@@ -91,7 +91,7 @@ final class AllFilterFieldsByCategoryRepository implements AllFilterFieldsByCate
                 'category_section',
                 CategoryProductSectionField::class,
                 'category_section_field',
-                'category_section_field.section = category_section.id AND category_section_field.filter = TRUE'
+                'category_section_field.section = category_section.id AND category_section_field.filter = TRUE',
             );
 
 
@@ -101,7 +101,7 @@ final class AllFilterFieldsByCategoryRepository implements AllFilterFieldsByCate
                 'category_section_field',
                 CategoryProductSectionFieldTrans::class,
                 'category_section_field_trans',
-                'category_section_field_trans.field = category_section_field.id AND category_section_field_trans.local = :local'
+                'category_section_field_trans.field = category_section_field.id AND category_section_field_trans.local = :local',
             );
 
 

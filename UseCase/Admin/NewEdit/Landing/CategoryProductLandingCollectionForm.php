@@ -46,8 +46,8 @@ final class CategoryProductLandingCollectionForm extends AbstractType
                 function($price) {
 
                     return new Locale($price);
-                }
-            )
+                },
+            ),
         );
 
         /** Верхний посадочный блок */
@@ -62,7 +62,7 @@ final class CategoryProductLandingCollectionForm extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class' => CategoryProductLandingCollectionDTO::class,
-            ]
+            ],
         );
     }
 

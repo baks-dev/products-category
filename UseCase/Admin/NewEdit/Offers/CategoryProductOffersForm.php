@@ -61,7 +61,7 @@ final class CategoryProductOffersForm extends AbstractType
                 $form->add(
                     'isReference',
                     CheckboxType::class,
-                    ['mapped' => false, 'required' => false, 'data' => true,]
+                    ['mapped' => false, 'required' => false, 'data' => true,],
                 );
             }
         });
@@ -80,7 +80,7 @@ final class CategoryProductOffersForm extends AbstractType
                 'choice_label' => function($choice) {
                     return $this->translator->trans('label', domain: $choice->domain());
                 },
-            ]
+            ],
         );
 
         $builder->get('reference')->addModelTransformer(
@@ -90,8 +90,8 @@ final class CategoryProductOffersForm extends AbstractType
                 },
                 function($type) {
                     return $type instanceof ReferenceChoiceInterface ? new InputField($type) : null;
-                }
-            )
+                },
+            ),
         );
 
         /** Загрузка пользовательских изображений */
@@ -111,7 +111,6 @@ final class CategoryProductOffersForm extends AbstractType
 
         /** Свойство группировки карточки */
         $builder->add('card', CheckboxType::class, ['required' => false]);
-
 
 
         /* Offers Trans */
@@ -154,7 +153,7 @@ final class CategoryProductOffersForm extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class' => CategoryProductOffersDTO::class,
-            ]
+            ],
         );
     }
 

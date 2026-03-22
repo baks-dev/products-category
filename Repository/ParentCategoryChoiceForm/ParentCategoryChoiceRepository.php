@@ -54,7 +54,7 @@ final readonly class ParentCategoryChoiceRepository implements ParentCategoryCho
                 'category',
                 CategoryProductEvent::class,
                 'category_event',
-                'category_event.id = category.event'
+                'category_event.id = category.event',
             );
 
         $dbal
@@ -63,7 +63,7 @@ final readonly class ParentCategoryChoiceRepository implements ParentCategoryCho
                 'category',
                 CategoryProductTrans::class,
                 'category_trans',
-                'category_trans.event = category.event AND category_trans.local = :local'
+                'category_trans.event = category.event AND category_trans.local = :local',
             );
 
         $result = $dbal

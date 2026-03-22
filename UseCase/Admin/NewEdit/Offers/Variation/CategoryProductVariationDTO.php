@@ -246,5 +246,4 @@ final class CategoryProductVariationDTO implements CategoryProductVariationInter
     }
 
 
-
 }

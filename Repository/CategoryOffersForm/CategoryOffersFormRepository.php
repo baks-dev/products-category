@@ -71,7 +71,7 @@ final class CategoryOffersFormRepository implements CategoryOffersFormInterface
             offers.postfix,
             offers_trans.postfix
         )',
-            CategoryOffersFormDTO::class
+            CategoryOffersFormDTO::class,
         );
 
         $orm->select($select);
@@ -85,13 +85,13 @@ final class CategoryOffersFormRepository implements CategoryOffersFormInterface
                     CategoryProduct::class,
                     'category',
                     'WITH',
-                    'category.event = offers.event'
+                    'category.event = offers.event',
                 )
                 ->where('category.id = :category')
                 ->setParameter(
                     key: 'category',
                     value: $this->category,
-                    type: CategoryProductUid::TYPE
+                    type: CategoryProductUid::TYPE,
                 );
         }
 
@@ -100,7 +100,7 @@ final class CategoryOffersFormRepository implements CategoryOffersFormInterface
                 CategoryProductOffersTrans::class,
                 'offers_trans',
                 'WITH',
-                'offers_trans.offer = offers.id AND offers_trans.local = :local'
+                'offers_trans.offer = offers.id AND offers_trans.local = :local',
             );
 
         return $orm->getOneOrNullResult();

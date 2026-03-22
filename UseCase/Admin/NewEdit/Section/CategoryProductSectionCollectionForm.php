@@ -41,7 +41,7 @@ final class CategoryProductSectionCollectionForm extends AbstractType
             [
                 'label' => false,
                 'attr' => ['min' => 0, 'max' => 999],
-            ]
+            ],
         );
 
         /** Настройки локали секции */
@@ -74,7 +74,7 @@ final class CategoryProductSectionCollectionForm extends AbstractType
                 'label_html' => true,
                 'attr' =>
                     ['class' => 'btn btn-sm  btn-light-danger del-item-section'],
-            ]
+            ],
         );
 
     }
