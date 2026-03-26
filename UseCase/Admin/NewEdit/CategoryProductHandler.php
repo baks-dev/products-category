@@ -53,7 +53,7 @@ final class CategoryProductHandler extends AbstractHandler
 
             if($Cover && $Cover->file !== null)
             {
-                $ProductCategoryCover = $this->event->getUploadCover();
+                $ProductCategoryCover = $this->main->getUploadCover();
                 $this->imageUpload->upload($Cover->file, $ProductCategoryCover);
             }
         }
