@@ -39,6 +39,7 @@ use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\CategoryProductOffers
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\CategoryProductSectionCollectionDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Seo\CategoryProductSeoCollectionDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Trans\CategoryProductTransDTO;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -97,6 +98,11 @@ final class CategoryProductDTO implements CategoryProductEventInterface
     /** Настройка автоматического рассчета цены */
     #[Assert\Valid]
     private CategoryProductCurrencyDTO $currency;
+
+
+    /** Профиль  */
+    #[Assert\Valid]
+    private ?UserProfileUid $profile = null;
 
 
     public function __construct(?ParentCategoryProductUid $parent = null)
@@ -377,4 +383,19 @@ final class CategoryProductDTO implements CategoryProductEventInterface
         $this->currency = $currency;
         return $this;
     }
+
+    /**
+     * Profile
+     */
+    public function getProfile(): ?UserProfileUid
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(?UserProfileUid $profile): self
+    {
+        $this->profile = $profile;
+        return $this;
+    }
+
 }

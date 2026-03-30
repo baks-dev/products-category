@@ -25,18 +25,23 @@ declare(strict_types=1);
 
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit;
 
+use BaksDev\Core\Type\Locale\Locale;
+use BaksDev\Products\Category\Repository\FindExistLanding\FindExistLandingInterface;
 use BaksDev\Products\Category\Repository\ParentCategoryChoiceForm\ParentCategoryChoiceInterface;
 use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Cover\CategoryProductCoverForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Currency\CategoryProductCurrencyForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Domains\CategoryProductDomainForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Info\CategoryProductInfoForm;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Landing\CategoryProductLandingCollectionDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Landing\CategoryProductLandingCollectionForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\CategoryProductOffersDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\CategoryProductOffersForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\CategoryProductSectionCollectionForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Seo\CategoryProductSeoCollectionForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Trans\CategoryProductTransForm;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -51,7 +56,11 @@ final class CategoryProductForm extends AbstractType
 {
     private ParentCategoryChoiceInterface $categoryParent;
 
-    public function __construct(ParentCategoryChoiceInterface $categoryParent)
+    public function __construct(
+        ParentCategoryChoiceInterface $categoryParent,
+        #[Autowire(env: 'PROJECT_PROFILE')] private readonly ?string $projectProfile = null,
+        private readonly FindExistLandingInterface $findExistLanding,
+    )
     {
         $this->categoryParent = $categoryParent;
     }
@@ -152,6 +161,67 @@ final class CategoryProductForm extends AbstractType
             if($data->getOffer() === null)
             {
                 $data->setOffer(new CategoryProductOffersDTO());
+            }
+
+
+            /** @var CategoryProductDTO $CategoryProductDTO */
+            $CategoryProductDTO = $event->getData();
+
+            /* Профиль */
+            /* Задать профиль для CategoryProductDTO использования в контроллерах создания и редактирования */
+            if(false === empty($this->projectProfile))
+            {
+                $CategoryProductDTO->setProfile(new UserProfileUid($this->projectProfile));
+            }
+
+
+            /* При редактировании категории */
+            if(false === empty($CategoryProductDTO->getEvent()))
+            {
+
+                /* Проверить - есть ли посадочный блок по профилю */
+                $ExistLanding = $this->findExistLanding
+                    ->byEvent($CategoryProductDTO->getEvent())
+                    ->byProfile($CategoryProductDTO->getProfile())
+                    ->exist();
+
+                if(false === $ExistLanding)
+                {
+
+                    /* "Пустой" посадочный блок НЕ добавляется, если вообще нет записей по landing по данной категории */
+                    /* Т.е. проверить есть ли посадочные блоки по данной категории */
+                    $existByEvent = $this->findExistLanding
+                        ->byEvent($CategoryProductDTO->getEvent())
+                        ->existByEvent();
+
+
+                    /* Проверить кейс когда есть посадочный блок, НО без профиля */
+                    $CategoryProductLandingCollection = $CategoryProductDTO->getLanding();
+
+                    $addLanding = true;
+                    /** @var CategoryProductLandingCollectionDTO $landing */
+                    foreach($CategoryProductLandingCollection as $landing)
+                    {
+                        if(empty($landing->getProfile()))
+                        {
+                            $addLanding = false;
+                        }
+                    }
+
+
+                    /**
+                     * Добавить новый "пустой" посадочный блок (c указанием профиля) при условии,
+                     * что есть запись с CategoryProductEvent, но без profile
+                     */
+                    if(true === $existByEvent && $addLanding)
+                    {
+                        $newLanding = new CategoryProductLandingCollectionDTO();
+                        $newLanding->setLocal(new Locale(Locale::default()));
+                        $newLanding->setProfile($CategoryProductDTO->getProfile());
+                        $CategoryProductDTO->addLanding($newLanding);
+                    }
+
+                }
             }
 
         });

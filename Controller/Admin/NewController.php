@@ -32,6 +32,7 @@ use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductHandler;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Landing\CategoryProductLandingCollectionDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,15 +74,24 @@ final class NewController extends AbstractController
             // $category->copy();
         }
 
+
         // Форма добавления
         $form = $this->createForm(CategoryProductForm::class, $category);
         $form->handleRequest($request);
 
+
+        /* Добавить профиль в коллекцию landing (посадочные блоки) */
+        $CategoryProductLandingCollection = $category->getLanding();
+
+        /** @var CategoryProductLandingCollectionDTO $landingDTO */
+        foreach($CategoryProductLandingCollection as $landingDTO)
+        {
+            $landingDTO->setProfile($category->getProfile());
+        }
+
+
         if($form->isSubmitted() && $form->isValid() && $form->has('Save'))
         {
-            //dd($request->request);
-
-            //$this->refreshTokenForm($form);
 
             $ProductCategory = $handler->handle($category);
 

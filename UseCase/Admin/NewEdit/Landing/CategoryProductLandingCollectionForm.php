@@ -24,6 +24,7 @@
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Landing;
 
 use BaksDev\Core\Type\Locale\Locale;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -55,6 +56,21 @@ final class CategoryProductLandingCollectionForm extends AbstractType
 
         /** Нижний посадочный блок */
         $builder->add('bottom', TextareaType::class, ['required' => false]);
+
+
+        /** Профиль пользователя */
+        $builder->add('profile', HiddenType::class);
+
+        $builder->get('profile')->addModelTransformer(
+            new CallbackTransformer(
+                function($profile) {
+                    return $profile instanceof UserProfileUid ? $profile->getValue() : $profile;
+                },
+                function($profile) {
+                    return $profile ? new UserProfileUid($profile) : null;
+                }
+            )
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

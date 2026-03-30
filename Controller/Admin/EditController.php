@@ -26,9 +26,11 @@ namespace BaksDev\Products\Category\Controller\Admin;
 use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Products\Category\Entity;
+use BaksDev\Products\Category\Repository\FindExistLanding\FindExistLandingInterface;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductHandler;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Landing\CategoryProductLandingCollectionDTO;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,20 +46,50 @@ final class EditController extends AbstractController
         Request $request,
         #[MapEntity] Entity\Event\CategoryProductEvent $Event,
         CategoryProductHandler $handler,
+        FindExistLandingInterface $findExistLanding
     ): Response
     {
 
         /** @var CategoryProductDTO $ProductCategoryDTO */
         $ProductCategoryDTO = $Event->getDto(CategoryProductDTO::class);
 
+
         // Форма добавления
         $form = $this->createForm(CategoryProductForm::class, $ProductCategoryDTO);
         $form->handleRequest($request);
 
 
+        $ExistLanding = $findExistLanding
+            ->byEvent($Event->getId())
+            ->byProfile($ProductCategoryDTO->getProfile())
+            ->exist();
+
+
         if($form->isSubmitted() && $form->isValid() && $form->has('Save'))
         {
+
             $this->refreshTokenForm($form);
+
+
+            /* Если у категории нет лендинга у профиля */
+            if(false === $ExistLanding)
+            {
+
+                $CategoryProductLandingCollection = $ProductCategoryDTO->getLanding();
+                /** @var CategoryProductLandingCollectionDTO $landing */
+                foreach($CategoryProductLandingCollection as $landing)
+                {
+
+                    // При редактировании: если профиль = null, то задать его
+                    if(empty($landing->getProfile()))
+                    {
+                        // Заполнить значением текущего профиля
+                        $landing->setProfile($ProductCategoryDTO->getProfile());
+                    }
+
+                }
+            }
+
 
             $ProductCategory = $handler->handle($ProductCategoryDTO);
 
@@ -73,6 +105,9 @@ final class EditController extends AbstractController
             return $this->redirectToReferer();
         }
 
-        return $this->render(['form' => $form->createView()]);
+        return $this->render([
+            'form' => $form->createView(),
+            'landing_profile' => $ProductCategoryDTO->getProfile()->getValue(),
+        ]);
     }
 }

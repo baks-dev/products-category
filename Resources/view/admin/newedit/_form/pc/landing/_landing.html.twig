@@ -1,8 +1,6 @@
 {% trans_default_domain 'admin.products.category' %}
 
-
-
-{% if form. landing.count > 1 %}
+{% if form.landing.count > 1 %}
 
     <ul class="nav nav-pills gap-3 mb-3" id="nav-{{ form. landing.vars.id }}" role="tablist">
 
@@ -19,7 +17,10 @@
                         data-bs-target="#nav-{{ form. landing.vars.id }}-{{ landing.vars.value.local }}"
                         aria-controls="nav-{{ form. landing.vars.id }}-{{ landing.vars.value.local }}"
                 >
-                    <small class="text-uppercase px-3">{{ landing.vars.value.local.value|trans({}, 'core') }}</small>
+                    {% if landing.vars.value.local.value is defined %}
+                         <small class="text-uppercase px-3">{{ landing.vars.value.local.value|trans({}, 'core') }}</small>
+                    {% endif %}
+
                 </button>
 
 
@@ -38,27 +39,33 @@
 
     {% for landing in form.landing %}
 
-        <div class="tab-pane fade{{ app.request.locale == landing.vars.value.local? ' show active' : '' }}"
-             role="tabpanel"
-             id="nav-{{ form.landing.vars.id }}-{{ landing.vars.value.local }}"
-             aria-labelledby="nav-{{ form.landing.vars.id }}-{{ landing.vars.value.local }}-tab"
-        >
+       {% set display = landing_profile is defined and  landing.vars.value.profile.value is defined and landing.vars.value.profile.value != landing_profile ? 'd-none' : '' %}
 
-            {{ form_row(landing.local) }}
+            <div class="tab-pane fade{{ app.request.locale == landing.vars.value.local? ' show active' : '' }} {{ display }} "
+                 role="tabpanel"
+                 id="nav-{{ form.landing.vars.id }}-{{ landing.vars.value.local }}"
+                 aria-labelledby="nav-{{ form.landing.vars.id }}-{{ landing.vars.value.local }}-tab"
+            >
 
-            {#  Верхний блок #}
-            {{ form_row(landing.header, {
-                label : 'Заголовочный блок'|trans,
-                attr: { class: 'ckeditor', 'data-nonce' : csp_nonce() }
-            }) }}
+                {{ form_row(landing.local) }}
 
-            {# Нижний блок #}
-            {{ form_row(landing.bottom, {
-                label: 'Нижний блок'|trans,
-                attr: { class: 'ckeditor', 'data-nonce' : csp_nonce() }
-            }) }}
+                {{ form_row(landing.profile) }}
 
-        </div>
+                {# Верхний блок#}
+                {{ form_row(landing.header, {
+                    label : 'Заголовочный блок'|trans,
+                    attr: { class: 'ckeditor', 'data-nonce' : csp_nonce() }
+                }) }}
+
+                {# Нижний блок#}
+                {{ form_row(landing.bottom, {
+                    label: 'Нижний блок'|trans,
+                    attr: { class: 'ckeditor', 'data-nonce' : csp_nonce() }
+                }) }}
+
+
+            </div>
+
     {% endfor %}
 
 </div>

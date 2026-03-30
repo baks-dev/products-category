@@ -27,6 +27,7 @@ use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 use BaksDev\Products\Category\Entity\Landing\CategoryProductLandingInterface;
 use BaksDev\Products\Category\Type\Event\CategoryProductEventUid;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use ReflectionProperty;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -45,6 +46,9 @@ final class CategoryProductLandingCollectionDTO implements CategoryProductLandin
 
     /** Нижний посадочный блок */
     private ?string $bottom = null;
+
+    /** Профиль */
+    private ?UserProfileUid $profile = null;
 
 
     public function withEvent(CategoryProductEvent|CategoryProductEventUid $event): void
@@ -95,6 +99,20 @@ final class CategoryProductLandingCollectionDTO implements CategoryProductLandin
     public function setBottom(?string $bottom): void
     {
         $this->bottom = $bottom;
+    }
+
+    /**
+     * Профиль
+     */
+    public function getProfile(): ?UserProfileUid
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(?UserProfileUid $profile): self
+    {
+        $this->profile = $profile;
+        return $this;
     }
 
 }

@@ -26,6 +26,8 @@ namespace BaksDev\Products\Category\Entity\Landing;
 use BaksDev\Core\Entity\EntityState;
 use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
+use BaksDev\Products\Category\Type\Landing\Id\CategoryProductLandingUid;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
@@ -34,16 +36,21 @@ use InvalidArgumentException;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'product_category_landing')]
+#[ORM\Index(columns: ['local', 'event', 'profile'])]
 class CategoryProductLanding extends EntityState
 {
-    /** Связь на событие */
+
+    /** ID */
     #[ORM\Id]
+    #[ORM\Column(type: CategoryProductLandingUid::TYPE)]
+    private readonly CategoryProductLandingUid $id;
+
+    /** Связь на событие */
     #[ORM\ManyToOne(targetEntity: CategoryProductEvent::class, inversedBy: "landing")]
     #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
     private readonly CategoryProductEvent $event;
 
     /** Локаль */
-    #[ORM\Id]
     #[ORM\Column(type: Locale::TYPE, length: 2)]
     private readonly Locale $local;
 
@@ -55,8 +62,13 @@ class CategoryProductLanding extends EntityState
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $bottom;
 
+
+    #[ORM\Column(type: UserProfileUid::TYPE, nullable: true)]
+    private ?UserProfileUid $profile = null;
+
     public function __construct(CategoryProductEvent $event)
     {
+        $this->id = new CategoryProductLandingUid();
         $this->event = $event;
     }
 
