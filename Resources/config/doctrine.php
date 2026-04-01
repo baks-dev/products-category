@@ -40,6 +40,8 @@ use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationType
 use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
 use BaksDev\Products\Category\Type\Parent\ParentCategoryProductType;
 use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
+use BaksDev\Products\Category\Type\Project\CategoryProductProjectType;
+use BaksDev\Products\Category\Type\Project\CategoryProductProjectUid;
 use BaksDev\Products\Category\Type\Section\Field\Const\CategoryProductSectionFieldConst;
 use BaksDev\Products\Category\Type\Section\Field\Const\CategoryProductSectionFieldConstType;
 use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldType;
@@ -69,6 +71,8 @@ return static function(ContainerConfigurator $container, DoctrineConfig $doctrin
     $doctrine->dbal()->type(CategoryProductVariationUid::TYPE)->class(CategoryProductVariationType::class);
     $doctrine->dbal()->type(CategoryProductModificationUid::TYPE)->class(CategoryProductModificationType::class);
     $doctrine->dbal()->type(CategoryProductModificationTypeUid::TYPE)->class(CategoryProductModificationTypeType::class);
+
+    $doctrine->dbal()->type(CategoryProductProjectUid::TYPE)->class(CategoryProductProjectType::class);
 
 
     /** Резолверы */

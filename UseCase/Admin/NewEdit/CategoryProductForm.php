@@ -31,12 +31,14 @@ use BaksDev\Products\Category\UseCase\Admin\NewEdit\Cover\CategoryProductCoverFo
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Currency\CategoryProductCurrencyForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Domains\CategoryProductDomainForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Info\CategoryProductInfoForm;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Landing\CategoryProductLandingCollectionForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\CategoryProductOffersDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\CategoryProductOffersForm;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Project\CategoryProductProjectForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\CategoryProductSectionCollectionForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Seo\CategoryProductSeoCollectionForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Trans\CategoryProductTransForm;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -51,7 +53,10 @@ final class CategoryProductForm extends AbstractType
 {
     private ParentCategoryChoiceInterface $categoryParent;
 
-    public function __construct(ParentCategoryChoiceInterface $categoryParent)
+    public function __construct(
+        ParentCategoryChoiceInterface $categoryParent,
+        #[Autowire(env: 'PROJECT_PROFILE')] private readonly ?string $projectProfile = null,
+    )
     {
         $this->categoryParent = $categoryParent;
     }
@@ -119,15 +124,16 @@ final class CategoryProductForm extends AbstractType
         ]);
 
         /** Посадочные блоки */
-        $builder->add('landing', CollectionType::class, [
-            'entry_type' => CategoryProductLandingCollectionForm::class,
-            'entry_options' => ['label' => false],
-            'label' => false,
-            'by_reference' => false,
-            'allow_delete' => true,
-            'allow_add' => true,
-            'prototype_name' => '__category_landing__',
-        ]);
+        /* TODO удалить после удаления сущности CategoryProductLanding */
+        //        $builder->add('landing', CollectionType::class, [
+        //            'entry_type' => CategoryProductLandingCollectionForm::class,
+        //            'entry_options' => ['label' => false],
+        //            'label' => false,
+        //            'by_reference' => false,
+        //            'allow_delete' => true,
+        //            'allow_add' => true,
+        //            'prototype_name' => '__category_landing__',
+        //        ]);
 
         /** Секции свойств продукта категории */
         $builder->add('section', CollectionType::class, [
@@ -154,11 +160,25 @@ final class CategoryProductForm extends AbstractType
                 $data->setOffer(new CategoryProductOffersDTO());
             }
 
+            /** @var CategoryProductDTO $CategoryProductDTO */
+            $CategoryProductDTO = $event->getData();
+
+            /* Профиль */
+            /* Задать профиль для CategoryProductDTO */
+            if(false === empty($this->projectProfile))
+            {
+                $CategoryProductDTO->setProfile(new UserProfileUid($this->projectProfile));
+            }
+
         });
 
 
         /** Товары в категории с торговым предложением */
         $builder->add('offer', CategoryProductOffersForm::class, ['label' => false]);
+
+
+        /* CategoryProductProject */
+        $builder->add('project', CategoryProductProjectForm::class, ['label' => false]);
 
 
         /* Сохранить ******************************************************/

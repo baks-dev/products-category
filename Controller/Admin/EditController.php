@@ -26,6 +26,8 @@ namespace BaksDev\Products\Category\Controller\Admin;
 use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Products\Category\Entity;
+use BaksDev\Products\Category\Repository\CategoryProject\CategoryProjectInterface;
+use BaksDev\Products\Category\Repository\CategoryProject\CategoryProjectResult;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductHandler;
@@ -44,16 +46,34 @@ final class EditController extends AbstractController
         Request $request,
         #[MapEntity] Entity\Event\CategoryProductEvent $Event,
         CategoryProductHandler $handler,
+        CategoryProjectInterface $productProject,
     ): Response
     {
 
         /** @var CategoryProductDTO $ProductCategoryDTO */
         $ProductCategoryDTO = $Event->getDto(CategoryProductDTO::class);
 
+
+        /* Получить CategoryProjectProfile */
+
+        $existingProjectProfile = $productProject
+            ->byCategory($Event->getMain())
+            ->find();
+
+        /* Задать значения для bottom и header */
+        if(true === ($existingProjectProfile instanceof CategoryProjectResult))
+        {
+            $project = $ProductCategoryDTO->getProject();
+            $landingDTO = $project->getLanding();
+
+            $landingDTO->setHeader($existingProjectProfile->getHeader());
+            $landingDTO->setBottom($existingProjectProfile->getBottom());
+        }
+
+
         // Форма добавления
         $form = $this->createForm(CategoryProductForm::class, $ProductCategoryDTO);
         $form->handleRequest($request);
-
 
         if($form->isSubmitted() && $form->isValid() && $form->has('Save'))
         {

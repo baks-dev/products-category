@@ -28,6 +28,7 @@ namespace BaksDev\Products\Category\UseCase\Admin\NewEdit;
 use BaksDev\Core\Entity\AbstractHandler;
 use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
+use BaksDev\Products\Category\Entity\Project\CategoryProductProject;
 
 final class CategoryProductHandler extends AbstractHandler
 {
@@ -64,7 +65,43 @@ final class CategoryProductHandler extends AbstractHandler
             return $this->validatorCollection->getErrorUniqid();
         }
 
+
+        if(true === ($this->main instanceof CategoryProductEvent))
+        {
+            /** Сохранение сущности CategoryProductProject */
+
+            /* Подготовить данные по категории и профилю */
+            $CategoryProductProjectDTO = $command->getProject();
+
+            $CategoryProductProjectDTO->setProfile($command->getProfile());
+            $CategoryProductProjectDTO->setCategory($this->main->getCategory());
+
+
+            /* Проверить на существование CategoryProductProject */
+
+            $ExistingCategoryProject = $this->getRepository(CategoryProductProject::class)
+                ->findOneBy([
+                    'category' => $this->main->getCategory(),
+                    'profile' => $command->getProfile()
+                ]);
+
+
+            $CategoryProductProject = (true === empty($ExistingCategoryProject))
+                ? new CategoryProductProject()
+                : $ExistingCategoryProject;
+
+
+            $CategoryProductProject->setEntity($CategoryProductProjectDTO);
+
+            if(true === empty($ExistingCategoryProject))
+            {
+                $this->persist($CategoryProductProject);
+            }
+
+        }
+
         $this->flush();
+
 
         /* Отправляем событие в шину  */
         $this->messageDispatch
