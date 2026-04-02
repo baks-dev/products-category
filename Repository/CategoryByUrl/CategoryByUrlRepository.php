@@ -31,6 +31,8 @@ use BaksDev\Products\Category\Entity\Cover\CategoryProductCover;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 use BaksDev\Products\Category\Entity\Info\CategoryProductInfo;
 use BaksDev\Products\Category\Entity\Landing\CategoryProductLanding;
+use BaksDev\Products\Category\Entity\Project\CategoryProductProject;
+use BaksDev\Products\Category\Entity\Project\Landing\CategoryProductProjectLanding;
 use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 
 final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
@@ -86,15 +88,73 @@ final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
             );
 
 
+        /* Получить посадочные блоки с учетом PROJECT_PROFILE */
+        /* TODO пока есть данные по CategoryProductLanding. */
         $dbal
-            ->addSelect('product_category_landing.header AS category_header')
-            ->addSelect('product_category_landing.bottom AS category_bottom')
+            ->addSelect(
+            'COALESCE(
+                product_category_project_landing.header,
+                product_category_landing.header
+            ) AS category_header'
+            )
+            ->addSelect(
+            'COALESCE(
+                product_category_project_landing.bottom,
+                product_category_landing.bottom
+            ) AS category_bottom'
+            )
             ->leftJoin(
                 'product_category',
                 CategoryProductLanding::class,
                 'product_category_landing',
-                'product_category_landing.event = product_category_event.id  AND product_category_landing.local = :local',
+                'product_category_landing.event = product_category_event.id AND product_category_landing.local = :local',
             );
+
+        /* CategoryProductProject с учетом PROJECT_PROFILE либо NULL */
+        $and_profile = true === $dbal->bindProjectProfile()
+            ? ' AND (product_category_project.profile = :'.$dbal::PROJECT_PROFILE_KEY.' OR product_category_project.profile IS NULL)'
+            : '';
+
+        $dbal->leftJoin(
+            'product_category',
+            CategoryProductProject::class,
+            'product_category_project',
+            'product_category_project.category = product_category.id'.$and_profile
+        );
+
+        /* CategoryProductProjectLanding */
+        $dbal
+            ->leftJoin(
+                'product_category_project',
+                CategoryProductProjectLanding::class,
+                'product_category_project_landing',
+                'product_category_project_landing.project = product_category_project.id AND product_category_project_landing.local = :local'
+            );
+
+
+        /* TODO использовать после удаления CategoryProductLanding (вместо блока выше) */
+        //        $and_profile = true === $dbal->bindProjectProfile()
+        //            ? ' AND (product_category_project.profile = :'.$dbal::PROJECT_PROFILE_KEY.' OR product_category_project.profile IS NULL)'
+        //            : '';
+        //
+        //        $dbal->leftJoin(
+        //            'product_category',
+        //            CategoryProductProject::class,
+        //            'product_category_project',
+        //            'product_category_project.category = product_category.id'
+        //            . $and_profile,
+        //        );
+        //
+        //        $dbal
+        //            ->addSelect('product_category_project_landing.header AS category_header')
+        //            ->addSelect('product_category_project_landing.bottom AS category_bottom')
+        //            ->leftJoin(
+        //                'product_category_project',
+        //                CategoryProductProjectLanding::class,
+        //                'product_category_project_landing',
+        //                'product_category_project_landing.project = product_category_project.id AND product_category_project_landing.local = :local'
+        //
+        //            );
 
 
         /** КОРНЕВОЙ РАЗДЕЛ */
