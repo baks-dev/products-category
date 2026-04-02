@@ -85,7 +85,7 @@ final class NewController extends AbstractController
 
             $ProductCategory = $handler->handle($category);
 
-            if($ProductCategory instanceof Entity\CategoryProduct)
+            if(true === $ProductCategory)
             {
                 $this->addFlash('success', 'admin.success.new', 'admin.products.category');
 

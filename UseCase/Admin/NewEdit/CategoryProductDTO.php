@@ -36,9 +36,11 @@ use BaksDev\Products\Category\UseCase\Admin\NewEdit\Info\CategoryProductInfoDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Landing\CategoryProductLandingCollectionDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Modify\CategoryProductModifyDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\CategoryProductOffersDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Project\CategoryProductProjectDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Section\CategoryProductSectionCollectionDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Seo\CategoryProductSeoCollectionDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Trans\CategoryProductTransDTO;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -71,8 +73,9 @@ final class CategoryProductDTO implements CategoryProductEventInterface
     private ArrayCollection $section;
 
     /** Посадочные блоки */
-    #[Assert\Valid]
-    private ArrayCollection $landing;
+    /* TODO удалить после удаления сущности CategoryProductLanding */
+//    #[Assert\Valid]
+//    private ArrayCollection $landing;
 
     /** Торговые предложения */
     #[Assert\Valid]
@@ -99,6 +102,16 @@ final class CategoryProductDTO implements CategoryProductEventInterface
     private CategoryProductCurrencyDTO $currency;
 
 
+    /** Данные по посадочным блокам для профиля */
+    #[Assert\Valid]
+    private CategoryProductProjectDTO $project;
+
+
+    /** Профиль  */
+    #[Assert\Valid]
+    private ?UserProfileUid $profile = null;
+
+
     public function __construct(?ParentCategoryProductUid $parent = null)
     {
         $this->parent = $parent;
@@ -109,10 +122,14 @@ final class CategoryProductDTO implements CategoryProductEventInterface
         $this->offer = new CategoryProductOffersDTO();
 
         $this->translate = new ArrayCollection();
-        $this->landing = new ArrayCollection();
+
+/*        TODO удалить после удаления сущности CategoryProductLanding */
+//        $this->landing = new ArrayCollection();
         $this->section = new ArrayCollection();
         $this->seo = new ArrayCollection();
         $this->domain = new ArrayCollection();
+
+        $this->project = new CategoryProductProjectDTO();
 
     }
 
@@ -206,37 +223,38 @@ final class CategoryProductDTO implements CategoryProductEventInterface
 
 
     /** Посадочные блоки */
+    /* TODO удалить после удаления сущности CategoryProductLanding */
 
-    public function getLanding(): ArrayCollection
-    {
-        /* Вычисляем расхождение и добавляем неопределенные локали */
-        foreach(Locale::diffLocale($this->landing) as $locale)
-        {
-            $CategoryLandingDTO = new CategoryProductLandingCollectionDTO();
-            $CategoryLandingDTO->setLocal($locale);
-            $this->addLanding($CategoryLandingDTO);
-        }
-
-        return $this->landing;
-    }
-
-    public function addLanding(CategoryProductLandingCollectionDTO $landing): void
-    {
-        if(empty($landing->getLocal()->getLocalValue()))
-        {
-            return;
-        }
-
-        if(!$this->landing->contains($landing))
-        {
-            $this->landing->add($landing);
-        }
-    }
-
-    public function removeLanding(CategoryProductLandingCollectionDTO $landing): void
-    {
-        $this->landing->removeElement($landing);
-    }
+//    public function getLanding(): ArrayCollection
+//    {
+//        /* Вычисляем расхождение и добавляем неопределенные локали */
+//        foreach(Locale::diffLocale($this->landing) as $locale)
+//        {
+//            $CategoryLandingDTO = new CategoryProductLandingCollectionDTO();
+//            $CategoryLandingDTO->setLocal($locale);
+//            $this->addLanding($CategoryLandingDTO);
+//        }
+//
+//        return $this->landing;
+//    }
+//
+//    public function addLanding(CategoryProductLandingCollectionDTO $landing): void
+//    {
+//        if(empty($landing->getLocal()->getLocalValue()))
+//        {
+//            return;
+//        }
+//
+//        if(!$this->landing->contains($landing))
+//        {
+//            $this->landing->add($landing);
+//        }
+//    }
+//
+//    public function removeLanding(CategoryProductLandingCollectionDTO $landing): void
+//    {
+//        $this->landing->removeElement($landing);
+//    }
 
 
     /** Настройки SEO категории */
@@ -377,4 +395,33 @@ final class CategoryProductDTO implements CategoryProductEventInterface
         $this->currency = $currency;
         return $this;
     }
+
+
+    /**
+     * Profile
+     */
+    public function getProfile(): ?UserProfileUid
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(?UserProfileUid $profile): self
+    {
+        $this->profile = $profile;
+        return $this;
+    }
+
+    /** CategoryProductProject - данные по посадочным блокам для профиля */
+    public function getProject(): CategoryProductProjectDTO
+    {
+        return $this->project;
+    }
+
+    public function setProject(CategoryProductProjectDTO $project): self
+    {
+        $this->project = $project;
+        return $this;
+    }
+
+
 }

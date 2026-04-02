@@ -12,7 +12,8 @@
 
         <div class="card-body text-start pb-0">
             {# НАСТРОЙКИ ЛОКАЛИ ПОСАДОЧНЫХ БЛОКОВ #}
-            {{ include(_self|replace({ "form.landing.html.twig": "_landing.html.twig" })) }}
+            {# {{ include(_self|replace({ "form.landing.html.twig": "_landing.html.twig" })) }}#}
+            {{ include(_self|replace({ "form.landing.html.twig": "_project_landing.html.twig" })) }}
         </div>
     </div>
 </div>

@@ -1,0 +1,33 @@
+{% trans_default_domain 'admin.products.category' %}
+
+
+<div class="tab-content" id="nav-{{ form.project.landing.vars.id }}Content">
+
+    {{ form_row(form.project.landing.local) }}
+
+    {#  Верхний блок #}
+    {{ form_row(form.project.landing.header, {
+        label : 'Заголовочный блок.'|trans,
+        attr: { class: 'ckeditor', 'data-nonce' : csp_nonce() }
+    }) }}
+
+    {# Нижний блок #}
+    {{ form_row(form.project.landing.bottom, {
+        label: 'Нижний блок.'|trans,
+        attr: { class: 'ckeditor', 'data-nonce' : csp_nonce() }
+    }) }}
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
