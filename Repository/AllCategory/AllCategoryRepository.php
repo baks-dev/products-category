@@ -249,7 +249,7 @@ final class AllCategoryRepository implements AllCategoryInterface
 
 
         return $dbal
-            ->enableCache('products-category', 86400)
+            ->enableCache('products-category', '1 day')
             ->findAllRecursive(['parent' => 'id']);
     }
 }
