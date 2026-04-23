@@ -1,0 +1,83 @@
+{% trans_default_domain('admin.products.category') %}
+
+<div class="d-flex gap-2">
+
+    <div class="d-flex flex-column gap-2 w-100 mb-2">
+        {# Посадочные блоки категории #}
+
+        <div class="card w-100 border-light">
+
+            <div class="card-body pb-0">
+
+                {% set identifier = form.project.landing.vars.id %}
+
+                {% if form.project.landing.count > 1 %}
+
+                    <ul class="nav nav-pills gap-3 mb-3" id="navdesc-{{ identifier }}" role="tablist">
+
+                        {% for landing in form.project.landing %}
+
+                            <li class="nav-item" role="presentation">
+                                <button class="btn fw-bolder nav-link{{ app.request.locale == landing.vars.value.local and  landing.vars.value.device == 'pc'  ? ' active' : '' }}"
+                                        data-bs-toggle="tab"
+                                        type="button"
+                                        role="tab"
+                                        aria-selected="true"
+
+                                        id="navdesc-{{ identifier }}-{{ landing.vars.value.local }}-{{ landing.vars.value.device }}-tab"
+                                        data-bs-target="#navdesc-{{ identifier }}-{{ landing.vars.value.local }}-{{ landing.vars.value.device }}"
+                                        aria-controls="navdesc-{{ identifier }}-{{ landing.vars.value.local }}-{{ landing.vars.value.device }}"
+                                >
+                                    <small class="text-uppercase px-3">
+                                        {{ landing.vars.value.local|trans({}, 'core', landing.vars.value.local) }}
+                                        {{ landing.vars.value.device|trans({}, 'device', landing.vars.value.local) }}
+                                    </small>
+                                </button>
+                            </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                {% endif %}
+
+
+                <div class="tab-content" id="navdesc-{{ identifier }}-content">
+
+                    {% for landing in form.project.landing %}
+
+                        <div class="tab-pane fade{{ app.request.locale == landing.vars.value.local and  landing.vars.value.device == 'pc' ? ' show active' : '' }}"
+                             id="navdesc-{{ identifier }}-{{ landing.vars.value.local }}-{{ landing.vars.value.device }}"
+                             role="tabpanel"
+                             aria-labelledby="navdesc-{{ identifier }}-{{ landing.vars.value.local }}-{{ landing.vars.value.device }}-tab">
+
+                            {{ form_widget(landing.local) }}
+                            {{ form_widget(landing.device) }}
+
+                            {# Верхний блок #}
+                            {{ form_row(landing.header, {
+                                label : 'Верхний блок'|trans({}, 'core', landing.vars.value.local),
+                                attr: { class: 'ckeditor' }
+                            }) }}
+
+                            {# Нижний блок #}
+                            {{ form_row(landing.bottom, {
+                                label : 'Нижний блок'|trans,
+                                attr: { class: 'ckeditor h-25' }
+                            }) }}
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+

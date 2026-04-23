@@ -26,11 +26,12 @@ namespace BaksDev\Products\Category\Controller\Admin;
 use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Products\Category\Entity;
-use BaksDev\Products\Category\Repository\CategoryProject\CategoryProjectInterface;
-use BaksDev\Products\Category\Repository\CategoryProject\CategoryProjectResult;
+use BaksDev\Products\Category\Repository\ProjectProfileLandings\ProjectProfileLandingsInterface;
+use BaksDev\Products\Category\Repository\ProjectProfileLandings\ProjectProfileLandingsResult;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductDTO;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductForm;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\CategoryProductHandler;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Project\Landing\CategoryProductProjectLandingDTO;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,7 +47,7 @@ final class EditController extends AbstractController
         Request $request,
         #[MapEntity] Entity\Event\CategoryProductEvent $Event,
         CategoryProductHandler $handler,
-        CategoryProjectInterface $productProject,
+        ProjectProfileLandingsInterface $profileLandings,
     ): Response
     {
 
@@ -54,20 +55,36 @@ final class EditController extends AbstractController
         $ProductCategoryDTO = $Event->getDto(CategoryProductDTO::class);
 
 
-        /* Получить CategoryProjectProfile */
+        /* Получить ProjectProfileLandings */
 
-        $existingProjectProfile = $productProject
+        $projectProfileLandings = $profileLandings
             ->byCategory($Event->getMain())
-            ->find();
+            ->findAll();
+
 
         /* Задать значения для bottom и header */
-        if(true === ($existingProjectProfile instanceof CategoryProjectResult))
+        if(false !== $projectProfileLandings)
         {
-            $project = $ProductCategoryDTO->getProject();
-            $landingDTO = $project->getLanding();
 
-            $landingDTO->setHeader($existingProjectProfile->getHeader());
-            $landingDTO->setBottom($existingProjectProfile->getBottom());
+            $descriptionCollection = $ProductCategoryDTO->getProject()->getLanding();
+
+            /** @var ProjectProfileLandingsResult $projectProfileLanding */
+            foreach($projectProfileLandings as $projectProfileLanding)
+            {
+                /** @var CategoryProductProjectLandingDTO $CategoryProductProjectLandingDTO */
+                foreach($descriptionCollection as $CategoryProductProjectLandingDTO)
+                {
+                    /* Если совпадают значения по 'local' и 'device', задать значения */
+                    if(
+                        $projectProfileLanding->getLocal()->equals($CategoryProductProjectLandingDTO->getLocal())
+                        && $projectProfileLanding->getDevice()->equals($CategoryProductProjectLandingDTO->getDevice())
+                    )
+                    {
+                        $CategoryProductProjectLandingDTO->setBottom($projectProfileLanding->getBottom());
+                        $CategoryProductProjectLandingDTO->setHeader($projectProfileLanding->getHeader());
+                    }
+                }
+            }
         }
 
 

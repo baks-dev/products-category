@@ -30,6 +30,7 @@ use BaksDev\Products\Category\UseCase\Admin\NewEdit\Project\Landing\CategoryProd
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -67,8 +68,17 @@ final class CategoryProductProjectForm extends AbstractType
             )
         );
 
+
         /** Посадочные блоки */
-        $builder->add('landing', CategoryProductProjectLandingForm::class, ['label' => false]);
+        $builder->add('landing', CollectionType::class, [
+            'entry_type' => CategoryProductProjectLandingForm::class,
+            'entry_options' => ['label' => false],
+            'label' => false,
+            'by_reference' => false,
+            'allow_delete' => true,
+            'allow_add' => true,
+            'prototype_name' => '__landing__',
+        ]);
 
     }
 

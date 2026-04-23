@@ -26,11 +26,14 @@ declare(strict_types=1);
 namespace BaksDev\Products\Category\Entity\Project\Landing;
 
 use BaksDev\Core\Entity\EntityState;
+use BaksDev\Core\Type\Device\Device;
 use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Entity\Project\CategoryProductProject;
+use BaksDev\Products\Category\Type\Project\Landing\CategoryProductProjectLandingUid;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /* CategoryProductProjectLanding */
@@ -40,34 +43,51 @@ use InvalidArgumentException;
 class CategoryProductProjectLanding extends EntityState
 {
 
-    /** Связь на CategoryProductProject */
     #[ORM\Id]
-    #[ORM\OneToOne(targetEntity: CategoryProductProject::class, inversedBy: "landing")]
+    #[Assert\NotBlank]
+    #[Assert\Uuid]
+    #[ORM\Column(type: CategoryProductProjectLandingUid::TYPE)]
+    private ?CategoryProductProjectLandingUid $id;
+
+
+    /** Связь на CategoryProductProject */
+    #[ORM\ManyToOne(targetEntity: CategoryProductProject::class, inversedBy: "landing")]
     #[ORM\JoinColumn(name: 'project', referencedColumnName: 'id')]
     private readonly CategoryProductProject $project;
 
+
     /** Локаль */
-    #[ORM\Id]
     #[ORM\Column(type: Locale::TYPE, length: 2)]
     private readonly Locale $local;
+
 
     /** Верхний блок */
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $header;
 
+
     /** Нижний блок */
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $bottom;
 
+
+    /** Девайс (pc, mobile, tablet) */
+    #[ORM\Column(type: Device::TYPE, nullable: false, options: ['default' => 'pc'])]
+    private Device $device;
+
+
     public function __construct(CategoryProductProject $project)
     {
         $this->project = $project;
+        $this->id = new CategoryProductProjectLandingUid();
     }
+
 
     public function __toString(): string
     {
         return (string) $this->project;
     }
+
 
     public function getDto($dto): mixed
     {

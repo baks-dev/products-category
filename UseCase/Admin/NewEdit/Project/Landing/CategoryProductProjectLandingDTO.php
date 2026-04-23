@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Project\Landing;
 
+use BaksDev\Core\Type\Device\Device;
 use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Entity\Project\Landing\CategoryProductProjectLandingInterface;
 use ReflectionProperty;
@@ -36,16 +37,23 @@ final class CategoryProductProjectLandingDTO implements CategoryProductProjectLa
     #[Assert\NotBlank]
     private Locale $local;
 
+    /** Device  */
+    #[Assert\NotBlank]
+    private Device $device;
+
     /** Верхний посадочный блок */
+    #[Assert\Valid]
     private ?string $header = null;
 
     /** Нижний посадочный блок */
+    #[Assert\Valid]
     private ?string $bottom = null;
 
     public function __construct()
     {
         $this->local = new Locale(Locale::default());
     }
+
 
     /** Локаль */
 
@@ -64,6 +72,7 @@ final class CategoryProductProjectLandingDTO implements CategoryProductProjectLa
 
         return $this;
     }
+
 
     /** Верхний посадочный блок */
 
@@ -90,6 +99,26 @@ final class CategoryProductProjectLandingDTO implements CategoryProductProjectLa
     public function setBottom(?string $bottom): self
     {
         $this->bottom = $bottom;
+        return $this;
+    }
+
+
+    /**
+     * Device
+     */
+
+    public function getDevice(): Device
+    {
+        return $this->device;
+    }
+
+    public function setDevice(Device $device): self
+    {
+        if(!(new ReflectionProperty(self::class, 'device'))->isInitialized($this))
+        {
+            $this->device = $device;
+        }
+
         return $this;
     }
 

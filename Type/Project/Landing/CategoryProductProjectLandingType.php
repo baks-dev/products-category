@@ -21,26 +21,19 @@
  *  THE SOFTWARE.
  */
 
-declare(strict_types=1);
+namespace BaksDev\Products\Category\Type\Project\Landing;
 
-namespace BaksDev\Products\Category\Repository\CategoryProject;
+use BaksDev\Core\Type\UidType\UidType;
 
-final readonly class CategoryProjectResult
+final class CategoryProductProjectLandingType extends UidType
 {
-
-    public function __construct(
-        private ?string $header,
-        private ?string $bottom,
-    ) {}
-
-    public function getHeader(): ?string
+    public function getClassType(): string
     {
-        return $this->header;
+        return CategoryProductProjectLandingUid::class;
     }
 
-    public function getBottom(): ?string
+    public function getName(): string
     {
-        return $this->bottom;
+        return CategoryProductProjectLandingUid::TYPE;
     }
-
 }

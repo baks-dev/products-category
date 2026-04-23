@@ -28,6 +28,7 @@ use BaksDev\Products\Category\Entity\Project\Landing\CategoryProductProjectLandi
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Products\Category\Type\Project\CategoryProductProjectUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -58,20 +59,21 @@ class CategoryProductProject extends EntityState
 
 
     /** Посадочные блоки */
-    #[ORM\OneToOne(targetEntity: CategoryProductProjectLanding::class, mappedBy: 'project', cascade: ['all'], fetch: 'EAGER')]
-    private CategoryProductProjectLanding $landing;
+    #[ORM\OneToMany(targetEntity: CategoryProductProjectLanding::class, mappedBy: 'project', cascade: ['all'])]
+    private Collection $landing;
 
 
     public function __construct()
     {
         $this->id = new CategoryProductProjectUid();
-
     }
+
 
     public function __toString(): string
     {
         return (string) $this->id;
     }
+
 
     public function getDto($dto): mixed
     {

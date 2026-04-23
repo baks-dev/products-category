@@ -23,13 +23,39 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Products\Category\Repository\CategoryProject;
+namespace BaksDev\Products\Category\Repository\ProjectProfileLandings;
 
-use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Core\Type\Device\Device;
+use BaksDev\Core\Type\Locale\Locale;
 
-interface CategoryProjectInterface
+final readonly class ProjectProfileLandingsResult
 {
-    public function find(): CategoryProjectResult|false;
 
-    public function byCategory(CategoryProductUid $category): self;
+    public function __construct(
+        private string $local,
+        private string $device,
+        private ?string $header,
+        private ?string $bottom,
+    ) {}
+
+    public function getHeader(): ?string
+    {
+        return $this->header;
+    }
+
+    public function getBottom(): ?string
+    {
+        return $this->bottom;
+    }
+
+    public function getLocal(): Locale
+    {
+        return new Locale($this->local);
+    }
+
+    public function getDevice(): Device
+    {
+        return new Device($this->device);
+    }
+
 }
