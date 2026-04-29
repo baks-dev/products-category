@@ -23,20 +23,19 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Products\Category\Repository\CategoryProject;
+namespace BaksDev\Products\Category\Repository\ProjectProfileLandings;
 
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Products\Category\Entity\Project\CategoryProductProject;
 use BaksDev\Products\Category\Entity\Project\Landing\CategoryProductProjectLanding;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use Generator;
 use InvalidArgumentException;
 
-
-final class CategoryProjectRepository implements CategoryProjectInterface
+final class ProjectProfileLandingsRepository implements ProjectProfileLandingsInterface
 {
 
     private CategoryProductUid|false $category;
-
 
     public function byCategory(CategoryProductUid $category): self
     {
@@ -47,7 +46,7 @@ final class CategoryProjectRepository implements CategoryProjectInterface
     public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
 
 
-    public function find(): CategoryProjectResult|false
+    public function findAll(): Generator|false
     {
 
         if(false === $this->category)
@@ -73,6 +72,8 @@ final class CategoryProjectRepository implements CategoryProjectInterface
 
 
         $dbal
+            ->addSelect('category_project_landing.local AS local')
+            ->addSelect('category_project_landing.device AS device')
             ->addSelect('category_project_landing.header AS header')
             ->addSelect('category_project_landing.bottom AS bottom')
             ->join(
@@ -82,6 +83,7 @@ final class CategoryProjectRepository implements CategoryProjectInterface
                 'category_project.id = category_project_landing.project'
             );
 
+
         /* Задать профиль - PROJECT_PROFILE */
         if(true === $dbal->bindProjectProfile())
         {
@@ -89,7 +91,9 @@ final class CategoryProjectRepository implements CategoryProjectInterface
         }
 
 
-        return $dbal->fetchHydrate(CategoryProjectResult::class);
+        $result = $dbal->fetchAllHydrate(ProjectProfileLandingsResult::class);
+
+        return ($result->valid() === true) ? $result : false;
 
     }
 }

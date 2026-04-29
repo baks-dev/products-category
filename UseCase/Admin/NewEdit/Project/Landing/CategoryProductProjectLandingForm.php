@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Project\Landing;
 
+use BaksDev\Core\Type\Device\Device;
 use BaksDev\Core\Type\Locale\Locale;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -47,6 +48,20 @@ final class CategoryProductProjectLandingForm extends AbstractType
                 },
                 function($local) {
                     return new Locale($local);
+                },
+            ),
+        );
+
+        /** Device */
+        $builder->add('device', HiddenType::class);
+
+        $builder->get('device')->addModelTransformer(
+            new CallbackTransformer(
+                function($device) {
+                    return $device instanceof Device ? $device->getDevice() : $device;
+                },
+                function($device) {
+                    return new Device($device);
                 },
             ),
         );

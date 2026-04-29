@@ -42,6 +42,8 @@ use BaksDev\Products\Category\Type\Parent\ParentCategoryProductType;
 use BaksDev\Products\Category\Type\Parent\ParentCategoryProductUid;
 use BaksDev\Products\Category\Type\Project\CategoryProductProjectType;
 use BaksDev\Products\Category\Type\Project\CategoryProductProjectUid;
+use BaksDev\Products\Category\Type\Project\Landing\CategoryProductProjectLandingType;
+use BaksDev\Products\Category\Type\Project\Landing\CategoryProductProjectLandingUid;
 use BaksDev\Products\Category\Type\Section\Field\Const\CategoryProductSectionFieldConst;
 use BaksDev\Products\Category\Type\Section\Field\Const\CategoryProductSectionFieldConstType;
 use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldType;
@@ -73,6 +75,7 @@ return static function(ContainerConfigurator $container, DoctrineConfig $doctrin
     $doctrine->dbal()->type(CategoryProductModificationTypeUid::TYPE)->class(CategoryProductModificationTypeType::class);
 
     $doctrine->dbal()->type(CategoryProductProjectUid::TYPE)->class(CategoryProductProjectType::class);
+    $doctrine->dbal()->type(CategoryProductProjectLandingUid::TYPE)->class(CategoryProductProjectLandingType::class);
 
 
     /** Резолверы */

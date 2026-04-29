@@ -128,7 +128,17 @@ final readonly class CategoryByUrlRepository implements CategoryByUrlInterface
                 'product_category_project',
                 CategoryProductProjectLanding::class,
                 'product_category_project_landing',
-                'product_category_project_landing.project = product_category_project.id AND product_category_project_landing.local = :local'
+                '
+                 product_category_project_landing.project = product_category_project.id
+                 AND product_category_project_landing.local = :local
+                 AND product_category_project_landing.device = :device
+                 '
+            )
+            ->setParameter(
+                key: 'device',
+                value: $dbal->getDevice(),
+//                value: 'pc',
+
             );
 
 

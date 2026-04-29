@@ -86,14 +86,22 @@ final class CategoryProductHandler extends AbstractHandler
                 ]);
 
 
-            $CategoryProductProject = (true === empty($ExistingCategoryProject))
-                ? new CategoryProductProject()
-                : $ExistingCategoryProject;
+            $CategoryProductProject = (true === ($ExistingCategoryProject instanceof CategoryProductProject))
+                ? $ExistingCategoryProject
+                : new CategoryProductProject();
+
+
+            /* Если есть сущность CategoryProductProject */
+            if(true === ($ExistingCategoryProject instanceof CategoryProductProject))
+            {
+                $ExistingCategoryProject->setEntityManager($this->getEntityManager());
+            }
 
 
             $CategoryProductProject->setEntity($CategoryProductProjectDTO);
 
-            if(true === empty($ExistingCategoryProject))
+            /* Создается новая сущность CategoryProductProject */
+            if(false === ($ExistingCategoryProject instanceof CategoryProductProject))
             {
                 $this->persist($CategoryProductProject);
             }

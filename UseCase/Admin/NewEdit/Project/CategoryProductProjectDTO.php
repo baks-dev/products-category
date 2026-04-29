@@ -25,18 +25,24 @@ declare(strict_types=1);
 
 namespace BaksDev\Products\Category\UseCase\Admin\NewEdit\Project;
 
+use BaksDev\Core\Type\Device\Device;
+use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Entity\Project\CategoryProductProjectInterface;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Project\Landing\CategoryProductProjectLandingDTO;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 final class CategoryProductProjectDTO implements CategoryProductProjectInterface
 {
     /* Профиль */
+    #[Assert\Valid]
     private ?UserProfileUid $profile = null;
 
     /* Посадочные блоки */
-    private ?CategoryProductProjectLandingDTO $landing = null;
+    #[Assert\Valid]
+    private ArrayCollection $landing;
 
     /* Категория */
     private CategoryProductUid $category;
@@ -44,7 +50,7 @@ final class CategoryProductProjectDTO implements CategoryProductProjectInterface
 
     public function __construct()
     {
-        $this->landing = new CategoryProductProjectLandingDTO();
+        $this->landing = new ArrayCollection();
     }
 
 
@@ -59,17 +65,48 @@ final class CategoryProductProjectDTO implements CategoryProductProjectInterface
         return $this;
     }
 
-    public function getLanding(): ?CategoryProductProjectLandingDTO
+
+    /* Посадочные блоки */
+
+    public function getLanding(): ArrayCollection
     {
+
+        /* Вычислить расхождение и добавляем неопределенные локали */
+        foreach(Locale::diffLocale($this->landing) as $locale)
+        {
+            /** @var Device $device */
+            foreach(Device::cases() as $device)
+            {
+                $CategoryProductProjectLandingDTO = new CategoryProductProjectLandingDTO();
+                $CategoryProductProjectLandingDTO->setLocal($locale);
+                $CategoryProductProjectLandingDTO->setDevice($device);
+
+                $this->addLanding($CategoryProductProjectLandingDTO);
+            }
+        }
+
         return $this->landing;
     }
 
-    public function setLanding(?CategoryProductProjectLandingDTO $landing): self
+    public function setLanding(ArrayCollection $landing): void
     {
         $this->landing = $landing;
-        return $this;
     }
 
+    public function addLanding(CategoryProductProjectLandingDTO $landing): void
+    {
+        if(empty($landing->getLocal()->getLocalValue()))
+        {
+            return;
+        }
+
+        if(!$this->landing->contains($landing))
+        {
+            $this->landing->add($landing);
+        }
+    }
+
+    /* Профиль */
     public function getProfile(): ?UserProfileUid
     {
         return $this->profile;

@@ -23,9 +23,10 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Products\Category\Repository\CategoryProject\Tests;
+namespace BaksDev\Products\Category\Repository\ProjectProfileLandings\Tests;
 
-use BaksDev\Products\Category\Repository\CategoryProject\CategoryProjectInterface;
+
+use BaksDev\Products\Category\Repository\ProjectProfileLandings\ProjectProfileLandingsInterface;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Products\Category\UseCase\Admin\NewEdit\Tests\CategoryProductNewTest;
 use PHPUnit\Framework\Attributes\DependsOnClass;
@@ -35,7 +36,7 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 
 #[Group('products-category')]
 #[When(env: 'test')]
-final class CategoryProjectRepositoryTest extends KernelTestCase
+final class ProjectProfileLandingsRepositoryTest extends KernelTestCase
 {
 
     #[DependsOnClass(CategoryProductNewTest::class)]
@@ -43,14 +44,14 @@ final class CategoryProjectRepositoryTest extends KernelTestCase
     {
         self::assertTrue(true);
 
-        /** @var CategoryProjectInterface $CategoryProjectInterface */
-        $CategoryProjectInterface = self::getContainer()->get(CategoryProjectInterface::class);
+        /** @var ProjectProfileLandingsInterface $ProjectProfileLandings */
+        $ProjectProfileLandings = self::getContainer()->get(ProjectProfileLandingsInterface::class);
 
         $category = CategoryProductUid::TEST;
 
-        $result = $CategoryProjectInterface
+        $result = $ProjectProfileLandings
             ->byCategory(new CategoryProductUid($category))
-            ->find();
+            ->findAll();
 
         //        dd($result);
     }
