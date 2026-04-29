@@ -36,16 +36,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class CategoryProductProjectDTO implements CategoryProductProjectInterface
 {
+    /* Категория */
+    #[Assert\NotBlank]
+    private CategoryProductUid $category;
+
     /* Профиль */
-    #[Assert\Valid]
     private ?UserProfileUid $profile = null;
 
     /* Посадочные блоки */
     #[Assert\Valid]
     private ArrayCollection $landing;
-
-    /* Категория */
-    private CategoryProductUid $category;
 
 
     public function __construct()
