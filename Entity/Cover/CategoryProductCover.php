@@ -146,21 +146,9 @@ class CategoryProductCover extends EntityState implements UploadEntityInterface
         return $this->ext;
     }
 
-
-
-    //	public function getUploadDir() : object
-    //	{
-    //		return $this->event->getId();
-    //	}
-    //
-    //    public function getDir(): ProductCategoryEventUid
-    //    {
-    //        return $this->dir;
-    //    }
-    //
-    //    public static function getDirName(): string
-    //    {
-    //        return  ProductCategoryEventUid::class;
-    //    }
+    public function isCdn(): bool
+    {
+        return $this->cdn === true;
+    }
 
 }
