@@ -28,7 +28,7 @@ namespace BaksDev\Products\Category\Repository\SettingsByUrl;
 final readonly class SettingsByUrlResult
 {
     public function __construct(
-        private string $offer,
+        private ?string $offer,
         private ?string $variation,
         private ?string $modification,
     ) {}
