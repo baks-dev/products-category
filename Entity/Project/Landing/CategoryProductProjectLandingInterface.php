@@ -27,5 +27,7 @@ namespace BaksDev\Products\Category\Entity\Project\Landing;
 
 interface CategoryProductProjectLandingInterface
 {
+    public function getHeader(): ?string;
 
+    public function getBottom(): ?string;
 }

@@ -31,6 +31,7 @@ use BaksDev\Products\Category\Entity\Project\Landing\CategoryProductProjectLandi
 use ReflectionProperty;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/** @see CategoryProductProjectLanding */
 final class CategoryProductProjectLandingDTO implements CategoryProductProjectLandingInterface
 {
     /** Локаль */
@@ -42,11 +43,9 @@ final class CategoryProductProjectLandingDTO implements CategoryProductProjectLa
     private Device $device;
 
     /** Верхний посадочный блок */
-    #[Assert\Valid]
     private ?string $header = null;
 
     /** Нижний посадочный блок */
-    #[Assert\Valid]
     private ?string $bottom = null;
 
     public function __construct()

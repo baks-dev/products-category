@@ -104,9 +104,13 @@ class CategoryProductProjectLanding extends EntityState
 
     public function setEntity($dto): mixed
     {
-
         if($dto instanceof CategoryProductProjectLandingInterface || $dto instanceof self)
         {
+            if(empty($dto->getHeader()) && empty($dto->getBottom()))
+            {
+                return false;
+            }
+
             return parent::setEntity($dto);
         }
 
