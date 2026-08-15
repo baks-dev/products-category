@@ -94,7 +94,8 @@
                         data-section="{{ section.vars.name }}"
                         data-index="{{ section.field.count }}"
                         data-prototype="{{ include(_self|replace({ "_section.html.twig": "field/prototype.field.html.twig" }), { field_prototype : section.field.vars.prototype })| e('html_attr') }} "
-                        class="btn btn-sm btn-outline-primary border-0 section-field_add-collection">
+                        class="btn btn-sm btn-outline-primary border-0 section-field_add-collection"
+                >
 			
 			<span class="svg-icon svg-icon-2">
 				<svg xmlns="http://www.w3.org/2000/svg"
