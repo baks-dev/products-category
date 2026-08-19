@@ -57,7 +57,7 @@
             {# {% set include_field = include(_self|replace({ "prototype.section.html.twig": "field/prototype.field.html.twig" }), { field_prototype : section.field.vars.prototype }) %} #}
 
 
-            <div id="field-collection-{{ section.vars.name }}" class=''>
+            <div id="field-collection-{{ section.vars.name }}">
 
                 {% for field in section.field %}
                     <div id="item-collection-field-{{ field.vars.name }}"
@@ -93,10 +93,10 @@
                         {# onclick="createSectionField(this)" #}
                         data-section="{{ section.vars.name }}"
                         data-index="{{ section.field.count }}"
-                        data-prototype="{{ include(_self|replace({ "_section.html.twig": "field/prototype.field.html.twig" }), { field_prototype : section.field.vars.prototype })| e('html_attr') }} "
-                        class="btn btn-sm btn-outline-primary border-0 section-field_add-collection"
-                >
-			
+                        data-prototype="{{ include(_self|replace({ "_section.html.twig": "field/prototype.field.html.twig" }), { field_prototype : section.field.vars.prototype })|e('html_attr') }} "
+
+                        class="btn btn-sm btn-outline-primary border-0 section-field_add-collection">
+
 			<span class="svg-icon svg-icon-2">
 				<svg xmlns="http://www.w3.org/2000/svg"
                      width="24" height="24" viewBox="0 0 24 24"

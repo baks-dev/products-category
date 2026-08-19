@@ -45,7 +45,9 @@
             {{ form_widget(field_prototype.alternative, { label : 'Применить к поиску альтернатив' }) }}
         </div>
 
-        {{ include(_self|replace({ "prototype.field.html.twig": "trans/prototype.field.trans.html.twig" }), { trans_prototype : field_prototype.translate.vars.prototype }) }}
+        {{ include(
+            _self|replace({ "prototype.field.html.twig": "trans/prototype.field.trans.html.twig" }),
+            { trans_prototype : field_prototype.translate.vars.prototype }) }}
 
     </div>
 </div>

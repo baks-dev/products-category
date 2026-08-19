@@ -137,7 +137,7 @@
                 <button type="button"
                         id="{{ form.vars.id }}-add"
                         class="btn btn-sm btn-outline-primary border-0"
-                        data-prototype="{{ include(_self|replace({ "main/form.main.html.twig": "domains/prototype.domain.html.twig" }) )|e('html_attr') }}"
+                        data-prototype="{{ include(_self|replace({ "main/form.main.html.twig": "domains/prototype.domain.html.twig" }) )| e('html_attr') }}"
 
                         data-collection="{{ form.vars.id }}-collection"
                         data-index="{{ form.domain.count }}"

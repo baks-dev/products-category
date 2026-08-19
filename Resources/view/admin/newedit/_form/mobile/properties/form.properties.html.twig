@@ -15,6 +15,7 @@
     <button type="button" id="section_addCollection"
             class="btn btn-sm btn-outline-primary border-0 add_collection"
             data-prototype="{{ include(_self|replace({ "form.properties.html.twig": "section/prototype.section.html.twig"}), { section : form.section.vars.prototype })| e('html_attr') }}"
+
             data-index="{{ form.section.count }}"
     >
 		

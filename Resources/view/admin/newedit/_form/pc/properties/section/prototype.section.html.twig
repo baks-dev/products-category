@@ -34,7 +34,10 @@
                 </div>
             </div>
 
-            {{ include(_self|replace({ "prototype.section.html.twig": "trans/prototype.section.trans.html.twig" }), { trans_prototype : section.translate.vars.prototype }) }}
+            {{ include(
+                _self|replace({ "prototype.section.html.twig": "trans/prototype.section.trans.html.twig" }),
+                { trans_prototype : section.translate.vars.prototype }
+            ) }}
 
         </div>
     </div>
@@ -50,7 +53,11 @@
         </div>
 
         {# Поля свойств продукта #}
-        {% set include_field = include(_self|replace({ "prototype.section.html.twig": "field/prototype.field.html.twig" }), { field_prototype : section.field.vars.prototype }) %}
+        {% set include_field = include(
+            _self|replace({ "prototype.section.html.twig": "field/prototype.field.html.twig" }),
+            { field_prototype : section.field.vars.prototype }
+        ) %}
+
 
         <div id="field-collection-__category_section__" class=''>
             <div id="item-collection-field-0" class="item-collection-field pb-3 mt-5">
@@ -63,7 +70,6 @@
         </div>
 
         {# {% for field in section.fields %} #}
-
 
 
         {# {% endfor %} #}
@@ -81,9 +87,8 @@
                     data-section="__category_section__"
                     data-index="1"
                     data-prototype="{{ include_field }}"
-                    class="btn btn-sm btn-outline-primary border-0 section-field_add-collection"
-            >
-			
+                    class="btn btn-sm btn-outline-primary border-0 section-field_add-collection">
+
 			<span class="svg-icon svg-icon-2">
 				<svg xmlns="http://www.w3.org/2000/svg"
                      width="24" height="24" viewBox="0 0 24 24"
